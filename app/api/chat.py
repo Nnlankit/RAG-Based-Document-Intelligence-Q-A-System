@@ -1,8 +1,9 @@
-"""Chat and conversation management endpoints."""
-
+import json
 import logging
 from typing import List, Optional
+import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -31,6 +32,8 @@ def chat(
     user_id: str = "default_user",
 ) -> ChatResponse:
     """Answers document queries using grounded vector retrieval, query rewriting, and Llama 3.2."""
+    request_id = str(uuid.uuid4())[:8]
+
     # 1. Fetch or initialize conversation
     conv = ConversationRepository.get_or_create(
         db=db,
@@ -50,6 +53,7 @@ def chat(
         document_ids=request.document_ids if request.document_ids else None,
         similarity_threshold=request.similarity_threshold,
         top_k=request.top_k,
+        request_id=request_id,
     )
 
     # 4. Persist user message and assistant answer
@@ -78,7 +82,53 @@ def chat(
         generation_latency_ms=result.generation_latency_ms,
         total_latency_ms=result.total_latency_ms,
         abstention=result.abstention,
+        metadata=result.metadata,
     )
+
+
+@router.post("/chat/stream", summary="Stream grounded RAG response as Server-Sent Events (SSE)")
+def chat_stream(
+    request: ChatRequest,
+    db: Session = Depends(get_db),
+    user_id: str = "default_user",
+):
+    """Streams RAG generation tokens in real-time as Server-Sent Events (SSE)."""
+    conv = ConversationRepository.get_or_create(
+        db=db,
+        conversation_id=request.conversation_id,
+        user_id=user_id,
+        initial_title=request.question,
+    )
+    history = ConversationMemory.get_recent_history(db, conv.id, max_turns=4)
+    request_id = str(uuid.uuid4())[:8]
+
+    def event_generator():
+        # Yield conversation info first
+        yield f"data: {json.dumps({'type': 'conversation', 'conversation_id': conv.id})}\n\n"
+
+        full_answer = []
+        for event in _rag_pipeline.execute_stream(
+            question=request.question,
+            history=history,
+            user_id=user_id,
+            document_ids=request.document_ids if request.document_ids else None,
+            similarity_threshold=request.similarity_threshold,
+            top_k=request.top_k,
+            request_id=request_id,
+        ):
+            if event["type"] == "token":
+                full_answer.append(event["content"])
+            elif event["type"] == "abstention":
+                full_answer.append(event.get("content", ""))
+            elif event["type"] == "done":
+                try:
+                    ConversationRepository.add_message(db, conv.id, role="user", content=request.question)
+                    ConversationRepository.add_message(db, conv.id, role="assistant", content="".join(full_answer))
+                except Exception as e:
+                    logger.error(f"Failed to persist streamed messages: {e}")
+            yield f"data: {json.dumps(event)}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 @router.get("/conversations", response_model=List[ConversationResponse], summary="List all user conversations")

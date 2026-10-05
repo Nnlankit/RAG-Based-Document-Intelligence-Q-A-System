@@ -34,6 +34,7 @@ class ChatResponse(BaseModel):
     generation_latency_ms: Optional[float] = Field(None, description="Generation latency in milliseconds")
     total_latency_ms: Optional[float] = Field(None, description="End-to-end latency in milliseconds")
     abstention: bool = Field(default=False, description="True if system abstained due to lack of evidence")
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Detailed latency and execution metrics")
 
 
 class MessageResponse(BaseModel):

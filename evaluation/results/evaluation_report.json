@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-05 13:19:57",
+  "timestamp": "2026-10-05 15:17:36",
   "total_test_cases": 5,
   "supported_cases": 3,
   "unsupported_negative_cases": 2,
@@ -7,9 +7,9 @@
     "context_recall": 1.0,
     "context_precision": 1.0,
     "abstention_accuracy": 1.0,
-    "avg_retrieval_latency_ms": 481.65,
-    "avg_generation_latency_ms": 4128.29,
-    "avg_total_latency_ms": 4610.0
+    "avg_retrieval_latency_ms": 468.54,
+    "avg_generation_latency_ms": 4118.94,
+    "avg_total_latency_ms": 4587.69
   },
   "individual_results": [
     {
@@ -20,7 +20,7 @@
       "context_precision": 1.0,
       "answer": "Navigating subterranean tunnels and mapping hazard areas without human intervention.",
       "sources_count": 3,
-      "total_latency_ms": 2664.81
+      "total_latency_ms": 2659.51
     },
     {
       "id": "eval_002",
@@ -30,7 +30,7 @@
       "context_precision": 1.0,
       "answer": "According to SOURCE 1, the dual lithium-sulfur batteries provide 18 hours of continuous autonomous operation.",
       "sources_count": 3,
-      "total_latency_ms": 3551.81
+      "total_latency_ms": 3279.47
     },
     {
       "id": "eval_003",
@@ -39,7 +39,7 @@
       "abstained": true,
       "abstention_correct": true,
       "answer": "I could not find sufficient information in the provided documents about a \"rocket\" in Project Apollo. The documents only mention Project Titan, which uses four brushless DC motors capable of a maximum speed of 4.5 meters per second on rough gravel.",
-      "total_latency_ms": 5396.22
+      "total_latency_ms": 5501.19
     },
     {
       "id": "eval_004",
@@ -49,7 +49,7 @@
       "context_precision": 1.0,
       "answer": "I could not find sufficient information in the provided documents regarding the specific details of the Titan vision system's development team. However, it is mentioned that Dr. Aris Thorne engineered the visual odometry and stereoscopic vision system.",
       "sources_count": 3,
-      "total_latency_ms": 6917.22
+      "total_latency_ms": 6937.4
     },
     {
       "id": "eval_005",
@@ -58,7 +58,7 @@
       "abstained": true,
       "abstention_correct": true,
       "answer": "I could not find sufficient information in the provided documents regarding the capital city of ancient Atlantis. The documents appear to be related to a project named \"Titan\" and do not mention Atlantis or its capital city.",
-      "total_latency_ms": 4519.92
+      "total_latency_ms": 4560.89
     }
   ]
 }

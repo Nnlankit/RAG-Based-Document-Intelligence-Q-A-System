@@ -17,6 +17,7 @@ export interface ChatMessage {
   generation_latency_ms?: number;
   total_latency_ms?: number;
   abstention?: boolean;
+  metadata?: Record<string, any>;
 }
 
 export interface Conversation {
@@ -44,4 +45,5 @@ export interface ChatResponse {
   generation_latency_ms: number;
   total_latency_ms: number;
   abstention: boolean;
+  metadata?: Record<string, any>;
 }

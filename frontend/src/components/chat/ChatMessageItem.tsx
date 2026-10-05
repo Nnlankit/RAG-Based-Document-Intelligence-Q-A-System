@@ -23,6 +23,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
   const isUser = message.role === 'user';
   const [copied, setCopied] = useState(false);
   const [sourcesOpen, setSourcesOpen] = useState(true);
+  const [showPerf, setShowPerf] = useState(false);
 
   const handleCopyText = () => {
     navigator.clipboard.writeText(message.content);
@@ -95,18 +96,120 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
           </ReactMarkdown>
         </div>
 
-        {/* Telemetry Latency Chips */}
+        {/* Telemetry Latency Chips & Expandable Performance Panel */}
         {message.total_latency_ms !== undefined && (
-          <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono font-medium text-[#5A4634] dark:text-[#DCC9AA] pt-1 border-t border-[#D4C3A5]/40 dark:border-[#4B3C2F]/40">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3 text-[#8B6F52]" />
-              Total: {(message.total_latency_ms / 1000).toFixed(2)}s
-            </span>
-            {message.retrieval_latency_ms !== undefined && (
-              <span>• Retrieval: {message.retrieval_latency_ms.toFixed(0)}ms</span>
-            )}
-            {message.generation_latency_ms !== undefined && (
-              <span>• Gen: {(message.generation_latency_ms / 1000).toFixed(2)}s</span>
+          <div className="pt-2 border-t border-[#D4C3A5]/40 dark:border-[#4B3C2F]/40">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono font-medium text-[#5A4634] dark:text-[#DCC9AA]">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-[#8B6F52]" />
+                  Generated in {(message.total_latency_ms / 1000).toFixed(2)}s
+                </span>
+                {message.metadata?.llm_ttft_ms !== undefined && (
+                  <span>
+                    • TTFT:{' '}
+                    {message.metadata.llm_ttft_ms < 1000
+                      ? `${message.metadata.llm_ttft_ms.toFixed(0)}ms`
+                      : `${(message.metadata.llm_ttft_ms / 1000).toFixed(2)}s`}
+                  </span>
+                )}
+              </div>
+
+              {import.meta.env.VITE_SHOW_PERFORMANCE_METRICS !== 'false' && (
+                <button
+                  type="button"
+                  onClick={() => setShowPerf(!showPerf)}
+                  className="flex items-center gap-1 text-[11px] font-medium text-[#8B6F52] hover:text-[#5A4634] dark:text-[#D4A359] dark:hover:text-[#F7F0E3] transition-colors cursor-pointer select-none"
+                >
+                  <span>{showPerf ? 'Hide' : 'View'} Performance</span>
+                  {showPerf ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                </button>
+              )}
+            </div>
+
+            {showPerf && (
+              <div className="mt-2.5 p-3 rounded-xl bg-[#EDE4D3]/50 dark:bg-[#1E1712]/50 border border-[#D4C3A5]/60 dark:border-[#4B3C2F]/60 text-[11px] font-mono space-y-2">
+                <div className="font-semibold text-xs text-[#30261E] dark:text-[#F7F0E3] pb-1 border-b border-[#D4C3A5]/40 dark:border-[#4B3C2F]/40 flex items-center justify-between">
+                  <span>RAG Performance Telemetry</span>
+                  <span className="text-[10px] text-[#8B6F52] dark:text-[#DCC9AA]">High-Resolution</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-[#5A4634] dark:text-[#DCC9AA]">
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Total Latency</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {(message.total_latency_ms / 1000).toFixed(2)}s
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">LLM TTFT</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {message.metadata?.llm_ttft_ms !== undefined
+                        ? message.metadata.llm_ttft_ms < 1000
+                          ? `${message.metadata.llm_ttft_ms.toFixed(0)}ms`
+                          : `${(message.metadata.llm_ttft_ms / 1000).toFixed(2)}s`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">LLM Generation</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {message.generation_latency_ms !== undefined
+                        ? `${(message.generation_latency_ms / 1000).toFixed(2)}s`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Query Embedding</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {message.metadata?.embedding_ms !== undefined
+                        ? `${message.metadata.embedding_ms.toFixed(1)}ms`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Vector Retrieval</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {message.retrieval_latency_ms !== undefined
+                        ? `${message.retrieval_latency_ms.toFixed(1)}ms`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Reranking</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {message.metadata?.reranking_ms !== undefined
+                        ? `${message.metadata.reranking_ms.toFixed(1)}ms`
+                        : '0.0ms'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Context Building</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {message.metadata?.context_building_ms !== undefined
+                        ? `${message.metadata.context_building_ms.toFixed(2)}ms`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Generated Tokens</span>
+                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                      {message.metadata?.generated_tokens !== undefined
+                        ? `${message.metadata.generated_tokens} tokens`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                  {message.metadata?.frontend_ttft_ms !== undefined && (
+                    <div>
+                      <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Browser Network TTFT</span>
+                      <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                        {message.metadata.frontend_ttft_ms < 1000
+                          ? `${message.metadata.frontend_ttft_ms}ms`
+                          : `${(message.metadata.frontend_ttft_ms / 1000).toFixed(2)}s`}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         )}

@@ -6,7 +6,7 @@ import { documentService } from '../services/documentService';
 import { ChatSidebar } from '../components/chat/ChatSidebar';
 import { ChatMessageList } from '../components/chat/ChatMessageList';
 import { ChatInput } from '../components/chat/ChatInput';
-import { ChatMessage, Conversation } from '../types/chat';
+import { ChatMessage, Conversation, SourceAttribution } from '../types/chat';
 import { useChatSettings } from '../context/ChatSettingsContext';
 import { useToast } from '../components/common/Toast';
 
@@ -106,36 +106,167 @@ export const ChatPage: React.FC = () => {
     setMessages((prev) => [...prev, userMsg]);
     setIsSending(true);
 
+    const streamMessageId = 'stream-' + Date.now();
+    let accumulatedContent = '';
+    let accumulatedSources: SourceAttribution[] = [];
+    let isAbstention = false;
+
     try {
-      const response = await chatService.sendMessage({
-        question: text,
-        conversation_id: activeConversationId,
-        document_ids: scopeDocumentIds.length > 0 ? scopeDocumentIds : null,
-        similarity_threshold: similarityThreshold,
-        top_k: topK,
-      });
-
-      // Update active conversation ID and URL
-      if (!activeConversationId && response.conversation_id) {
-        setActiveConversationId(response.conversation_id);
-        navigate(`/chat/${response.conversation_id}`, { replace: true });
-        refetchConversations();
-      }
-
-      const assistantMsg: ChatMessage = {
-        role: 'assistant',
-        content: response.answer,
-        sources: response.sources,
-        retrieval_latency_ms: response.retrieval_latency_ms,
-        generation_latency_ms: response.generation_latency_ms,
-        total_latency_ms: response.total_latency_ms,
-        abstention: response.abstention,
-        created_at: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, assistantMsg]);
-      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
+      await chatService.sendMessageStream(
+        {
+          question: text,
+          conversation_id: activeConversationId,
+          document_ids: scopeDocumentIds.length > 0 ? scopeDocumentIds : null,
+          similarity_threshold: similarityThreshold,
+          top_k: topK,
+        },
+        (token) => {
+          accumulatedContent += token;
+          setMessages((prev) => {
+            const idx = prev.findIndex((m) => m.id === streamMessageId);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = {
+                ...updated[idx],
+                content: accumulatedContent,
+              };
+              return updated;
+            } else {
+              return [
+                ...prev,
+                {
+                  id: streamMessageId,
+                  role: 'assistant',
+                  content: accumulatedContent,
+                  sources: accumulatedSources,
+                  created_at: new Date().toISOString(),
+                },
+              ];
+            }
+          });
+        },
+        (sources) => {
+          accumulatedSources = sources;
+          setMessages((prev) => {
+            const idx = prev.findIndex((m) => m.id === streamMessageId);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = { ...updated[idx], sources };
+              return updated;
+            }
+            return prev;
+          });
+        },
+        (abstentionText) => {
+          isAbstention = true;
+          accumulatedContent = abstentionText;
+          setMessages((prev) => {
+            const idx = prev.findIndex((m) => m.id === streamMessageId);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = { ...updated[idx], content: abstentionText, abstention: true };
+              return updated;
+            } else {
+              return [
+                ...prev,
+                {
+                  id: streamMessageId,
+                  role: 'assistant',
+                  content: abstentionText,
+                  abstention: true,
+                  created_at: new Date().toISOString(),
+                },
+              ];
+            }
+          });
+        },
+        (doneData) => {
+          setMessages((prev) => {
+            const idx = prev.findIndex((m) => m.id === streamMessageId);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = {
+                ...updated[idx],
+                content: doneData.full_answer || accumulatedContent,
+                generation_latency_ms: doneData.generation_latency_ms,
+                total_latency_ms: doneData.total_latency_ms,
+                metadata: doneData.metadata,
+                abstention: isAbstention,
+              };
+              return updated;
+            }
+            return prev;
+          });
+          queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
+        },
+        (convId) => {
+          if (!activeConversationId && convId) {
+            setActiveConversationId(convId);
+            navigate(`/chat/${convId}`, { replace: true });
+            refetchConversations();
+          }
+        },
+        (timing) => {
+          setMessages((prev) => {
+            const idx = prev.findIndex((m) => m.id === streamMessageId);
+            if (idx >= 0) {
+              const updated = [...prev];
+              const curMeta = updated[idx].metadata || {};
+              updated[idx] = {
+                ...updated[idx],
+                metadata: {
+                  ...curMeta,
+                  frontend_ttft_ms: timing.frontend_ttft_ms,
+                  frontend_stream_duration_ms: timing.total_stream_duration_ms,
+                },
+              };
+              return updated;
+            }
+            return prev;
+          });
+        }
+      );
     } catch (err: any) {
-      error('Query Failed', err.message || 'Failed to process question');
+      console.warn('Streaming failed, trying non-streaming fallback', err);
+      try {
+        const response = await chatService.sendMessage({
+          question: text,
+          conversation_id: activeConversationId,
+          document_ids: scopeDocumentIds.length > 0 ? scopeDocumentIds : null,
+          similarity_threshold: similarityThreshold,
+          top_k: topK,
+        });
+
+        if (!activeConversationId && response.conversation_id) {
+          setActiveConversationId(response.conversation_id);
+          navigate(`/chat/${response.conversation_id}`, { replace: true });
+          refetchConversations();
+        }
+
+        setMessages((prev) => {
+          const filtered = prev.filter((m) => m.id !== streamMessageId);
+          return [
+            ...filtered,
+            {
+              role: 'assistant',
+              content: response.answer,
+              sources: response.sources,
+              retrieval_latency_ms: response.retrieval_latency_ms,
+              generation_latency_ms: response.generation_latency_ms,
+              total_latency_ms: response.total_latency_ms,
+              abstention: response.abstention,
+              metadata: response.metadata,
+              created_at: new Date().toISOString(),
+            },
+          ];
+        });
+        queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
+      } catch (fallbackErr: any) {
+        error(
+          'Query Failed',
+          fallbackErr.message || 'AI service is taking longer than expected. Please try again.'
+        );
+      }
     } finally {
       setIsSending(false);
     }

@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 import json
 import logging
 import time
-from typing import AsyncGenerator, Generator, Optional, Tuple
+from typing import Any, AsyncGenerator, Generator, Optional, Tuple
 import httpx
 
 from app.core.config import get_settings
@@ -22,6 +22,8 @@ class BaseLLMService(ABC):
         prompt: str,
         system_prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+        profiler: Optional[Any] = None,
     ) -> Tuple[str, float]:
         """Generates completion text and returns (response_text, latency_ms)."""
         pass
@@ -32,6 +34,8 @@ class BaseLLMService(ABC):
         prompt: str,
         system_prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+        profiler: Optional[Any] = None,
     ) -> Generator[str, None, None]:
         """Streams generation tokens incrementally."""
         pass
@@ -64,6 +68,7 @@ class OllamaLLMService(BaseLLMService):
         system_prompt: Optional[str] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
+        profiler: Optional[Any] = None,
     ) -> Tuple[str, float]:
         """Calls Ollama generate API synchronously with performance-optimized options."""
         start_time = time.perf_counter()
@@ -74,6 +79,7 @@ class OllamaLLMService(BaseLLMService):
             "model": self.model_name,
             "prompt": prompt,
             "stream": False,
+            "keep_alive": getattr(self.settings, "OLLAMA_KEEP_ALIVE", "5m"),
             "options": {
                 "temperature": temp,
                 "num_predict": num_predict,
@@ -94,6 +100,18 @@ class OllamaLLMService(BaseLLMService):
             data = resp.json()
             answer = data.get("response", "").strip()
             latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+            if profiler:
+                if "load_duration" in data and data["load_duration"]:
+                    profiler.record("llm_model_load_ms", round(data["load_duration"] / 1e6, 2))
+                if "eval_count" in data:
+                    profiler.set_metric("generated_tokens", data["eval_count"])
+                if "prompt_eval_count" in data:
+                    profiler.set_metric("prompt_tokens", data["prompt_eval_count"])
+                if "eval_duration" in data and data["eval_duration"]:
+                    profiler.record("llm_eval_ms", round(data["eval_duration"] / 1e6, 2))
+                if "llm_ttft_ms" not in profiler.timings:
+                    ttft = round((data.get("load_duration", 0) + data.get("prompt_eval_duration", 0)) / 1e6, 2)
+                    profiler.record("llm_ttft_ms", ttft)
             return answer, latency_ms
         except httpx.TimeoutException:
             logger.error(f"Ollama generation timed out after {self.timeout}s")
@@ -108,6 +126,7 @@ class OllamaLLMService(BaseLLMService):
         system_prompt: Optional[str] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
+        profiler: Optional[Any] = None,
     ) -> Generator[str, None, None]:
         """Streams generation tokens incrementally from Ollama."""
         temp = temperature if temperature is not None else self.default_temperature
@@ -117,6 +136,7 @@ class OllamaLLMService(BaseLLMService):
             "model": self.model_name,
             "prompt": prompt,
             "stream": True,
+            "keep_alive": getattr(self.settings, "OLLAMA_KEEP_ALIVE", "5m"),
             "options": {
                 "temperature": temp,
                 "num_predict": num_predict,
@@ -129,6 +149,7 @@ class OllamaLLMService(BaseLLMService):
         if system_prompt:
             payload["system"] = system_prompt
 
+        first_token_recorded = False
         try:
             with self._client.stream("POST", f"{self.base_url}/api/generate", json=payload) as response:
                 if response.status_code != 200:
@@ -138,8 +159,19 @@ class OllamaLLMService(BaseLLMService):
                         data = json.loads(line)
                         chunk = data.get("response", "")
                         if chunk:
+                            if not first_token_recorded:
+                                first_token_recorded = True
+                                if profiler:
+                                    profiler.record_first_token()
                             yield chunk
                         if data.get("done", False):
+                            if profiler:
+                                if "load_duration" in data and data["load_duration"]:
+                                    profiler.record("llm_model_load_ms", round(data["load_duration"] / 1e6, 2))
+                                if "eval_count" in data:
+                                    profiler.set_metric("generated_tokens", data["eval_count"])
+                                if "prompt_eval_count" in data:
+                                    profiler.set_metric("prompt_tokens", data["prompt_eval_count"])
                             break
         except httpx.TimeoutException:
             raise LLMTimeoutError("Streaming request timed out")

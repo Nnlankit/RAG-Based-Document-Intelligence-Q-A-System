@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     LLM_REQUEST_TIMEOUT: float = Field(default=120.0, description="Timeout in seconds for LLM calls")
     LLM_MAX_TOKENS: int = Field(default=256, description="Maximum tokens to generate for fast, concise responses")
     LLM_NUM_CTX: int = Field(default=2048, description="Context window size to optimize prompt evaluation latency")
+    OLLAMA_KEEP_ALIVE: str = Field(default="5m", description="Ollama model keep_alive duration (e.g. '5m', '30m')")
+    ENABLE_STREAMING: bool = Field(default=True, description="Enable streaming responses")
+    ENABLE_LATENCY_METRICS: bool = Field(default=True, description="Enable detailed latency metrics in responses")
 
     # Vector Store Strategy
     VECTOR_STORE: Literal["chroma", "pgvector"] = Field(
@@ -59,7 +62,7 @@ class Settings(BaseSettings):
     PROCESSED_DIR: str = Field(default="./data/processed", description="Directory to store processed outputs")
 
     # Retrieval & Grounding
-    TOP_K: int = Field(default=3, description="Final number of retrieved context chunks passed to LLM")
+    TOP_K: int = Field(default=5, description="Final number of retrieved context chunks passed to LLM")
     RETRIEVAL_CANDIDATES: int = Field(default=10, description="Initial candidates retrieved before filtering/reranking")
     SIMILARITY_THRESHOLD: float = Field(default=0.35, description="Cosine relevance similarity cutoff threshold")
     MAX_CONTEXT_CHARS: int = Field(default=3000, description="Maximum characters in formatted context prompt")
