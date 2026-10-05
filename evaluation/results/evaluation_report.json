@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-10-05 13:19:57",
+  "total_test_cases": 5,
+  "supported_cases": 3,
+  "unsupported_negative_cases": 2,
+  "metrics": {
+    "context_recall": 1.0,
+    "context_precision": 1.0,
+    "abstention_accuracy": 1.0,
+    "avg_retrieval_latency_ms": 481.65,
+    "avg_generation_latency_ms": 4128.29,
+    "avg_total_latency_ms": 4610.0
+  },
+  "individual_results": [
+    {
+      "id": "eval_001",
+      "question": "What is the primary objective of Project Titan?",
+      "is_unsupported": false,
+      "context_recalled": true,
+      "context_precision": 1.0,
+      "answer": "Navigating subterranean tunnels and mapping hazard areas without human intervention.",
+      "sources_count": 3,
+      "total_latency_ms": 2664.81
+    },
+    {
+      "id": "eval_002",
+      "question": "What is the battery endurance of the Titan robot?",
+      "is_unsupported": false,
+      "context_recalled": true,
+      "context_precision": 1.0,
+      "answer": "According to SOURCE 1, the dual lithium-sulfur batteries provide 18 hours of continuous autonomous operation.",
+      "sources_count": 3,
+      "total_latency_ms": 3551.81
+    },
+    {
+      "id": "eval_003",
+      "question": "What is the maximum speed of the rocket in Project Apollo?",
+      "is_unsupported": true,
+      "abstained": true,
+      "abstention_correct": true,
+      "answer": "I could not find sufficient information in the provided documents about a \"rocket\" in Project Apollo. The documents only mention Project Titan, which uses four brushless DC motors capable of a maximum speed of 4.5 meters per second on rough gravel.",
+      "total_latency_ms": 5396.22
+    },
+    {
+      "id": "eval_004",
+      "question": "Who was the lead software engineer for the Titan vision system?",
+      "is_unsupported": false,
+      "context_recalled": true,
+      "context_precision": 1.0,
+      "answer": "I could not find sufficient information in the provided documents regarding the specific details of the Titan vision system's development team. However, it is mentioned that Dr. Aris Thorne engineered the visual odometry and stereoscopic vision system.",
+      "sources_count": 3,
+      "total_latency_ms": 6917.22
+    },
+    {
+      "id": "eval_005",
+      "question": "What is the capital city of ancient Atlantis according to the document?",
+      "is_unsupported": true,
+      "abstained": true,
+      "abstention_correct": true,
+      "answer": "I could not find sufficient information in the provided documents regarding the capital city of ancient Atlantis. The documents appear to be related to a project named \"Titan\" and do not mention Atlantis or its capital city.",
+      "total_latency_ms": 4519.92
+    }
+  ]
+}

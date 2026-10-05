@@ -1,0 +1,47 @@
+[
+  {
+    "id": "eval_001",
+    "question": "What is the primary objective of Project Titan?",
+    "document_filename": "project_titan.txt",
+    "document_content": "Project Titan is an autonomous mobile robotics platform designed by Advanced Robotics Labs. Its primary objective is navigating subterranean tunnels and mapping hazard areas without human intervention.",
+    "expected_page": 1,
+    "ground_truth_answer": "The primary objective is navigating subterranean tunnels and mapping hazard areas without human intervention.",
+    "is_unsupported": false
+  },
+  {
+    "id": "eval_002",
+    "question": "What is the battery endurance of the Titan robot?",
+    "document_filename": "project_titan.txt",
+    "document_content": "The platform is equipped with dual lithium-sulfur batteries providing 18 hours of continuous autonomous operation.",
+    "expected_page": 1,
+    "ground_truth_answer": "The battery provides 18 hours of continuous autonomous operation.",
+    "is_unsupported": false
+  },
+  {
+    "id": "eval_003",
+    "question": "What is the maximum speed of the rocket in Project Apollo?",
+    "document_filename": "project_titan.txt",
+    "document_content": "Project Titan uses four brushless DC motors capable of a maximum speed of 4.5 meters per second on rough gravel.",
+    "expected_page": 1,
+    "ground_truth_answer": "I could not find sufficient information in the provided documents.",
+    "is_unsupported": true
+  },
+  {
+    "id": "eval_004",
+    "question": "Who was the lead software engineer for the Titan vision system?",
+    "document_filename": "project_titan.txt",
+    "document_content": "The visual odometry and stereoscopic vision system was engineered by Dr. Aris Thorne.",
+    "expected_page": 1,
+    "ground_truth_answer": "Dr. Aris Thorne was the lead engineer for the vision system.",
+    "is_unsupported": false
+  },
+  {
+    "id": "eval_005",
+    "question": "What is the capital city of ancient Atlantis according to the document?",
+    "document_filename": "project_titan.txt",
+    "document_content": "Titan is manufactured in Zurich, Switzerland and deployed in testing facilities across Bavaria.",
+    "expected_page": 1,
+    "ground_truth_answer": "I could not find sufficient information in the provided documents.",
+    "is_unsupported": true
+  }
+]

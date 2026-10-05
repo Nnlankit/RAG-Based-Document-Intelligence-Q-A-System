@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #E8DCC8;
+    --background-secondary: #F2E9D8;
+    --background-gradient: linear-gradient(135deg, #E8DCC8 0%, #F2E9D8 45%, #DCC9AA 100%);
+    --surface: #F7F0E3;
+    --card: #F7F0E3;
+    --card-foreground: #30261E;
+    --sidebar: #E2D3BB;
+    --sidebar-foreground: #5A4634;
+    --sidebar-active: #CDB795;
+    --sidebar-active-foreground: #30261E;
+    --sidebar-hover: #E9DDC8;
+    --topbar: rgba(247, 240, 227, 0.75);
+    
+    --foreground: #30261E;
+    --foreground-muted: #5A4634;
+    --primary: #5A4634;
+    --primary-foreground: #F7F0E3;
+    --primary-hover: #463526;
+    
+    --secondary: #8B6F52;
+    --secondary-foreground: #5A4634;
+    --secondary-bg: #E1D2B8;
+    --secondary-hover: #D6C4A6;
+    
+    --accent: #B87952;
+    --accent-foreground: #F7F0E3;
+    --accent-hover: #A26844;
+    
+    --muted: #6B5C4D;
+    --muted-foreground: #5A4634;
+    --border: #D4C3A5;
+    --border-secondary: #CDBB9D;
+    --input: #F7F0E3;
+    --ring: #8B6F52;
+    
+    --success: #657A58;
+    --warning: #B38A4A;
+    --destructive: #A65D50;
+    
+    --chat-user-bg: #D8C6A7;
+    --chat-user-text: #30261E;
+    --chat-ai-bg: #F7F0E3;
+    --chat-ai-border: #D4C3A5;
+    
+    --citation-bg: #EEE3D0;
+    --citation-hover: #E5D6BD;
+    --citation-border: #D4C3A5;
+    --citation-icon: #8B6F52;
+    --citation-page: #B87952;
+  }
+
+  .dark {
+    --background: #211B16;
+    --background-secondary: #2B231D;
+    --background-gradient: linear-gradient(135deg, #1C1713 0%, #211B16 45%, #2B231D 100%);
+    --surface: #2B231D;
+    --card: #342A22;
+    --card-foreground: #F4EBDD;
+    --sidebar: #261F1A;
+    --sidebar-foreground: #DCC9AA;
+    --sidebar-active: #44362A;
+    --sidebar-active-foreground: #F4EBDD;
+    --sidebar-hover: #342A22;
+    --topbar: rgba(43, 35, 29, 0.85);
+    
+    --foreground: #F4EBDD;
+    --foreground-muted: #DCC9AA;
+    --primary: #E5D5BA;
+    --primary-foreground: #211B16;
+    --primary-hover: #D4C3A5;
+    
+    --secondary: #CDB795;
+    --secondary-foreground: #E5D5BA;
+    --secondary-bg: #3D3228;
+    --secondary-hover: #4D3E32;
+    
+    --accent: #C58A63;
+    --accent-foreground: #211B16;
+    --accent-hover: #B47953;
+    
+    --muted: #B9A995;
+    --muted-foreground: #DCC9AA;
+    --border: #554638;
+    --border-secondary: #4A3C2F;
+    --input: #2B231D;
+    --ring: #CDB795;
+    
+    --success: #829A73;
+    --warning: #D4AA64;
+    --destructive: #C57466;
+    
+    --chat-user-bg: #44362A;
+    --chat-user-text: #F4EBDD;
+    --chat-ai-bg: #2B231D;
+    --chat-ai-border: #554638;
+    
+    --citation-bg: #382D24;
+    --citation-hover: #44362A;
+    --citation-border: #554638;
+    --citation-icon: #CDB795;
+    --citation-page: #C58A63;
+  }
+
+  * {
+    border-color: #D4C3A5;
+  }
+
+  .dark * {
+    border-color: #554638;
+  }
+
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background: linear-gradient(135deg, #E8DCC8 0%, #F2E9D8 45%, #DCC9AA 100%);
+    background-attachment: fixed;
+    color: #30261E;
+    min-height: 100vh;
+  }
+
+  .dark body {
+    background: linear-gradient(135deg, #1C1713 0%, #211B16 45%, #2B231D 100%);
+    background-attachment: fixed;
+    color: #F4EBDD;
+  }
+}
+
+/* Custom modern scrollbars in warm sand */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(169, 159, 144, 0.45);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(126, 116, 101, 0.75);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(95, 86, 71, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(169, 159, 144, 0.75);
+}
+
+/* Hero gradient utility */
+.bg-hero-gradient {
+  background: linear-gradient(135deg, #F7F0E3 0%, #F2E9D8 50%, #EDE1CD 100%);
+}
+
+.dark .bg-hero-gradient {
+  background: linear-gradient(135deg, #342A22 0%, #3A2E25 50%, #2B231D 100%);
+}
+
+/* Prose markdown adjustments for dark/light with sand theme */
+.prose {
+  max-width: none;
+  --tw-prose-body: #30261E;
+  --tw-prose-headings: #211B16;
+  --tw-prose-lead: #5A4634;
+  --tw-prose-links: #8B6F52;
+  --tw-prose-bold: #211B16;
+  --tw-prose-counters: #5A4634;
+  --tw-prose-bullets: #8B6F52;
+  --tw-prose-hr: #D4C3A5;
+  --tw-prose-quotes: #30261E;
+  --tw-prose-quote-borders: #B87952;
+  --tw-prose-captions: #5A4634;
+  --tw-prose-code: #5A4634;
+  --tw-prose-pre-code: #F4EBDD;
+  --tw-prose-pre-bg: #2B231D;
+  --tw-prose-th-borders: #D4C3A5;
+  --tw-prose-td-borders: #D4C3A5;
+  color: #30261E;
+}
+
+.prose p, .prose li, .prose span {
+  color: #30261E;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: #211B16;
+  font-weight: 700;
+}
+
+.prose strong {
+  color: #211B16;
+  font-weight: 600;
+}
+
+.prose pre {
+  background-color: #2B231D;
+  border: 1px solid #554638;
+  border-radius: 0.5rem;
+  padding: 0.85rem;
+  overflow-x: auto;
+  color: #F4EBDD;
+}
+
+.prose code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  background-color: rgba(212, 195, 165, 0.4);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+  color: #5A4634;
+}
+
+.dark .prose {
+  --tw-prose-body: #F4EBDD;
+  --tw-prose-headings: #FAF5EE;
+  --tw-prose-lead: #DCC9AA;
+  --tw-prose-links: #D4A359;
+  --tw-prose-bold: #FAF5EE;
+  --tw-prose-counters: #DCC9AA;
+  --tw-prose-bullets: #CDB795;
+  --tw-prose-hr: #554638;
+  --tw-prose-quotes: #F4EBDD;
+  --tw-prose-quote-borders: #C58A63;
+  --tw-prose-captions: #DCC9AA;
+  --tw-prose-code: #E5D5BA;
+  --tw-prose-pre-code: #F4EBDD;
+  --tw-prose-pre-bg: #1C1713;
+  --tw-prose-th-borders: #554638;
+  --tw-prose-td-borders: #554638;
+  color: #F4EBDD;
+}
+
+.dark .prose p, .dark .prose li, .dark .prose span {
+  color: #F4EBDD;
+}
+
+.dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4 {
+  color: #FAF5EE;
+}
+
+.dark .prose strong {
+  color: #FAF5EE;
+}
+
+.dark .prose code {
+  background-color: rgba(85, 70, 56, 0.5);
+  color: #E5D5BA;
+}

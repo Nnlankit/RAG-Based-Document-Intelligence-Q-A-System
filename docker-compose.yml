@@ -1,0 +1,88 @@
+version: "3.8"
+
+services:
+  # 1. FastAPI Backend API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag_document_ai_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - VECTOR_STORE=pgvector
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/document_ai
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - LLM_MODEL=llama3.2
+      - EMBEDDING_MODEL=nomic-embed-text
+      - CHUNK_SIZE=1000
+      - CHUNK_OVERLAP=150
+      - TOP_K=5
+      - RETRIEVAL_CANDIDATES=20
+      - SIMILARITY_THRESHOLD=0.70
+      - ENABLE_QUERY_REWRITING=true
+      - ENABLE_HYBRID_SEARCH=true
+      - ENABLE_RERANKER=true
+      - LOG_LEVEL=INFO
+    volumes:
+      - uploads_data:/app/data/uploads
+      - processed_data:/app/data/processed
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+
+  # 2. Streamlit Web Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag_document_ai_frontend
+    restart: unless-stopped
+    command: ["streamlit", "run", "frontend/streamlit_app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE_URL=http://api:8000/api/v1
+    depends_on:
+      - api
+
+  # 3. PostgreSQL with pgvector extension
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: rag_document_ai_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=document_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d document_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 4. Ollama Local LLM & Embedding Server
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag_document_ai_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  postgres_data:
+  ollama_data:
+  uploads_data:
+  processed_data:
