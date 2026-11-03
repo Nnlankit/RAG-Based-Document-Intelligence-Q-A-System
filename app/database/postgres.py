@@ -23,6 +23,7 @@ else:
     engine = create_engine(
         settings.DATABASE_URL,
         pool_pre_ping=True,
+        pool_recycle=300,
         pool_size=10,
         max_overflow=20,
         echo=settings.DEBUG,
@@ -34,9 +35,20 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def init_db() -> None:
     """Initializes the database schema and seeds a default local user if none exists."""
     try:
+        # Use direct unpooled connection for DDL schema creation if available (Neon best practice)
+        ddl_engine = engine
+        if settings.DATABASE_URL_UNPOOLED:
+            ddl_engine = create_engine(
+                settings.DATABASE_URL_UNPOOLED,
+                echo=settings.DEBUG,
+            )
+
         # Create all tables
-        Base.metadata.create_all(bind=engine)
+        Base.metadata.create_all(bind=ddl_engine)
         logger.info("Database tables verified/created successfully.")
+
+        if ddl_engine is not engine:
+            ddl_engine.dispose()
 
         # Ensure a default user exists for local single-user or unauthenticated MVP mode
         with SessionLocal() as db:

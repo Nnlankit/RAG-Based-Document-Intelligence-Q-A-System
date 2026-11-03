@@ -11,7 +11,6 @@ import pytest
 from app.retrieval.retriever import RetrievedCandidate, DocumentRetriever
 from app.retrieval.hybrid_search import BM25KeywordIndex, HybridSearchEngine
 from app.retrieval.reranker import ScoreBlendedReranker
-from app.vectorstore.chroma import ChromaVectorStore
 from app.embeddings.embedding_service import get_embedding_service
 
 

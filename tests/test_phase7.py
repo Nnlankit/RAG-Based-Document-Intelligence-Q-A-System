@@ -3,14 +3,14 @@
 Verifies:
 - PostgreSQL / Relational persistent conversations & message tracking
 - RetrievalLogRepository audit trail recording
-- Vector store factory dynamic backend resolution (ChromaDB vs PgVector)
+- Vector store factory backend resolution (Neon PgVector)
 """
 
 import pytest
 from app.database.postgres import SessionLocal, init_db
 from app.database.repositories import ConversationRepository, RetrievalLogRepository
 from app.database.models import User, Conversation, Message, RetrievalLog
-from app.vectorstore import get_vector_store, ChromaVectorStore, PgVectorStore
+from app.vectorstore import get_vector_store, PgVectorStore
 from app.core.config import get_settings
 
 
@@ -85,14 +85,8 @@ def test_retrieval_log_persistence():
         assert len(log.retrieved_chunk_ids) == 2
 
 
-def test_vector_store_factory_switching(monkeypatch):
-    """Verify get_vector_store respects VECTOR_STORE configuration."""
-    settings = get_settings()
-
-    monkeypatch.setattr(settings, "VECTOR_STORE", "chroma")
-    vs_chroma = get_vector_store()
-    assert isinstance(vs_chroma, ChromaVectorStore)
-
-    monkeypatch.setattr(settings, "VECTOR_STORE", "pgvector")
-    vs_pg = get_vector_store()
-    assert isinstance(vs_pg, PgVectorStore)
+def test_vector_store_factory(monkeypatch):
+    """Verify get_vector_store resolves to PgVectorStore."""
+    vs = get_vector_store()
+    assert isinstance(vs, PgVectorStore)
+    assert vs.check_health() is True

@@ -1,21 +1,16 @@
-"""Vector store abstraction package."""
+"""Vector store abstraction package for Neon PostgreSQL."""
+
 from app.vectorstore.base import BaseVectorStore, VectorSearchResult
-from app.vectorstore.chroma import ChromaVectorStore
 from app.vectorstore.pgvector import PgVectorStore
-from app.core.config import get_settings
 
 __all__ = [
     "BaseVectorStore",
     "VectorSearchResult",
-    "ChromaVectorStore",
     "PgVectorStore",
     "get_vector_store",
 ]
 
 
 def get_vector_store() -> BaseVectorStore:
-    """Factory function returning the configured vector store instance."""
-    settings = get_settings()
-    if settings.VECTOR_STORE == "pgvector":
-        return PgVectorStore()
-    return ChromaVectorStore()
+    """Factory function returning the active Neon PgVector store instance."""
+    return PgVectorStore()

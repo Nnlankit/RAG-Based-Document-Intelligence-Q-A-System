@@ -137,6 +137,8 @@ class DocumentIntelligenceService:
             "document_id_b": document_id_b,
             "filename_b": doc_b.filename,
             "comparison": comparison,
+            "common_themes": [],
+            "key_differences": [],
             "latency_ms": latency,
         }
 

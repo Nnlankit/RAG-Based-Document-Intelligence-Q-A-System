@@ -2,14 +2,16 @@
 
 Verifies:
 - OllamaEmbeddingService generation (nomic-embed-text)
-- ChromaDB indexing with embeddings and similarity search
+- PgVector indexing with embeddings and similarity search
 - OllamaLLMService text generation (llama3.2)
 """
 
 import pytest
+from app.database.postgres import SessionLocal
+from app.database.models import Document
 from app.embeddings.embedding_service import OllamaEmbeddingService
 from app.generation.llm import OllamaLLMService
-from app.vectorstore.chroma import ChromaVectorStore
+from app.vectorstore import get_vector_store
 
 
 def test_ollama_embedding_service():
@@ -25,46 +27,68 @@ def test_ollama_embedding_service():
     assert len(doc_vectors[1]) == 768
 
 
-def test_chroma_indexing_and_search(tmp_path):
-    """Verify ChromaDB stores and retrieves embeddings accurately."""
+def test_pgvector_indexing_and_search(tmp_path):
+    """Verify PgVector stores and retrieves embeddings accurately."""
     embedding_service = OllamaEmbeddingService()
-    vs = ChromaVectorStore()
+    vs = get_vector_store()
+    doc_id = "doc_test_100"
 
-    chunks = [
-        {
-            "chunk_id": "test_chunk_001",
-            "document_id": "doc_test_100",
-            "chunk_index": 0,
-            "content": "Deep learning uses neural networks with many layers to model complex representations.",
-            "metadata": {"filename": "ai_book.pdf", "page_number": 5, "user_id": "test_user"},
-        },
-        {
-            "chunk_id": "test_chunk_002",
-            "document_id": "doc_test_100",
-            "chunk_index": 1,
-            "content": "Photosynthesis is the biological process by which green plants convert light energy into chemical energy.",
-            "metadata": {"filename": "ai_book.pdf", "page_number": 6, "user_id": "test_user"},
-        }
-    ]
+    with SessionLocal() as db:
+        if not db.query(Document).filter(Document.id == doc_id).first():
+            db.add(Document(
+                id=doc_id,
+                user_id="default_user",
+                filename="ai_book.pdf",
+                original_filename="ai_book.pdf",
+                mime_type="application/pdf",
+                file_size=1024,
+                checksum=f"chk_{doc_id}",
+                storage_path=f"data/uploads/{doc_id}.pdf",
+                status="completed",
+            ))
+            db.commit()
 
-    contents = [c["content"] for c in chunks]
-    embeddings = embedding_service.embed_documents(contents)
+    try:
+        chunks = [
+            {
+                "chunk_id": "test_chunk_001",
+                "document_id": doc_id,
+                "chunk_index": 0,
+                "content": "Deep learning uses neural networks with many layers to model complex representations.",
+                "metadata": {"filename": "ai_book.pdf", "page_number": 5, "user_id": "test_user"},
+            },
+            {
+                "chunk_id": "test_chunk_002",
+                "document_id": doc_id,
+                "chunk_index": 1,
+                "content": "Photosynthesis is the biological process by which green plants convert light energy into chemical energy.",
+                "metadata": {"filename": "ai_book.pdf", "page_number": 6, "user_id": "test_user"},
+            }
+        ]
 
-    added_ids = vs.add_chunks(chunks, embeddings)
-    assert len(added_ids) == 2
+        contents = [c["content"] for c in chunks]
+        embeddings = embedding_service.embed_documents(contents)
 
-    # Query about neural networks
-    query_emb = embedding_service.embed_query("How do neural networks work in deep learning?")
-    results = vs.search_by_vector(query_emb, k=2)
+        added_ids = vs.add_chunks(chunks, embeddings)
+        assert len(added_ids) == 2
 
-    assert len(results) >= 1
-    # First result should be the deep learning chunk
-    assert results[0].chunk_id == "test_chunk_001"
-    assert results[0].score > 0.60
-    assert results[0].metadata["page_number"] == 5
+        # Query about neural networks
+        query_emb = embedding_service.embed_query("How do neural networks work in deep learning?")
+        results = vs.search_by_vector(query_emb, k=2)
 
-    # Cleanup
-    vs.delete_document("doc_test_100")
+        assert len(results) >= 1
+        # First result should be the deep learning chunk
+        assert results[0].chunk_id == "test_chunk_001"
+        assert results[0].score > 0.60
+        assert results[0].metadata["page_number"] == 5
+    finally:
+        # Cleanup
+        vs.delete_document(doc_id)
+        with SessionLocal() as db:
+            doc = db.query(Document).filter(Document.id == doc_id).first()
+            if doc:
+                db.delete(doc)
+                db.commit()
 
 
 def test_ollama_llm_generation():

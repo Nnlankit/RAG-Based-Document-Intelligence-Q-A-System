@@ -116,7 +116,7 @@ export const ChatPage: React.FC = () => {
         {
           question: text,
           conversation_id: activeConversationId,
-          document_ids: scopeDocumentIds.length > 0 ? scopeDocumentIds : null,
+          document_ids: scopeDocumentIds.length > 0 ? scopeDocumentIds : undefined,
           similarity_threshold: similarityThreshold,
           top_k: topK,
         },

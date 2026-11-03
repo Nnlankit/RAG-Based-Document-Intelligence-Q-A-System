@@ -56,7 +56,6 @@ def setup_logging(log_level: str = "INFO", json_format: bool = False) -> logging
 
     # Silence noisy 3rd-party loggers
     logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
-    logging.getLogger("chromadb").setLevel(logging.WARNING)
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("httpcore").setLevel(logging.WARNING)
 

@@ -3,8 +3,10 @@ export interface SourceAttribution {
   filename: string;
   page_number?: number | null;
   chunk_id: string;
+  chunk_index?: number | null;
   score: number;
-  snippet: string;
+  snippet?: string;
+  content_snippet?: string;
 }
 
 export interface ChatMessage {

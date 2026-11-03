@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-05 15:17:36",
+  "timestamp": "2026-11-03 10:00:04",
   "total_test_cases": 5,
   "supported_cases": 3,
   "unsupported_negative_cases": 2,
@@ -7,9 +7,9 @@
     "context_recall": 1.0,
     "context_precision": 1.0,
     "abstention_accuracy": 1.0,
-    "avg_retrieval_latency_ms": 468.54,
-    "avg_generation_latency_ms": 4118.94,
-    "avg_total_latency_ms": 4587.69
+    "avg_retrieval_latency_ms": 541.54,
+    "avg_generation_latency_ms": 2946.27,
+    "avg_total_latency_ms": 3488.0
   },
   "individual_results": [
     {
@@ -20,7 +20,7 @@
       "context_precision": 1.0,
       "answer": "Navigating subterranean tunnels and mapping hazard areas without human intervention.",
       "sources_count": 3,
-      "total_latency_ms": 2659.51
+      "total_latency_ms": 4916.49
     },
     {
       "id": "eval_002",
@@ -28,9 +28,9 @@
       "is_unsupported": false,
       "context_recalled": true,
       "context_precision": 1.0,
-      "answer": "According to SOURCE 1, the dual lithium-sulfur batteries provide 18 hours of continuous autonomous operation.",
+      "answer": "18 hours.",
       "sources_count": 3,
-      "total_latency_ms": 3279.47
+      "total_latency_ms": 2309.71
     },
     {
       "id": "eval_003",
@@ -38,8 +38,8 @@
       "is_unsupported": true,
       "abstained": true,
       "abstention_correct": true,
-      "answer": "I could not find sufficient information in the provided documents about a \"rocket\" in Project Apollo. The documents only mention Project Titan, which uses four brushless DC motors capable of a maximum speed of 4.5 meters per second on rough gravel.",
-      "total_latency_ms": 5501.19
+      "answer": "I could not find sufficient information in the provided documents about a \"rocket\" in Project Apollo. The documents only mention Project Titan, its capabilities, and design.",
+      "total_latency_ms": 4060.98
     },
     {
       "id": "eval_004",
@@ -47,9 +47,9 @@
       "is_unsupported": false,
       "context_recalled": true,
       "context_precision": 1.0,
-      "answer": "I could not find sufficient information in the provided documents regarding the specific details of the Titan vision system's development team. However, it is mentioned that Dr. Aris Thorne engineered the visual odometry and stereoscopic vision system.",
+      "answer": "Dr. Aris Thorne engineered the visual odometry and stereoscopic vision system.",
       "sources_count": 3,
-      "total_latency_ms": 6937.4
+      "total_latency_ms": 2974.21
     },
     {
       "id": "eval_005",
@@ -57,8 +57,8 @@
       "is_unsupported": true,
       "abstained": true,
       "abstention_correct": true,
-      "answer": "I could not find sufficient information in the provided documents regarding the capital city of ancient Atlantis. The documents appear to be related to a project named \"Titan\" and do not mention Atlantis or its capital city.",
-      "total_latency_ms": 4560.89
+      "answer": "I could not find sufficient information in the provided documents regarding the capital city of ancient Atlantis.",
+      "total_latency_ms": 3178.59
     }
   ]
 }

@@ -18,7 +18,9 @@ from app.embeddings.embedding_service import get_embedding_service
 from app.generation.prompts import ABSTENTION_MESSAGE
 from app.rag.pipeline import RAGPipeline
 from app.retrieval.retriever import DocumentRetriever
-from app.vectorstore.chroma import ChromaVectorStore
+from app.vectorstore import get_vector_store
+from app.database.postgres import SessionLocal
+from app.database.models import Document
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("document_intelligence.evaluation")
@@ -37,9 +39,26 @@ def run_evaluation(
         test_cases = json.load(f)
 
     # 1. Initialize clean vector store and index benchmark corpus
-    vs = ChromaVectorStore()
+    vs = get_vector_store()
     emb = get_embedding_service()
     doc_id = "eval_corpus_doc"
+
+    # Ensure parent document exists in database for relational FK integrity
+    with SessionLocal() as db:
+        if not db.query(Document).filter(Document.id == doc_id).first():
+            eval_doc = Document(
+                id=doc_id,
+                user_id="default_user",
+                filename="benchmark_eval_corpus.txt",
+                original_filename="benchmark_eval_corpus.txt",
+                mime_type="text/plain",
+                file_size=2048,
+                checksum=f"chk_{doc_id}",
+                storage_path=f"data/uploads/{doc_id}.txt",
+                status="completed",
+            )
+            db.add(eval_doc)
+            db.commit()
 
     # Purge old eval data
     vs.delete_document(doc_id)
@@ -172,6 +191,15 @@ def run_evaluation(
     logger.info(f"Evaluation report written to {report_file}")
     logger.info(f"Summary Metrics: Recall={avg_recall:.2%}, Precision={avg_precision:.2%}, Abstention Accuracy={abstention_accuracy:.2%}")
     logger.info(f"Avg Latency: Total={avg_total_ms}ms (Retrieval={avg_retrieval_ms}ms, Generation={avg_generation_ms}ms)")
+
+    # Cleanup evaluation corpus
+    vs.delete_document(doc_id)
+    with SessionLocal() as db:
+        doc = db.query(Document).filter(Document.id == doc_id).first()
+        if doc:
+            db.delete(doc)
+            db.commit()
+
     return report
 
 

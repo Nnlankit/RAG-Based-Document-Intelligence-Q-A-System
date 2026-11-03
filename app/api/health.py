@@ -15,8 +15,8 @@ logger = logging.getLogger("document_intelligence.api.health")
 @router.get("/health", response_model=HealthCheckResponse, summary="System Health Check")
 async def health_check() -> HealthCheckResponse:
     """Verifies health and connectivity of API dependencies:
-    - Relational Database (PostgreSQL / SQLite)
-    - Vector Store (ChromaDB / PgVector)
+    - Relational Database (Neon PostgreSQL)
+    - Vector Store (Neon PgVector)
     - Ollama LLM and Embedding service connectivity and model availability
     """
     settings = get_settings()

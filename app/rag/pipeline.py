@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 import logging
+import re
 import time
 from typing import Any, Dict, List, Optional
 
@@ -16,6 +17,16 @@ from app.retrieval.retriever import DocumentRetriever, RetrievedCandidate
 from app.schemas.chat import SourceAttribution
 
 logger = logging.getLogger("document_intelligence.rag.pipeline")
+
+
+def strip_trailing_references(text: str) -> str:
+    """Removes any trailing references or sources section inadvertently emitted by the LLM."""
+    cleaned = re.sub(
+        r"(?i)\n*(?:(?:###?\s*)?(?:sources?|references?|citations?|source\s+attribution):?[\s\S]*)$",
+        "",
+        text,
+    ).strip()
+    return cleaned or text
 
 
 @dataclass
@@ -139,11 +150,13 @@ class RAGPipeline:
         metrics = profiler.finalize()
         total_latency_ms = metrics.get("total_latency_ms", 0.0)
 
+        clean_answer = strip_trailing_references(answer)
+
         # Check if the LLM self-abstained based on system prompt rules
         is_abstention = (
-            ABSTENTION_MESSAGE.lower() in answer.lower()
-            or "insufficient information" in answer.lower()
-            or "could not find sufficient" in answer.lower()
+            ABSTENTION_MESSAGE.lower() in clean_answer.lower()
+            or "insufficient information" in clean_answer.lower()
+            or "could not find sufficient" in clean_answer.lower()
         )
 
         chunk_ids = [c.chunk_id for c in candidates]
@@ -152,7 +165,7 @@ class RAGPipeline:
         )
 
         return RAGExecutionResult(
-            answer=answer,
+            answer=clean_answer,
             sources=formatted_context.sources,
             retrieval_latency_ms=retrieval_latency_ms,
             generation_latency_ms=generation_latency_ms,
@@ -209,13 +222,21 @@ class RAGPipeline:
             profiler.record("llm_generation_ms", 0.0)
             profiler.record("llm_ttft_ms", 0.0)
             metrics = profiler.finalize()
+            total_lat = metrics.get("total_latency_ms", 0.0)
             yield {
                 "type": "abstention",
                 "content": ABSTENTION_MESSAGE,
                 "sources": [],
                 "retrieval_latency_ms": retrieval_latency_ms,
                 "generation_latency_ms": 0.0,
-                "total_latency_ms": metrics.get("total_latency_ms", 0.0),
+                "total_latency_ms": total_lat,
+                "metadata": metrics,
+            }
+            yield {
+                "type": "done",
+                "full_answer": ABSTENTION_MESSAGE,
+                "generation_latency_ms": 0.0,
+                "total_latency_ms": total_lat,
                 "metadata": metrics,
             }
             return
@@ -261,7 +282,7 @@ class RAGPipeline:
 
         yield {
             "type": "done",
-            "full_answer": "".join(accumulated_text),
+            "full_answer": strip_trailing_references("".join(accumulated_text)),
             "generation_latency_ms": generation_latency_ms,
             "total_latency_ms": total_latency_ms,
             "metadata": metrics,

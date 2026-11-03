@@ -14,13 +14,20 @@ class SourceAttribution(BaseModel):
     chunk_index: Optional[int] = Field(None, description="Deterministic chunk index")
     score: float = Field(..., description="Cosine relevance similarity score")
     content_snippet: Optional[str] = Field(None, description="Short snippet of retrieved text")
+    snippet: Optional[str] = Field(None, description="Short snippet alias for frontend compatibility")
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.snippet is None and self.content_snippet is not None:
+            self.snippet = self.content_snippet
+        elif self.content_snippet is None and self.snippet is not None:
+            self.content_snippet = self.snippet
 
 
 class ChatRequest(BaseModel):
     """Chat request payload."""
     question: str = Field(..., min_length=1, description="User question or query")
     conversation_id: Optional[str] = Field(None, description="Existing conversation ID for context, or null to start new")
-    document_ids: List[str] = Field(default_factory=list, description="Optional document IDs to restrict retrieval to")
+    document_ids: Optional[List[str]] = Field(default=None, description="Optional document IDs to restrict retrieval to")
     similarity_threshold: Optional[float] = Field(None, description="Optional override for similarity cutoff")
     top_k: Optional[int] = Field(None, description="Optional override for number of retrieved chunks")
 

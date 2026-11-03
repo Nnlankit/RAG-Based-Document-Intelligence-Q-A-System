@@ -148,8 +148,9 @@ async def upload_document(
         chunk_dicts = [c.to_dict() for c in processed_chunks]
         vector_store.add_chunks(chunk_dicts, embeddings)
 
-        # 11. Persist chunk records in relational database
-        DocumentRepository.add_chunks(db, document_id, chunk_dicts, embeddings)
+        # 11. Persist chunk records in relational database (if not already handled by unified pgvector store)
+        if settings.VECTOR_STORE != "pgvector":
+            DocumentRepository.add_chunks(db, document_id, chunk_dicts, embeddings)
 
         # 12. Update document status to completed
         DocumentRepository.update_status(db, document_id, status="completed")

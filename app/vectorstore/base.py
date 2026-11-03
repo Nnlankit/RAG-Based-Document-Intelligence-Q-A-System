@@ -1,6 +1,6 @@
 """Base vector store interface definition.
 
-Defines the contract for vector database backends (ChromaDB, PgVector).
+Defines the contract for vector database backends (PgVector on Neon PostgreSQL).
 """
 
 from abc import ABC, abstractmethod

@@ -1,5 +1,6 @@
 """Analytics and operational metrics endpoints."""
 
+from datetime import datetime, timezone
 import logging
 from typing import Any, Dict, List
 from fastapi import APIRouter, Depends
@@ -70,7 +71,8 @@ def get_analytics_stats(
 
     # 6. Top documents by chunk count
     top_docs = []
-    for d in sorted(docs, key=lambda x: x.created_at, reverse=True)[:5]:
+    min_dt = datetime.min.replace(tzinfo=timezone.utc)
+    for d in sorted(docs, key=lambda x: x.created_at if x.created_at is not None else min_dt, reverse=True)[:5]:
         c_count = db.query(DocumentChunk).filter(DocumentChunk.document_id == d.id).count()
         top_docs.append({
             "id": d.id,

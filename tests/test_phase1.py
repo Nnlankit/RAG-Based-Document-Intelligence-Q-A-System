@@ -3,7 +3,7 @@
 Verifies:
 - Settings load from environment
 - Database initialization and connectivity
-- ChromaDB vector store initialization
+- Vector store initialization
 - Ollama connectivity and model detection
 - FastAPI health check endpoint via TestClient
 """
@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 from app.core.config import get_settings
 from app.database.postgres import init_db, check_db_health, SessionLocal
 from app.database.models import User
-from app.vectorstore.chroma import ChromaVectorStore
+from app.vectorstore import get_vector_store
 from app.main import app
 
 
@@ -23,7 +23,7 @@ def test_settings_loaded():
     assert settings.APP_NAME == "RAG-Based Document Intelligence & Q&A System"
     assert settings.LLM_MODEL == "llama3.2"
     assert settings.EMBEDDING_MODEL == "nomic-embed-text"
-    assert settings.VECTOR_STORE in ["chroma", "pgvector"]
+    assert settings.VECTOR_STORE == "pgvector"
     assert settings.CHUNK_SIZE == 1000
     assert settings.CHUNK_OVERLAP == 150
     assert settings.TOP_K == 5
@@ -40,9 +40,9 @@ def test_database_initialization():
         assert user.email == "admin@example.com"
 
 
-def test_chroma_vector_store():
-    """Verify ChromaDB initialization and basic health."""
-    vs = ChromaVectorStore()
+def test_vector_store():
+    """Verify Neon pgvector initialization and basic health."""
+    vs = get_vector_store()
     assert vs.check_health() is True
     # Count should be an int >= 0
     assert isinstance(vs.count(), int)

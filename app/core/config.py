@@ -5,7 +5,7 @@ Loads strongly typed configuration from environment variables and .env files.
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, computed_field
 
@@ -38,20 +38,27 @@ class Settings(BaseSettings):
     ENABLE_LATENCY_METRICS: bool = Field(default=True, description="Enable detailed latency metrics in responses")
 
     # Vector Store Strategy
-    VECTOR_STORE: Literal["chroma", "pgvector"] = Field(
-        default="chroma",
-        description="Vector store backend: 'chroma' (MVP) or 'pgvector' (production)"
+    VECTOR_STORE: str = Field(
+        default="pgvector",
+        description="Vector store backend: 'pgvector' on Neon PostgreSQL"
     )
-    CHROMA_PERSIST_DIRECTORY: str = Field(default="./data/chroma", description="ChromaDB persistence directory")
     COLLECTION_NAME: str = Field(
         default="documents_v1_nomic_embed_text",
-        description="Vector collection name including embedding model/version identifier"
+        description="Vector collection identifier"
     )
 
     # Relational Database
     DATABASE_URL: str = Field(
-        default="sqlite:///./data/document_ai.db",
-        description="Database connection URL (PostgreSQL or SQLite fallback for local development)"
+        default="",
+        description="Database connection URL for Neon PostgreSQL"
+    )
+    DATABASE_URL_UNPOOLED: Optional[str] = Field(
+        default=None,
+        description="Direct unpooled connection URL for DDL/schema initialization in Neon"
+    )
+    NEON_BRANCH: Optional[str] = Field(
+        default=None,
+        description="Active Neon branch name"
     )
 
     # Ingestion & Chunking
@@ -89,7 +96,7 @@ class Settings(BaseSettings):
 
     def ensure_directories(self) -> None:
         """Ensures all necessary local runtime directories exist."""
-        for path_str in [self.UPLOAD_DIR, self.PROCESSED_DIR, self.CHROMA_PERSIST_DIRECTORY]:
+        for path_str in [self.UPLOAD_DIR, self.PROCESSED_DIR]:
             path = Path(path_str)
             path.mkdir(parents=True, exist_ok=True)
 

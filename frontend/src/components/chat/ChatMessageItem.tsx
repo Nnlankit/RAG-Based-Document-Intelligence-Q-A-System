@@ -7,13 +7,11 @@ import {
   Copy,
   Check,
   Clock,
-  Layers,
   AlertTriangle,
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
 import { ChatMessage } from '../../types/chat';
-import { SourceCard } from './SourceCard';
 
 interface ChatMessageItemProps {
   message: ChatMessage;
@@ -22,7 +20,6 @@ interface ChatMessageItemProps {
 export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => {
   const isUser = message.role === 'user';
   const [copied, setCopied] = useState(false);
-  const [sourcesOpen, setSourcesOpen] = useState(true);
   const [showPerf, setShowPerf] = useState(false);
 
   const handleCopyText = () => {
@@ -209,32 +206,6 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
                     </div>
                   )}
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Grounded Source Attributions */}
-        {message.sources && message.sources.length > 0 && (
-          <div className="pt-2 border-t border-[#D4C3A5]/40 dark:border-[#4B3C2F]/40">
-            <div
-              onClick={() => setSourcesOpen(!sourcesOpen)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-[#5A4634] dark:text-[#DCC9AA] cursor-pointer select-none mb-2"
-            >
-              <Layers className="w-3.5 h-3.5 text-[#8B6F52]" />
-              <span>Grounded Sources ({message.sources.length})</span>
-              {sourcesOpen ? (
-                <ChevronUp className="w-3.5 h-3.5 text-[#5A4634] dark:text-[#DCC9AA]" />
-              ) : (
-                <ChevronDown className="w-3.5 h-3.5 text-[#5A4634] dark:text-[#DCC9AA]" />
-              )}
-            </div>
-
-            {sourcesOpen && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {message.sources.map((source, idx) => (
-                  <SourceCard key={`${source.chunk_id}-${idx}`} source={source} index={idx} />
-                ))}
               </div>
             )}
           </div>

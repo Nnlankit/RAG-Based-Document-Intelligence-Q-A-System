@@ -301,9 +301,9 @@ class RetrievalLogRepository:
         """Aggregates metrics for the analytics dashboard."""
         logs = db.query(RetrievalLog).all()
         total_queries = len(logs)
-        avg_retrieval_ms = round(sum(l.retrieval_latency_ms for l in logs) / total_queries, 2) if total_queries else 0.0
-        avg_generation_ms = round(sum(l.generation_latency_ms for l in logs) / total_queries, 2) if total_queries else 0.0
-        avg_total_ms = round(sum(l.total_latency_ms for l in logs) / total_queries, 2) if total_queries else 0.0
+        avg_retrieval_ms = round(sum((l.retrieval_latency_ms or 0.0) for l in logs) / total_queries, 2) if total_queries else 0.0
+        avg_generation_ms = round(sum((l.generation_latency_ms or 0.0) for l in logs) / total_queries, 2) if total_queries else 0.0
+        avg_total_ms = round(sum((l.total_latency_ms or 0.0) for l in logs) / total_queries, 2) if total_queries else 0.0
 
         # Success rate (queries that retrieved at least one chunk)
         successful_queries = sum(1 for l in logs if l.retrieved_chunk_ids and len(l.retrieved_chunk_ids) > 0)

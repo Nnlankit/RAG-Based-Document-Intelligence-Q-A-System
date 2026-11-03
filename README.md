@@ -6,8 +6,8 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![LangChain](https://img.shields.io/badge/LangChain-0.2+-1C3C3C.svg)](https://langchain.com)
 [![Ollama](https://img.shields.io/badge/Ollama-Local_GenAI-black.svg?logo=ollama)](https://ollama.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.38+-FF4B4B.svg?logo=streamlit&logoColor=white)](https://streamlit.io)
-[![ChromaDB](https://img.shields.io/badge/VectorStore-ChromaDB%20%7C%20PgVector-orange.svg)](https://trychroma.com)
+[![React](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
+[![Neon](https://img.shields.io/badge/Database-Neon%20PostgreSQL%20%2B%20pgvector-00E599.svg?logo=postgresql&logoColor=white)](https://neon.tech)
 
 A production-grade, modular, and privacy-first Document Intelligence & Question-Answering system designed to run entirely locally. The platform parses multi-format documents (PDF, DOCX, TXT, MD), extracts clean textual sections while preserving page boundaries, indexes semantic vector embeddings locally with Ollama (`nomic-embed-text`), supports hybrid dense-sparse retrieval with BM25 and Reciprocal Rank Fusion, performs secondary reranking, and synthesizes verifiable, grounded answers using `Llama 3.2` with source citations and explicit abstention.
 
@@ -66,10 +66,9 @@ A production-grade, modular, and privacy-first Document Intelligence & Question-
                                   +---------------------------------+
                                   |      Persistent Storage         |
                                   |                                 |
-                                  | - Relational: PostgreSQL /      |
-                                  |   SQLite (Docs, Chunks, Logs)   |
-                                  | - Vectors: ChromaDB (MVP) /     |
-                                  |   pgvector (Production)         |
+                                  | - Storage: Neon PostgreSQL       |
+                                  |   (Docs, Chunks, Messages, Logs)|
+                                  | - Vectors: Neon pgvector        |
                                   +---------------------------------+
 ```
 
@@ -81,7 +80,7 @@ A production-grade, modular, and privacy-first Document Intelligence & Question-
 - **Conservative Text Normalization**: Cleans control characters, hyphenations across line-breaks, and excessive whitespace while preserving code blocks, mathematical symbols, punctuation, and technical terms.
 - **Deterministic Metadata-Tagged Chunking**: Uses `RecursiveCharacterTextSplitter` configured for 1000-character windows and 150-character overlap. Each chunk carries a deterministic identifier (`{doc_id}_chunk_{index:04d}`), page numbers, document IDs, and source types.
 - **Privacy-First Local Vector Embeddings**: Generates dense embeddings locally via Ollama `nomic-embed-text` with automatic `search_query:` and `search_document:` prefix formatting.
-- **Pluggable Vector Store Abstraction**: Cleanly switch between **ChromaDB** for local zero-dependency prototyping and **PostgreSQL + pgvector** for enterprise deployments with zero code rewrites.
+- **Neon Vector Store Integration**: Native `pgvector` on Neon PostgreSQL for ultra-fast, serverless cosine similarity indexing and retrieval.
 - **Dual-Stage Hybrid Search & Reranking**: Combines dense semantic search with sparse `BM25Plus` keyword search using Reciprocal Rank Fusion (RRF) and secondary lexical-semantic score blending.
 - **Conversational Memory & Query Rewriting**: Detects anaphoric and elliptical follow-up queries (e.g., "What is its battery life?") and transparently reformulates them into standalone search queries.
 - **Grounded Generation & Explicit Abstention**: If retrieved chunks fail the similarity threshold or contain insufficient information, the system explicitly abstains: `"I could not find sufficient information in the provided documents."`
@@ -99,10 +98,10 @@ A production-grade, modular, and privacy-first Document Intelligence & Question-
 | **RAG Orchestration** | LangChain Core / Community | Established text splitters and Ollama integrations |
 | **Local LLM** | Ollama (`llama3.2:latest`) | Fast, local inference with instruction-following and tool grounding |
 | **Embeddings** | Ollama (`nomic-embed-text:latest`) | 768-dimensional local dense embeddings optimized for retrieval |
-| **Vector Database** | ChromaDB & PostgreSQL + pgvector | Pluggable architecture supporting local file-based or SQL vectors |
-| **Relational Database** | SQLAlchemy 2.0 & psycopg 3 | Robust ORM for users, documents, messages, and audit logs |
+| **Vector Database** | Neon PostgreSQL + pgvector | Native cloud vector database supporting cosine similarity indexing |
+| **Relational Database** | SQLAlchemy 2.0 & psycopg 3 | Robust ORM on Neon for users, documents, messages, and audit logs |
 | **Keyword Search** | rank-bm25 (`BM25Plus`) | Sparse lexical search for exact entity codes, IDs, and dates |
-| **Frontend UI** | Streamlit | Responsive, real-time dashboard with chat and document management |
+| **Frontend UI** | React 18 + Vite + Tailwind CSS | Modern, responsive dashboard with streaming chat and document management |
 | **Testing** | pytest & pytest-asyncio | Full regression suite across 9 phases with 100% pass rate |
 
 ---
@@ -167,8 +166,8 @@ cp .env.example .env
 | `LLM_MODEL` | `llama3.2` | Ollama model identifier |
 | `EMBEDDING_MODEL` | `nomic-embed-text` | Ollama embedding model identifier |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Endpoint for Ollama service |
-| `VECTOR_STORE` | `chroma` | Vector backend: `chroma` (MVP) or `pgvector` (production) |
-| `DATABASE_URL` | `sqlite:///./data/document_ai.db` | PostgreSQL or local SQLite connection string |
+| `VECTOR_STORE` | `pgvector` | Vector backend: `pgvector` on Neon PostgreSQL |
+| `DATABASE_URL` | Neon URL | PostgreSQL connection string on Neon |
 | `CHUNK_SIZE` | `1000` | Recursive chunk size in characters |
 | `CHUNK_OVERLAP` | `150` | Overlap between adjacent chunks |
 | `MAX_UPLOAD_MB` | `50` | Maximum file size for document uploads |

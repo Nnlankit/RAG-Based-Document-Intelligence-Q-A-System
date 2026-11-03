@@ -101,10 +101,10 @@ class PgVectorStore(BaseVectorStore):
                 document_id, 
                 content, 
                 metadata, 
-                1.0 - (embedding::vector <=> :query_emb::vector) AS similarity_score
+                1.0 - (embedding::vector <=> CAST(:query_emb AS vector)) AS similarity_score
             FROM document_chunks
             WHERE {where_sql}
-            ORDER BY embedding::vector <=> :query_emb::vector ASC
+            ORDER BY embedding::vector <=> CAST(:query_emb AS vector) ASC
             LIMIT :k
         """
 
