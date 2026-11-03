@@ -7,7 +7,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 
 from app.database.models import User, Document, DocumentChunk, Conversation, Message, RetrievalLog
 from app.core.exceptions import (
@@ -219,16 +219,30 @@ class ConversationRepository:
         conversation_id: str,
         role: str,
         content: str,
+        user_id: Optional[str] = None,
+        status: str = "completed",
     ) -> Message:
-        """Adds a message to a conversation."""
+        """Adds a message to a conversation with strict sequence ordering."""
+        last_seq = (
+            db.query(func.coalesce(func.max(Message.message_sequence), 0))
+            .filter(Message.conversation_id == conversation_id)
+            .scalar()
+            or 0
+        )
+        next_seq = last_seq + 1
+
+        conv = db.query(Conversation).filter(Conversation.id == conversation_id).first()
+        eff_user_id = user_id or (conv.user_id if conv else "default_user")
+
         msg = Message(
             conversation_id=conversation_id,
+            user_id=eff_user_id,
             role=role,
             content=content,
+            message_sequence=next_seq,
+            status=status,
         )
         db.add(msg)
-        # Update conversation timestamp
-        conv = db.query(Conversation).filter(Conversation.id == conversation_id).first()
         if conv:
             conv.updated_at = datetime.now(timezone.utc)
             if conv.title == "New Conversation" and role == "user":

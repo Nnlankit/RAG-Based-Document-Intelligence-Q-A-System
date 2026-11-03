@@ -23,9 +23,9 @@ export const LatencyChart: React.FC<LatencyChartProps> = ({ queries }) => {
     .map((q, idx) => ({
       index: `Q${idx + 1}`,
       query: q.query.length > 20 ? `${q.query.slice(0, 20)}...` : q.query,
-      Retrieval: Math.round(q.retrieval_latency_ms),
-      Generation: Math.round(q.generation_latency_ms),
-      Total: Math.round(q.total_latency_ms),
+      Retrieval: Math.round(q.retrieval_latency_ms || 0),
+      Generation: Math.round(q.generation_latency_ms || 0),
+      Total: Math.round(q.total_latency_ms || 0),
     }));
 
   if (data.length === 0) {

@@ -21,9 +21,11 @@ export const chatService = {
       full_answer: string;
       generation_latency_ms: number;
       total_latency_ms: number;
+      assistant_message_id?: string;
+      assistant_sequence?: number;
       metadata?: Record<string, any>;
     }) => void,
-    onConversation: (id: string) => void,
+    onConversation: (id: string, meta?: { user_message_id?: string; user_sequence?: number }) => void,
     onTiming?: (timings: {
       frontend_request_start: number;
       frontend_first_response: number;
@@ -65,7 +67,10 @@ export const chatService = {
           try {
             const data = JSON.parse(trimmed.slice(6));
             if (data.type === 'conversation') {
-              onConversation(data.conversation_id);
+              onConversation(data.conversation_id, {
+                user_message_id: data.user_message_id,
+                user_sequence: data.user_sequence,
+              });
             } else if (data.type === 'token') {
               if (!firstTokenTime) {
                 firstTokenTime = performance.now();

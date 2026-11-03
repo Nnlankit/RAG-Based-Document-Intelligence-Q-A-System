@@ -55,7 +55,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask a question about your documents (e.g. 'Summarize key findings with citations')..."
+            placeholder="Ask a question about your documents (e.g. 'Summarize key findings')..."
             disabled={isLoading}
             className="w-full px-4 pt-3.5 pb-2 text-sm bg-transparent text-[#17152B] dark:text-[#F5F3FF] placeholder-[#77738A]/70 focus:outline-none resize-none max-h-40 min-h-[50px]"
           />
@@ -83,7 +83,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
         {/* Small footer note */}
         <p className="text-[11px] text-center text-[#77738A] dark:text-[#A39EB8] select-none">
-          100% grounded answers generated via local Llama 3.2. Vector context is retrieved with verified page citations.
+          100% grounded answers generated via local Llama 3.2 based on your documents.
         </p>
       </form>
     </div>

@@ -48,8 +48,11 @@ class MessageResponse(BaseModel):
     """Individual conversation message representation."""
     id: str
     conversation_id: str
+    user_id: Optional[str] = "default_user"
     role: str
     content: str
+    message_sequence: Optional[int] = 1
+    status: Optional[str] = "completed"
     created_at: datetime
 
     model_config = {"from_attributes": True}

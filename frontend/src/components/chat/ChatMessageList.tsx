@@ -8,6 +8,7 @@ interface ChatMessageListProps {
   isLoading: boolean;
   onSelectPrompt?: (prompt: string) => void;
   onRegenerate?: () => void;
+  onRetry?: (messageId?: string) => void;
   isStreaming?: boolean;
 }
 
@@ -16,6 +17,7 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   isLoading,
   onSelectPrompt,
   onRegenerate,
+  onRetry,
   isStreaming = false,
 }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -23,6 +25,10 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
+
+  const hasPendingAssistant = messages.some(
+    (m) => m.role === 'assistant' && m.status === 'pending'
+  );
 
   const starterPrompts = [
     {
@@ -93,18 +99,18 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
 
         return (
           <ChatMessageItem
-            key={index}
+            key={msg.id || `msg-${index}`}
             message={msg}
             isLatestAssistant={isLatestAssistant}
             onRegenerate={onRegenerate}
-            onSelectPrompt={onSelectPrompt}
+            onRetry={() => onRetry?.(msg.id)}
             isStreaming={isStreaming && index === messages.length - 1 && msg.role === 'assistant'}
           />
         );
       })}
 
-      {/* Thinking / Loading indicator */}
-      {isLoading && (
+      {/* Thinking / Loading indicator (only if no pending assistant bubble in state) */}
+      {isLoading && !hasPendingAssistant && (
         <div className="flex items-start gap-3.5 py-3">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center shadow-purple shrink-0 animate-pulse">
             <Sparkles className="w-4 h-4" />

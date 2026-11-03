@@ -66,13 +66,13 @@ export const RecentQueriesTable: React.FC<RecentQueriesTableProps> = ({ queries 
                       {q.chunks_retrieved}
                     </td>
                     <td className="py-3.5 px-4 font-mono text-[#77738A]">
-                      {q.retrieval_latency_ms.toFixed(1)} ms
+                      {(q.retrieval_latency_ms ?? 0).toFixed(1)} ms
                     </td>
                     <td className="py-3.5 px-4 font-mono text-[#77738A]">
-                      {(q.generation_latency_ms / 1000).toFixed(2)} s
+                      {((q.generation_latency_ms ?? 0) / 1000).toFixed(2)} s
                     </td>
                     <td className="py-3.5 px-4 font-mono font-bold text-[#16A34A] dark:text-[#4ADE80]">
-                      {(q.total_latency_ms / 1000).toFixed(2)} s
+                      {((q.total_latency_ms ?? 0) / 1000).toFixed(2)} s
                     </td>
                     <td className="py-3.5 px-4 text-[#77738A]">
                       {dateFormatted}

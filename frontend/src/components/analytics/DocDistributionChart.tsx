@@ -222,17 +222,20 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
               </ResponsiveContainer>
 
               {/* Total Documents in Center */}
-              <div
-                onClick={() => navigate('/documents')}
-                className="absolute inset-0 flex flex-col items-center justify-center text-center cursor-pointer group"
-                title="View All Documents in Repository"
-              >
-                <span className="text-lg font-extrabold text-[#17152B] dark:text-white leading-tight group-hover:text-[#5920B5] transition-colors">
-                  {total}
-                </span>
-                <span className="text-[8px] uppercase font-bold tracking-wider text-[#77738A] group-hover:text-[#5920B5] transition-colors">
-                  Total Docs
-                </span>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <button
+                  type="button"
+                  onClick={() => navigate('/documents')}
+                  className="w-14 h-14 rounded-full flex flex-col items-center justify-center text-center pointer-events-auto cursor-pointer group select-none focus:outline-none"
+                  title="View All Documents in Repository"
+                >
+                  <span className="text-lg font-extrabold text-[#17152B] dark:text-white leading-tight group-hover:text-[#5920B5] transition-colors">
+                    {total}
+                  </span>
+                  <span className="text-[8px] uppercase font-bold tracking-wider text-[#77738A] group-hover:text-[#5920B5] transition-colors">
+                    Total Docs
+                  </span>
+                </button>
               </div>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -15,15 +15,11 @@ import {
   Sparkles,
   Zap,
   HardDrive,
-  CreditCard,
-  CheckCircle2,
   X,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useQuery } from '@tanstack/react-query';
 import { analyticsService } from '../../services/analyticsService';
-import { Modal } from '../common/Modal';
-import { Button } from '../common/Button';
 
 interface SidebarProps {
   onOpenUpload?: () => void;
@@ -33,7 +29,6 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ onOpenUpload, collapsed, setCollapsed }) => {
   const navigate = useNavigate();
-  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   const { data: stats } = useQuery({
     queryKey: ['analytics-stats'],
@@ -198,91 +193,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenUpload, collapsed, setCo
                 </div>
               </div>
             </div>
-
-            {/* Upgrade Plan button */}
-            <button
-              onClick={() => setUpgradeModalOpen(true)}
-              className="w-full mt-2.5 py-1.5 px-2.5 rounded-xl bg-gradient-to-r from-[#5920B5]/60 to-[#8B5CF6]/60 hover:from-[#5920B5] hover:to-[#8B5CF6] border border-white/20 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95 group"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300 group-hover:rotate-12 transition-transform" />
-              <span>Upgrade Plan</span>
-            </button>
           </div>
         )}
 
         {/* Collapsed view simple indicator */}
         {collapsed && (
           <div
-            onClick={() => setUpgradeModalOpen(true)}
-            className="p-3 flex justify-center border-t border-[#2C2347] cursor-pointer hover:bg-[#2A2242] transition-colors"
-            title={`Storage: ${storageMB} MB / 1 GB (Click to Upgrade Plan)`}
+            className="p-3 flex justify-center border-t border-[#2C2347]"
+            title={`Storage: ${storageMB} MB / 1 GB`}
           >
             <div className="w-9 h-9 rounded-xl bg-[#2A2242] text-[#A78BFA] flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-amber-300" />
+              <HardDrive className="w-4 h-4 text-[#DDD6FE]" />
             </div>
           </div>
         )}
       </aside>
-
-      {/* Upgrade Plan Modal */}
-      <Modal
-        isOpen={upgradeModalOpen}
-        onClose={() => setUpgradeModalOpen(false)}
-        title="DocuMind AI — Upgrade Plan"
-        description="Unlock higher vector storage, larger context sizes, and priority local inference."
-        size="md"
-      >
-        <div className="space-y-4 text-xs">
-          <div className="grid grid-cols-2 gap-3">
-            {/* Free Plan */}
-            <div className="p-3.5 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-xs text-[#17152B] dark:text-white">Community</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E8E1F2] text-[#5920B5]">Current</span>
-              </div>
-              <p className="text-xl font-extrabold text-[#17152B] dark:text-white">$0 <span className="text-xs text-[#77738A] font-normal">/mo</span></p>
-              <ul className="space-y-1.5 text-[11px] text-[#77738A] dark:text-[#A39EB8]">
-                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" /> 1 GB Vector Storage</li>
-                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" /> Llama 3.2 (3B) Inference</li>
-                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" /> Single Workspace Isolation</li>
-              </ul>
-            </div>
-
-            {/* Pro Plan */}
-            <div className="p-3.5 rounded-2xl border-2 border-[#8B5CF6] bg-gradient-to-br from-white to-[#F0EBFA] dark:from-[#1E1733] dark:to-[#2A2047] space-y-2.5 shadow-purple relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-[#8B5CF6] text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg uppercase">
-                Recommended
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-xs text-[#5920B5] dark:text-[#C4B5FD]">Enterprise Pro</span>
-              </div>
-              <p className="text-xl font-extrabold text-[#17152B] dark:text-white">$29 <span className="text-xs text-[#77738A] font-normal">/mo</span></p>
-              <ul className="space-y-1.5 text-[11px] text-[#17152B] dark:text-[#E2DCF0]">
-                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#8B5CF6]" /> 50 GB Vector Storage</li>
-                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#8B5CF6]" /> Multi-Model Routing (70B / Vision)</li>
-                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#8B5CF6]" /> Dedicated Neon pgvector branch</li>
-                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#8B5CF6]" /> Priority Streaming & Indexing</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E8E1F2] dark:border-[#352B52]">
-            <Button variant="secondary" onClick={() => setUpgradeModalOpen(false)}>
-              Close
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                setUpgradeModalOpen(false);
-                navigate('/profile');
-              }}
-              leftIcon={<Sparkles className="w-3.5 h-3.5" />}
-            >
-              Manage Subscription in Profile
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };

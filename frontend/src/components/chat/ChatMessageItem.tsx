@@ -14,10 +14,7 @@ import {
   AlertTriangle,
   ChevronDown,
   ChevronUp,
-  FileText,
   ExternalLink,
-  BookOpen,
-  ArrowRight,
 } from 'lucide-react';
 import { ChatMessage, SourceAttribution } from '../../types/chat';
 import { useToast } from '../common/Toast';
@@ -26,16 +23,16 @@ interface ChatMessageItemProps {
   message: ChatMessage;
   isLatestAssistant?: boolean;
   onRegenerate?: () => void;
-  onSelectPrompt?: (prompt: string) => void;
   isStreaming?: boolean;
+  onRetry?: () => void;
 }
 
 export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   message,
   isLatestAssistant = false,
   onRegenerate,
-  onSelectPrompt,
   isStreaming = false,
+  onRetry,
 }) => {
   const navigate = useNavigate();
   const { success, info } = useToast();
@@ -44,7 +41,6 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState<'liked' | 'disliked' | null>(null);
   const [showPerf, setShowPerf] = useState(false);
-  const [expandedCitation, setExpandedCitation] = useState<string | null>(null);
 
   const handleCopyText = () => {
     navigator.clipboard.writeText(message.content);
@@ -67,25 +63,6 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     }
   };
 
-  // Generate contextual follow-up questions
-  const followUpSuggestions = React.useMemo(() => {
-    if (isUser || !message.content || message.abstention) return [];
-    const text = message.content.toLowerCase();
-    const suggestions: string[] = [];
-
-    if (text.includes('summary') || text.includes('document') || text.includes('key')) {
-      suggestions.push('Can you elaborate on the key findings?');
-      suggestions.push('What are the practical implications?');
-    } else if (text.includes('architecture') || text.includes('technical') || text.includes('system')) {
-      suggestions.push('What are the architectural trade-offs?');
-      suggestions.push('Explain the data flow in detail.');
-    } else {
-      suggestions.push('What additional details are supported by this document?');
-      suggestions.push('Can you provide specific citations or quotes?');
-    }
-
-    return suggestions.slice(0, 2);
-  }, [isUser, message.content, message.abstention]);
 
   if (isUser) {
     return (
@@ -102,7 +79,6 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     );
   }
 
-  const sources = message.sources || [];
 
   return (
     <div className="flex items-start gap-3.5 py-3 group">
@@ -184,95 +160,51 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           </div>
         )}
 
+        {/* Error / Failed State */}
+        {message.status === 'failed' && (
+          <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 flex items-center justify-between gap-3 text-red-800 dark:text-red-300 text-xs">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+              <span>{message.error || 'Failed to generate response. Please try again.'}</span>
+            </div>
+            {onRetry && (
+              <button
+                onClick={onRetry}
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium text-xs transition-colors flex items-center gap-1.5 shrink-0 shadow-sm"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Retry</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Thinking / Pending State without tokens yet */}
+        {message.status === 'pending' && !message.content && (
+          <div className="flex items-center gap-2.5 py-2 text-xs text-[#5920B5] dark:text-[#A78BFA] font-medium">
+            <div className="flex gap-1 items-center">
+              <span className="w-2 h-2 rounded-full bg-[#5920B5] animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#8B5CF6] animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#A78BFA] animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+            <span>DocuMind AI is thinking & retrieving context...</span>
+          </div>
+        )}
+
         {/* Markdown Answer Content */}
-        <div className="prose prose-sm dark:prose-invert max-w-none text-[#17152B] dark:text-[#F5F3FF] text-sm leading-relaxed">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {message.content}
-          </ReactMarkdown>
+        {message.content && (
+          <div className="prose prose-sm dark:prose-invert max-w-none text-[#17152B] dark:text-[#F5F3FF] text-sm leading-relaxed">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {message.content}
+            </ReactMarkdown>
 
-          {/* Streaming pulsing indicator */}
-          {isStreaming && (
-            <span className="inline-block w-2 h-4 ml-1 bg-[#8B5CF6] animate-pulse align-middle rounded-sm" />
-          )}
-        </div>
-
-        {/* Source Document Citations with Referenced Page Numbers */}
-        {sources.length > 0 && (
-          <div className="pt-3 border-t border-[#E8E1F2] dark:border-[#352B52] space-y-2">
-            <div className="flex items-center justify-between text-xs font-bold text-[#77738A] dark:text-[#A39EB8]">
-              <span className="flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[#5920B5] dark:text-[#A78BFA]" />
-                Referenced Document Citations ({sources.length})
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {sources.map((src, idx) => {
-                const isExpanded = expandedCitation === src.chunk_id;
-                const pageLabel = src.page_number ? `Page ${src.page_number}` : 'Page 1';
-                const scoreLabel = `${(src.score * 100).toFixed(0)}% Match`;
-                const snippet = src.snippet || src.content_snippet || 'Document context excerpt used in synthesis.';
-
-                return (
-                  <div
-                    key={src.chunk_id || idx}
-                    className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] hover:border-[#8B5CF6] transition-all text-xs"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div
-                        onClick={() => navigate(`/documents/${src.document_id}${src.page_number ? `?page=${src.page_number}` : ''}`)}
-                        className="flex items-center gap-2 truncate cursor-pointer group/cite"
-                        title={src.filename}
-                      >
-                        <FileText className="w-3.5 h-3.5 text-[#5920B5] shrink-0" />
-                        <span className="font-semibold text-[#17152B] dark:text-[#F5F3FF] truncate group-hover/cite:text-[#5920B5]">
-                          {src.filename}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2A2047] dark:text-[#C4B5FD]">
-                          {pageLabel}
-                        </span>
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
-                          {scoreLabel}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Excerpt toggle */}
-                    <div className="mt-1.5 pt-1.5 border-t border-[#E8E1F2]/60 dark:border-[#352B52]/60 text-[11px] text-[#77738A] dark:text-[#A39EB8]">
-                      <p className="line-clamp-2 italic">
-                        "{snippet.slice(0, 120)}..."
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            {/* Streaming pulsing indicator */}
+            {isStreaming && (
+              <span className="inline-block w-2 h-4 ml-1 bg-[#8B5CF6] animate-pulse align-middle rounded-sm" />
+            )}
           </div>
         )}
 
-        {/* Suggested Follow-up Questions Chips */}
-        {followUpSuggestions.length > 0 && isLatestAssistant && (
-          <div className="pt-3 border-t border-[#E8E1F2] dark:border-[#352B52] space-y-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#77738A]">
-              Suggested Follow-ups
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {followUpSuggestions.map((prompt, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => onSelectPrompt?.(prompt)}
-                  className="px-3 py-1.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] hover:border-[#8B5CF6] text-xs font-medium text-[#17152B] dark:text-[#E2DCF0] flex items-center gap-1.5 transition-all active:scale-98"
-                >
-                  <span>{prompt}</span>
-                  <ArrowRight className="w-3 h-3 text-[#5920B5] dark:text-[#A78BFA]" />
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Telemetry & Performance Expansion */}
         {message.total_latency_ms !== undefined && (

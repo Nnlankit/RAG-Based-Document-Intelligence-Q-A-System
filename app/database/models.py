@@ -110,7 +110,7 @@ class Conversation(Base):
 
     # Relationships
     user = relationship("User", back_populates="conversations")
-    messages = relationship("Message", back_populates="conversation", cascade="all, delete-orphan", order_by="Message.created_at")
+    messages = relationship("Message", back_populates="conversation", cascade="all, delete-orphan", order_by="Message.message_sequence.asc(), Message.created_at.asc()")
     retrieval_logs = relationship("RetrievalLog", back_populates="conversation", cascade="all, delete-orphan")
 
 
@@ -120,8 +120,11 @@ class Message(Base):
 
     id = Column(String(64), primary_key=True, default=generate_uuid)
     conversation_id = Column(String(64), ForeignKey("conversations.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(String(64), nullable=True, default="default_user")
     role = Column(String(20), nullable=False)  # 'user', 'assistant', 'system'
     content = Column(Text, nullable=False)
+    message_sequence = Column(Integer, nullable=True, default=1)
+    status = Column(String(20), nullable=True, default="completed")  # 'pending', 'completed', 'failed'
     created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
 
     # Relationships

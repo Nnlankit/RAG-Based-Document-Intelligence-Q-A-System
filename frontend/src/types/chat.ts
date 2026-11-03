@@ -11,8 +11,13 @@ export interface SourceAttribution {
 
 export interface ChatMessage {
   id?: string;
+  conversation_id?: string;
+  user_id?: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+  message_sequence?: number;
+  status?: 'pending' | 'completed' | 'failed';
+  error?: string;
   created_at?: string;
   sources?: SourceAttribution[];
   retrieval_latency_ms?: number;

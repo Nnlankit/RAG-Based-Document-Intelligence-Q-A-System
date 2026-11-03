@@ -57,8 +57,8 @@ def chat(
     )
 
     # 4. Persist user message and assistant answer
-    ConversationRepository.add_message(db, conv.id, role="user", content=request.question)
-    ConversationRepository.add_message(db, conv.id, role="assistant", content=result.answer)
+    ConversationRepository.add_message(db, conv.id, role="user", content=request.question, user_id=user_id, status="completed")
+    ConversationRepository.add_message(db, conv.id, role="assistant", content=result.answer, user_id=user_id, status="completed")
 
     # 5. Record observability log
     chunk_scores = [s.score for s in result.sources]
@@ -99,14 +99,27 @@ def chat_stream(
         user_id=user_id,
         initial_title=request.question,
     )
+
+    # Immediately persist user message to DB so it is permanently stored and visible
+    user_msg = ConversationRepository.add_message(
+        db=db,
+        conversation_id=conv.id,
+        role="user",
+        content=request.question,
+        user_id=user_id,
+        status="completed",
+    )
+
     history = ConversationMemory.get_recent_history(db, conv.id, max_turns=4)
     request_id = str(uuid.uuid4())[:8]
 
     def event_generator():
-        # Yield conversation info first
-        yield f"data: {json.dumps({'type': 'conversation', 'conversation_id': conv.id})}\n\n"
+        # Yield conversation info and user message id immediately
+        yield f"data: {json.dumps({'type': 'conversation', 'conversation_id': conv.id, 'user_message_id': user_msg.id, 'user_sequence': user_msg.message_sequence})}\n\n"
 
         full_answer = []
+        retrieved_sources = []
+        retrieval_latency = 0.0
         for event in _rag_pipeline.execute_stream(
             question=request.question,
             history=history,
@@ -116,16 +129,45 @@ def chat_stream(
             top_k=request.top_k,
             request_id=request_id,
         ):
-            if event["type"] == "token":
+            if event["type"] == "sources":
+                retrieved_sources = event.get("sources", [])
+                retrieval_latency = event.get("retrieval_latency_ms", 0.0)
+            elif event["type"] == "token":
                 full_answer.append(event["content"])
             elif event["type"] == "abstention":
                 full_answer.append(event.get("content", ""))
             elif event["type"] == "done":
                 try:
-                    ConversationRepository.add_message(db, conv.id, role="user", content=request.question)
-                    ConversationRepository.add_message(db, conv.id, role="assistant", content="".join(full_answer))
+                    asst_msg = ConversationRepository.add_message(
+                        db=db,
+                        conversation_id=conv.id,
+                        role="assistant",
+                        content="".join(full_answer),
+                        user_id=user_id,
+                        status="completed",
+                    )
+                    event["assistant_message_id"] = asst_msg.id
+                    event["assistant_sequence"] = asst_msg.message_sequence
+
+                    # Record observability log for streaming turn
+                    chunk_ids = [s.get("chunk_id") for s in retrieved_sources if isinstance(s, dict) and s.get("chunk_id")]
+                    scores = [float(s.get("score", 0.0)) for s in retrieved_sources if isinstance(s, dict)]
+                    gen_lat = event.get("generation_latency_ms", 0.0)
+                    tot_lat = event.get("total_latency_ms", 0.0)
+
+                    RetrievalLogRepository.log(
+                        db=db,
+                        conversation_id=conv.id,
+                        query=request.question,
+                        rewritten_query=None,
+                        retrieved_chunk_ids=chunk_ids,
+                        scores=scores,
+                        retrieval_latency_ms=retrieval_latency,
+                        generation_latency_ms=gen_lat,
+                        total_latency_ms=tot_lat,
+                    )
                 except Exception as e:
-                    logger.error(f"Failed to persist streamed messages: {e}")
+                    logger.error(f"Failed to persist streamed assistant message: {e}")
             yield f"data: {json.dumps(event)}\n\n"
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

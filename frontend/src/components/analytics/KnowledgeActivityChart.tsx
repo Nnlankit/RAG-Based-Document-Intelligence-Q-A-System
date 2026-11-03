@@ -115,7 +115,7 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
 
         return {
           name: `${dayName} (${monthDay})`,
-          shortName: dayName,
+          shortName: daysCount > 7 ? monthDay : `${dayName} ${dateObj.getDate()}`,
           date: item.date,
           Questions: item.questions,
           Answers: item.answers,
