@@ -29,27 +29,27 @@ export const DocumentScopeSelector: React.FC<DocumentScopeSelectorProps> = ({ do
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0] dark:bg-[#342A22] text-xs font-medium text-[#30261E] dark:text-[#F7F0E3] hover:bg-[#E5D6BD] dark:hover:bg-[#3D3128] transition-colors shadow-xs"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] text-xs font-semibold text-[#17152B] dark:text-[#F5F3FF] hover:border-[#8B5CF6] transition-colors shadow-xs"
       >
-        <Layers className="w-3.5 h-3.5 text-[#8B6F52]" />
+        <Layers className="w-3.5 h-3.5 text-[#5920B5] dark:text-[#A78BFA]" />
         <span>
           {isAll
-            ? 'Knowledge Scope: All Documents'
+            ? 'Scope: All Documents'
             : `Scoped: ${scopeDocumentIds.length} doc${scopeDocumentIds.length > 1 ? 's' : ''}`}
         </span>
-        <ChevronDown className="w-3.5 h-3.5 text-[#5A4634] dark:text-[#DCC9AA]" />
+        <ChevronDown className="w-3.5 h-3.5 text-[#77738A]" />
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full mb-2 left-0 w-72 rounded-xl bg-[#F7F0E3] dark:bg-[#2A221C] border border-[#D4C3A5] dark:border-[#524436] shadow-modal z-50 p-2 space-y-1">
-          <div className="flex items-center justify-between px-2 py-1.5 border-b border-[#D4C3A5]/50 dark:border-[#524436]/50">
-            <span className="text-[11px] font-semibold text-[#8B6F52] dark:text-[#CDB795] uppercase tracking-wider">
+        <div className="absolute bottom-full mb-2 left-0 w-80 rounded-2xl bg-white dark:bg-[#1E1733] border border-[#E8E1F2] dark:border-[#352B52] shadow-purple-lg z-50 p-2.5 space-y-1">
+          <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[#E8E1F2] dark:border-[#352B52]">
+            <span className="text-[11px] font-bold text-[#77738A] dark:text-[#A39EB8] uppercase tracking-wider">
               Filter Document Scope
             </span>
             {!isAll && (
               <button
                 onClick={clearScope}
-                className="text-[11px] text-[#B87952] hover:text-[#8B6F52] dark:text-[#D4A359] font-medium"
+                className="text-[11px] text-[#5920B5] hover:underline font-semibold"
               >
                 Reset to All
               </button>
@@ -58,31 +58,31 @@ export const DocumentScopeSelector: React.FC<DocumentScopeSelectorProps> = ({ do
 
           <button
             onClick={clearScope}
-            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-left transition-colors ${
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-left transition-colors ${
               isAll
-                ? 'bg-[#E1D2B8] text-[#5A4634] dark:bg-[#3E3228] dark:text-[#F7F0E3] font-medium'
-                : 'text-[#30261E] dark:text-[#E8DCC8] hover:bg-[#EDE1CD] dark:hover:bg-[#342A22]'
+                ? 'bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2A2047] dark:text-[#DDD6FE] font-bold'
+                : 'text-[#17152B] dark:text-[#E2DCF0] hover:bg-[#FAF8FD] dark:hover:bg-[#150F24]'
             }`}
           >
-            <span>All Uploaded Documents</span>
-            {isAll && <Check className="w-4 h-4 text-[#8B6F52]" />}
+            <span>All Uploaded Documents (Global Search)</span>
+            {isAll && <Check className="w-4 h-4 text-[#5920B5]" />}
           </button>
 
-          <div className="max-h-48 overflow-y-auto space-y-0.5 pt-1">
+          <div className="max-h-56 overflow-y-auto space-y-0.5 pt-1">
             {documents.map((doc) => {
               const isSelected = scopeDocumentIds.includes(doc.id);
               return (
                 <button
                   key={doc.id}
                   onClick={() => toggleScopeDocumentId(doc.id)}
-                  className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-left transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-left transition-colors ${
                     isSelected
-                      ? 'bg-[#E1D2B8] text-[#5A4634] dark:bg-[#3E3228] dark:text-[#F7F0E3] font-medium'
-                      : 'text-[#30261E] dark:text-[#E8DCC8] hover:bg-[#EDE1CD] dark:hover:bg-[#342A22]'
+                      ? 'bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2A2047] dark:text-[#DDD6FE] font-semibold'
+                      : 'text-[#17152B] dark:text-[#E2DCF0] hover:bg-[#FAF8FD] dark:hover:bg-[#150F24]'
                   }`}
                 >
                   <span className="truncate pr-2">{doc.filename}</span>
-                  {isSelected && <Check className="w-4 h-4 shrink-0 text-[#8B6F52]" />}
+                  {isSelected && <Check className="w-4 h-4 text-[#5920B5] shrink-0" />}
                 </button>
               );
             })}

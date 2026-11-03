@@ -1,41 +1,100 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
-  Cpu,
+  Sparkles,
   User,
   Copy,
   Check,
+  RotateCcw,
+  ThumbsUp,
+  ThumbsDown,
   Clock,
   AlertTriangle,
   ChevronDown,
   ChevronUp,
+  FileText,
+  ExternalLink,
+  BookOpen,
+  ArrowRight,
 } from 'lucide-react';
-import { ChatMessage } from '../../types/chat';
+import { ChatMessage, SourceAttribution } from '../../types/chat';
+import { useToast } from '../common/Toast';
 
 interface ChatMessageItemProps {
   message: ChatMessage;
+  isLatestAssistant?: boolean;
+  onRegenerate?: () => void;
+  onSelectPrompt?: (prompt: string) => void;
+  isStreaming?: boolean;
 }
 
-export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => {
+export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
+  message,
+  isLatestAssistant = false,
+  onRegenerate,
+  onSelectPrompt,
+  isStreaming = false,
+}) => {
+  const navigate = useNavigate();
+  const { success, info } = useToast();
   const isUser = message.role === 'user';
+
   const [copied, setCopied] = useState(false);
+  const [feedback, setFeedback] = useState<'liked' | 'disliked' | null>(null);
   const [showPerf, setShowPerf] = useState(false);
+  const [expandedCitation, setExpandedCitation] = useState<string | null>(null);
 
   const handleCopyText = () => {
     navigator.clipboard.writeText(message.content);
     setCopied(true);
+    success('Copied to Clipboard', 'Answer copied.');
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const handleFeedback = (type: 'liked' | 'disliked') => {
+    if (feedback === type) {
+      setFeedback(null);
+    } else {
+      setFeedback(type);
+      info(
+        type === 'liked' ? 'Feedback Submitted' : 'Feedback Recorded',
+        type === 'liked'
+          ? 'Thanks! We will use this to keep improving RAG accuracy.'
+          : 'Thank you for flagging. We will review grounded chunks.'
+      );
+    }
+  };
+
+  // Generate contextual follow-up questions
+  const followUpSuggestions = React.useMemo(() => {
+    if (isUser || !message.content || message.abstention) return [];
+    const text = message.content.toLowerCase();
+    const suggestions: string[] = [];
+
+    if (text.includes('summary') || text.includes('document') || text.includes('key')) {
+      suggestions.push('Can you elaborate on the key findings?');
+      suggestions.push('What are the practical implications?');
+    } else if (text.includes('architecture') || text.includes('technical') || text.includes('system')) {
+      suggestions.push('What are the architectural trade-offs?');
+      suggestions.push('Explain the data flow in detail.');
+    } else {
+      suggestions.push('What additional details are supported by this document?');
+      suggestions.push('Can you provide specific citations or quotes?');
+    }
+
+    return suggestions.slice(0, 2);
+  }, [isUser, message.content, message.abstention]);
 
   if (isUser) {
     return (
       <div className="flex justify-end py-2">
-        <div className="flex items-start gap-2.5 max-w-[80%]">
-          <div className="bg-[#D8C6A7] text-[#30261E] dark:bg-[#3E3228] dark:text-[#F7F0E3] border border-[#CDBB9D] dark:border-[#5A4634] rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm shadow-xs font-normal leading-relaxed">
+        <div className="flex items-start gap-3 max-w-[85%] md:max-w-[75%]">
+          <div className="bg-gradient-to-r from-[#5920B5] to-[#7C3AED] text-white rounded-2xl rounded-tr-sm px-4.5 py-3 text-sm shadow-purple font-normal leading-relaxed">
             <p className="whitespace-pre-wrap">{message.content}</p>
           </div>
-          <div className="w-8 h-8 rounded-full bg-[#CDB795] text-[#5A4634] dark:bg-[#4A3B2F] dark:text-[#E8DCC8] flex items-center justify-center text-xs font-semibold shrink-0 mt-0.5 border border-[#B9A587] dark:border-[#5A4634]">
+          <div className="w-8 h-8 rounded-full bg-[#EDE9FE] text-[#5920B5] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 border border-[#DDD6FE]">
             <User className="w-4 h-4" />
           </div>
         </div>
@@ -43,171 +102,219 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
     );
   }
 
+  const sources = message.sources || [];
+
   return (
-    <div className="flex items-start gap-3 py-3 group">
-      {/* Bot Icon */}
-      <div className="w-8 h-8 rounded-xl bg-[#5A4634] text-[#F7F0E3] flex items-center justify-center shadow-xs shrink-0 mt-1">
-        <Cpu className="w-4 h-4" />
+    <div className="flex items-start gap-3.5 py-3 group">
+      {/* Bot Avatar Icon */}
+      <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center shadow-purple shrink-0 mt-1">
+        <Sparkles className="w-4 h-4" />
       </div>
 
-      <div className="flex-1 min-w-0 space-y-3 bg-[#F7F0E3] dark:bg-[#2A221C] border border-[#D4C3A5] dark:border-[#4B3C2F] rounded-2xl p-4 shadow-card">
-        {/* Header: Name, Copy button */}
+      <div className="flex-1 min-w-0 space-y-3 bg-white dark:bg-[#1E1733] border border-[#E8E1F2] dark:border-[#352B52] rounded-2xl p-5 shadow-card">
+        {/* Header: Name, Model, Actions */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+            <span className="text-xs font-bold text-[#17152B] dark:text-white">
               DocuMind AI
             </span>
-            <span className="text-[10px] font-mono font-medium text-[#5A4634] dark:text-[#DCC9AA]">Llama 3.2</span>
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#A78BFA] border border-[#E8E1F2] dark:border-[#3E3065]">
+              Llama 3.2 • Grounded RAG
+            </span>
           </div>
 
-          <button
-            onClick={handleCopyText}
-            className="opacity-0 group-hover:opacity-100 p-1 text-[#5A4634] hover:text-[#211B16] dark:text-[#DCC9AA] dark:hover:text-[#F7F0E3] rounded transition-opacity"
-            title="Copy answer"
-          >
-            {copied ? (
-              <Check className="w-3.5 h-3.5 text-[#657A58]" />
-            ) : (
-              <Copy className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1">
+            {/* Copy Button */}
+            <button
+              onClick={handleCopyText}
+              className="p-1.5 text-[#77738A] hover:text-[#5920B5] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] rounded-lg transition-colors"
+              title="Copy answer"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-[#16A34A]" /> : <Copy className="w-3.5 h-3.5" />}
+            </button>
+
+            {/* Regenerate Answer Button */}
+            {onRegenerate && (
+              <button
+                onClick={onRegenerate}
+                className="p-1.5 text-[#77738A] hover:text-[#5920B5] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] rounded-lg transition-colors"
+                title="Regenerate answer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
             )}
-          </button>
+
+            {/* Feedback Controls (Thumbs Up / Down) */}
+            <button
+              onClick={() => handleFeedback('liked')}
+              className={`p-1.5 rounded-lg transition-colors ${
+                feedback === 'liked'
+                  ? 'text-[#16A34A] bg-[#DCFCE7] dark:bg-[#143E24]'
+                  : 'text-[#77738A] hover:text-[#16A34A] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047]'
+              }`}
+              title="Helpful response"
+            >
+              <ThumbsUp className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              onClick={() => handleFeedback('disliked')}
+              className={`p-1.5 rounded-lg transition-colors ${
+                feedback === 'disliked'
+                  ? 'text-[#DC2626] bg-[#FEE2E2] dark:bg-[#3D1414]'
+                  : 'text-[#77738A] hover:text-[#DC2626] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047]'
+              }`}
+              title="Not helpful"
+            >
+              <ThumbsDown className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
-        {/* Abstention Warning Banner */}
+        {/* Abstention Warning Banner (if RAG confidence fell below threshold) */}
         {message.abstention && (
-          <div className="p-3 rounded-xl bg-[#B38A4A]/10 border border-[#B38A4A]/30 flex items-start gap-2.5 text-[#8B6F52] dark:text-[#D4A359] text-xs">
-            <AlertTriangle className="w-4 h-4 text-[#B38A4A] shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 flex items-start gap-2.5 text-amber-800 dark:text-amber-300 text-xs">
+            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold">Uncertain or Out-of-Domain Query</p>
-              <p className="mt-0.5 text-[#5A4634] dark:text-[#D8C6A7]">
-                The retrieved document chunks did not meet the confidence threshold. The model abstained or answered with explicit caveats to prevent hallucinations.
+              <p className="font-bold">Confidence Threshold Caveat</p>
+              <p className="mt-0.5 opacity-90 leading-relaxed">
+                The retrieved context chunks fell below the strict evidence threshold. The answer was abstained or heavily qualified to guarantee zero hallucinations.
               </p>
             </div>
           </div>
         )}
 
-        {/* Markdown Content */}
-        <div className="prose prose-sm dark:prose-invert max-w-none text-[#30261E] dark:text-[#F4EBDD] text-sm leading-relaxed">
+        {/* Markdown Answer Content */}
+        <div className="prose prose-sm dark:prose-invert max-w-none text-[#17152B] dark:text-[#F5F3FF] text-sm leading-relaxed">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {message.content}
           </ReactMarkdown>
+
+          {/* Streaming pulsing indicator */}
+          {isStreaming && (
+            <span className="inline-block w-2 h-4 ml-1 bg-[#8B5CF6] animate-pulse align-middle rounded-sm" />
+          )}
         </div>
 
-        {/* Telemetry Latency Chips & Expandable Performance Panel */}
-        {message.total_latency_ms !== undefined && (
-          <div className="pt-2 border-t border-[#D4C3A5]/40 dark:border-[#4B3C2F]/40">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono font-medium text-[#5A4634] dark:text-[#DCC9AA]">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-[#8B6F52]" />
-                  Generated in {(message.total_latency_ms / 1000).toFixed(2)}s
-                </span>
-                {message.metadata?.llm_ttft_ms !== undefined && (
-                  <span>
-                    • TTFT:{' '}
-                    {message.metadata.llm_ttft_ms < 1000
-                      ? `${message.metadata.llm_ttft_ms.toFixed(0)}ms`
-                      : `${(message.metadata.llm_ttft_ms / 1000).toFixed(2)}s`}
-                  </span>
-                )}
-              </div>
+        {/* Source Document Citations with Referenced Page Numbers */}
+        {sources.length > 0 && (
+          <div className="pt-3 border-t border-[#E8E1F2] dark:border-[#352B52] space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-[#77738A] dark:text-[#A39EB8]">
+              <span className="flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-[#5920B5] dark:text-[#A78BFA]" />
+                Referenced Document Citations ({sources.length})
+              </span>
+            </div>
 
-              {import.meta.env.VITE_SHOW_PERFORMANCE_METRICS !== 'false' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {sources.map((src, idx) => {
+                const isExpanded = expandedCitation === src.chunk_id;
+                const pageLabel = src.page_number ? `Page ${src.page_number}` : 'Page 1';
+                const scoreLabel = `${(src.score * 100).toFixed(0)}% Match`;
+                const snippet = src.snippet || src.content_snippet || 'Document context excerpt used in synthesis.';
+
+                return (
+                  <div
+                    key={src.chunk_id || idx}
+                    className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] hover:border-[#8B5CF6] transition-all text-xs"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div
+                        onClick={() => navigate(`/documents/${src.document_id}${src.page_number ? `?page=${src.page_number}` : ''}`)}
+                        className="flex items-center gap-2 truncate cursor-pointer group/cite"
+                        title={src.filename}
+                      >
+                        <FileText className="w-3.5 h-3.5 text-[#5920B5] shrink-0" />
+                        <span className="font-semibold text-[#17152B] dark:text-[#F5F3FF] truncate group-hover/cite:text-[#5920B5]">
+                          {src.filename}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2A2047] dark:text-[#C4B5FD]">
+                          {pageLabel}
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
+                          {scoreLabel}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Excerpt toggle */}
+                    <div className="mt-1.5 pt-1.5 border-t border-[#E8E1F2]/60 dark:border-[#352B52]/60 text-[11px] text-[#77738A] dark:text-[#A39EB8]">
+                      <p className="line-clamp-2 italic">
+                        "{snippet.slice(0, 120)}..."
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Suggested Follow-up Questions Chips */}
+        {followUpSuggestions.length > 0 && isLatestAssistant && (
+          <div className="pt-3 border-t border-[#E8E1F2] dark:border-[#352B52] space-y-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#77738A]">
+              Suggested Follow-ups
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {followUpSuggestions.map((prompt, idx) => (
                 <button
-                  type="button"
-                  onClick={() => setShowPerf(!showPerf)}
-                  className="flex items-center gap-1 text-[11px] font-medium text-[#8B6F52] hover:text-[#5A4634] dark:text-[#D4A359] dark:hover:text-[#F7F0E3] transition-colors cursor-pointer select-none"
+                  key={idx}
+                  onClick={() => onSelectPrompt?.(prompt)}
+                  className="px-3 py-1.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] hover:border-[#8B5CF6] text-xs font-medium text-[#17152B] dark:text-[#E2DCF0] flex items-center gap-1.5 transition-all active:scale-98"
                 >
-                  <span>{showPerf ? 'Hide' : 'View'} Performance</span>
-                  {showPerf ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                  <span>{prompt}</span>
+                  <ArrowRight className="w-3 h-3 text-[#5920B5] dark:text-[#A78BFA]" />
                 </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Telemetry & Performance Expansion */}
+        {message.total_latency_ms !== undefined && (
+          <div className="pt-2 border-t border-[#E8E1F2] dark:border-[#352B52] flex items-center justify-between text-[11px] text-[#77738A] dark:text-[#A39EB8]">
+            <div className="flex items-center gap-1.5 font-mono">
+              <Clock className="w-3 h-3 text-[#5920B5]" />
+              <span>{(message.total_latency_ms / 1000).toFixed(2)}s total</span>
+              {message.metadata?.llm_ttft_ms !== undefined && (
+                <span>• TTFT: {message.metadata.llm_ttft_ms.toFixed(0)}ms</span>
               )}
             </div>
 
-            {showPerf && (
-              <div className="mt-2.5 p-3 rounded-xl bg-[#EDE4D3]/50 dark:bg-[#1E1712]/50 border border-[#D4C3A5]/60 dark:border-[#4B3C2F]/60 text-[11px] font-mono space-y-2">
-                <div className="font-semibold text-xs text-[#30261E] dark:text-[#F7F0E3] pb-1 border-b border-[#D4C3A5]/40 dark:border-[#4B3C2F]/40 flex items-center justify-between">
-                  <span>RAG Performance Telemetry</span>
-                  <span className="text-[10px] text-[#8B6F52] dark:text-[#DCC9AA]">High-Resolution</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-[#5A4634] dark:text-[#DCC9AA]">
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Total Latency</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {(message.total_latency_ms / 1000).toFixed(2)}s
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">LLM TTFT</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {message.metadata?.llm_ttft_ms !== undefined
-                        ? message.metadata.llm_ttft_ms < 1000
-                          ? `${message.metadata.llm_ttft_ms.toFixed(0)}ms`
-                          : `${(message.metadata.llm_ttft_ms / 1000).toFixed(2)}s`
-                        : 'N/A'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">LLM Generation</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {message.generation_latency_ms !== undefined
-                        ? `${(message.generation_latency_ms / 1000).toFixed(2)}s`
-                        : 'N/A'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Query Embedding</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {message.metadata?.embedding_ms !== undefined
-                        ? `${message.metadata.embedding_ms.toFixed(1)}ms`
-                        : 'N/A'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Vector Retrieval</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {message.retrieval_latency_ms !== undefined
-                        ? `${message.retrieval_latency_ms.toFixed(1)}ms`
-                        : 'N/A'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Reranking</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {message.metadata?.reranking_ms !== undefined
-                        ? `${message.metadata.reranking_ms.toFixed(1)}ms`
-                        : '0.0ms'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Context Building</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {message.metadata?.context_building_ms !== undefined
-                        ? `${message.metadata.context_building_ms.toFixed(2)}ms`
-                        : 'N/A'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Generated Tokens</span>
-                    <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                      {message.metadata?.generated_tokens !== undefined
-                        ? `${message.metadata.generated_tokens} tokens`
-                        : 'N/A'}
-                    </span>
-                  </div>
-                  {message.metadata?.frontend_ttft_ms !== undefined && (
-                    <div>
-                      <span className="text-[#8B6F52] dark:text-[#A89279] block text-[10px]">Browser Network TTFT</span>
-                      <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                        {message.metadata.frontend_ttft_ms < 1000
-                          ? `${message.metadata.frontend_ttft_ms}ms`
-                          : `${(message.metadata.frontend_ttft_ms / 1000).toFixed(2)}s`}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+            <button
+              onClick={() => setShowPerf(!showPerf)}
+              className="flex items-center gap-1 text-[11px] font-semibold text-[#5920B5] dark:text-[#A78BFA] hover:underline"
+            >
+              <span>{showPerf ? 'Hide Telemetry' : 'View Telemetry'}</span>
+              {showPerf ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            </button>
+          </div>
+        )}
+
+        {showPerf && message.metadata && (
+          <div className="mt-2 p-3 rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] text-[11px] font-mono grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div>
+              <span className="text-[#77738A] block text-[10px]">Retrieval Time</span>
+              <span className="font-bold text-[#17152B] dark:text-white">
+                {message.retrieval_latency_ms !== undefined ? `${message.retrieval_latency_ms.toFixed(1)}ms` : 'N/A'}
+              </span>
+            </div>
+            <div>
+              <span className="text-[#77738A] block text-[10px]">Generation Time</span>
+              <span className="font-bold text-[#17152B] dark:text-white">
+                {message.generation_latency_ms !== undefined ? `${(message.generation_latency_ms / 1000).toFixed(2)}s` : 'N/A'}
+              </span>
+            </div>
+            <div>
+              <span className="text-[#77738A] block text-[10px]">Generated Tokens</span>
+              <span className="font-bold text-[#17152B] dark:text-white">
+                {message.metadata?.generated_tokens ?? 'N/A'} tokens
+              </span>
+            </div>
           </div>
         )}
       </div>

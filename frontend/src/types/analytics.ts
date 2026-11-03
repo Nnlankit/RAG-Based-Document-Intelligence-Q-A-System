@@ -34,10 +34,25 @@ export interface TopDocumentItem {
   created_at: string;
 }
 
+export interface DocumentTypeDistributionItem {
+  name: string;
+  value: number;
+  percentage: number;
+}
+
+export interface ActivityTimelineItem {
+  date: string;
+  documents: number;
+  questions: number;
+  answers: number;
+}
+
 export interface AnalyticsStatsResponse {
   overview: AnalyticsOverview;
   performance: AnalyticsPerformance;
   document_types: Record<string, number>;
+  document_distribution?: DocumentTypeDistributionItem[];
+  activity_timeline?: ActivityTimelineItem[];
   recent_queries: RecentQueryItem[];
   top_documents: TopDocumentItem[];
 }

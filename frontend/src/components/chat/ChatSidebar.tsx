@@ -7,7 +7,7 @@ import {
   Check,
   X,
   Search,
-  ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import { Conversation } from '../../types/chat';
 import { Button } from '../common/Button';
@@ -58,42 +58,42 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm('Delete this conversation?')) {
+    if (window.confirm('Delete this conversation history?')) {
       onDeleteConversation(id);
     }
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#E2D3BB] dark:bg-[#261F1A] border-r border-[#D4C3A5] dark:border-[#524436] w-72 shrink-0 select-none">
+    <div className="flex flex-col h-full bg-[#FAF8FD] dark:bg-[#18112A] border-r border-[#E8E1F2] dark:border-[#352B52] w-72 shrink-0 select-none">
       {/* Top Header */}
-      <div className="p-3.5 border-b border-[#D4C3A5]/60 dark:border-[#524436]/60 space-y-3">
-        <Button
-          variant="primary"
+      <div className="p-4 border-b border-[#E8E1F2] dark:border-[#352B52] space-y-3">
+        <button
           onClick={onNewChat}
-          leftIcon={<Plus className="w-4 h-4" />}
-          className="w-full justify-start rounded-xl font-medium shadow-xs py-2"
+          className="w-full py-2.5 px-3 rounded-xl bg-[#5920B5] hover:bg-[#481A94] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-purple transition-all active:scale-95"
         >
-          New Conversation
-        </Button>
+          <Plus className="w-4 h-4" />
+          <span>New Conversation</span>
+        </button>
 
         {/* Search */}
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#5A4634] dark:text-[#DCC9AA] absolute left-3 top-2.5 pointer-events-none" />
+          <Search className="w-3.5 h-3.5 text-[#77738A] absolute left-3 top-2.5 pointer-events-none" />
           <input
             type="text"
             placeholder="Search conversations..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-[#CDBB9D] dark:border-[#524436] bg-[#F7F0E3] dark:bg-[#342A22] text-[#30261E] dark:text-[#F7F0E3] placeholder-[#6B5C4D]/80 dark:placeholder-[#B9A995]/80 focus:outline-none focus:ring-1 focus:ring-[#8B6F52]"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] text-[#17152B] dark:text-[#F5F3FF] placeholder-[#77738A]/70 focus:outline-none focus:ring-1 focus:ring-[#8B5CF6]"
           />
         </div>
       </div>
 
       {/* Conversation List */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-1">
+      <div className="flex-1 overflow-y-auto p-2.5 space-y-1">
         {filtered.length === 0 ? (
-          <div className="py-12 text-center text-xs text-[#5A4634] dark:text-[#DCC9AA] font-medium">
-            {conversations.length === 0 ? 'No conversations yet.' : 'No matching chats.'}
+          <div className="py-16 text-center text-xs text-[#77738A] dark:text-[#A39EB8] font-medium space-y-1">
+            <MessageSquare className="w-8 h-8 mx-auto text-[#8B5CF6] opacity-40 mb-2" />
+            <p>{conversations.length === 0 ? 'No conversations yet.' : 'No matching chats.'}</p>
           </div>
         ) : (
           filtered.map((conv) => {
@@ -104,14 +104,18 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
               <div
                 key={conv.id}
                 onClick={() => onSelectConversation(conv.id)}
-                className={`group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium cursor-pointer transition-colors ${
+                className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium cursor-pointer transition-all ${
                   isActive
-                    ? 'bg-[#CDB795] text-[#30261E] dark:bg-[#3E3228] dark:text-[#F7F0E3] font-semibold shadow-xs'
-                    : 'text-[#5A4634] dark:text-[#DCC9AA] hover:bg-[#E9DDC8] dark:hover:bg-[#342A22] hover:text-[#211B16] dark:hover:text-[#F7F0E3]'
+                    ? 'bg-[#5920B5] text-white font-semibold shadow-purple'
+                    : 'text-[#17152B] dark:text-[#E2DCF0] hover:bg-[#F0EBFA] dark:hover:bg-[#251D3E]'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
-                  <MessageSquare className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#5A4634] dark:text-[#DCC9AA]' : 'text-[#8B6F52] opacity-80'}`} />
+                  <MessageSquare
+                    className={`w-4 h-4 shrink-0 ${
+                      isActive ? 'text-white' : 'text-[#8B5CF6]'
+                    }`}
+                  />
                   {isEditing ? (
                     <input
                       type="text"
@@ -123,7 +127,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                         if (e.key === 'Enter') handleSaveRename(conv.id, e as any);
                         if (e.key === 'Escape') setEditingId(null);
                       }}
-                      className="w-full px-1.5 py-0.5 text-xs bg-[#F7F0E3] dark:bg-[#342A22] border border-[#8B6F52] rounded text-[#30261E] dark:text-[#F7F0E3] focus:outline-none"
+                      className="w-full px-1.5 py-0.5 text-xs bg-white text-[#17152B] border border-[#8B5CF6] rounded-md focus:outline-none"
                     />
                   ) : (
                     <span className="truncate" title={conv.title}>
@@ -133,19 +137,19 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-0.5 shrink-0" onClick={(e) => e.stopPropagation()}>
                   {isEditing ? (
                     <>
                       <button
                         onClick={(e) => handleSaveRename(conv.id, e)}
-                        className="p-1 text-[#657A58] hover:text-[#4A5B40] rounded"
+                        className="p-1 text-emerald-600 hover:text-emerald-700"
                         title="Save"
                       >
                         <Check className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={handleCancelRename}
-                        className="p-1 text-[#5A4634] hover:text-[#30261E] dark:text-[#DCC9AA] dark:hover:text-[#F7F0E3] rounded"
+                        className="p-1 text-[#77738A] hover:text-[#17152B]"
                         title="Cancel"
                       >
                         <X className="w-3.5 h-3.5" />
@@ -155,14 +159,22 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                     <div className="opacity-0 group-hover:opacity-100 flex items-center gap-0.5 transition-opacity">
                       <button
                         onClick={(e) => startEditing(conv, e)}
-                        className="p-1 text-[#5A4634] hover:text-[#30261E] dark:text-[#DCC9AA] dark:hover:text-[#F7F0E3] rounded"
+                        className={`p-1 rounded ${
+                          isActive
+                            ? 'text-white/80 hover:text-white'
+                            : 'text-[#77738A] hover:text-[#5920B5]'
+                        }`}
                         title="Rename"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={(e) => handleDelete(conv.id, e)}
-                        className="p-1 text-[#5A4634] hover:text-[#A65D50] dark:text-[#DCC9AA] dark:hover:text-[#A65D50] rounded"
+                        className={`p-1 rounded ${
+                          isActive
+                            ? 'text-white/80 hover:text-red-200'
+                            : 'text-[#77738A] hover:text-red-500'
+                        }`}
                         title="Delete"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

@@ -8,12 +8,12 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'sand-gradient': 'linear-gradient(135deg, #E8DCC8 0%, #F2E9D8 45%, #DCC9AA 100%)',
-        'sand-dark-gradient': 'linear-gradient(135deg, #1C1713 0%, #211B16 45%, #2B231D 100%)',
-        'upload-gradient': 'linear-gradient(135deg, #F7F0E3 0%, #E8DCC8 100%)',
-        'upload-dark-gradient': 'linear-gradient(135deg, #2B231D 0%, #211B16 100%)',
-        'hero-gradient': 'linear-gradient(135deg, #4A3827 0%, #5A4634 50%, #3D2D1E 100%)',
-        'hero-dark-gradient': 'linear-gradient(135deg, #2D2218 0%, #3D2E21 50%, #231B13 100%)',
+        'purple-gradient': 'linear-gradient(135deg, #5920B5 0%, #8B5CF6 100%)',
+        'soft-purple-gradient': 'linear-gradient(135deg, #F8F6FC 0%, #F1ECFA 50%, #EAE2F8 100%)',
+        'card-gradient': 'linear-gradient(180deg, #FFFFFF 0%, #FAF8FD 100%)',
+        'sidebar-gradient': 'linear-gradient(180deg, #211A35 0%, #1A142B 100%)',
+        'hero-gradient': 'linear-gradient(135deg, #5920B5 0%, #7C3AED 50%, #8B5CF6 100%)',
+        'upload-gradient': 'linear-gradient(135deg, #FAF8FD 0%, #F3EEFB 100%)',
       },
       colors: {
         // Semantic CSS variables mapping
@@ -22,76 +22,72 @@ export default {
         surface: 'var(--surface)',
         border: 'var(--border)',
 
-        // Exact Sand Palette from Spec
-        sand: {
-          50: '#F7F0E3',   // Surface / Card
-          100: '#F2E9D8',  // Secondary background
-          200: '#E8DCC8',  // Primary background
-          250: '#E2D3BB',  // Sidebar background
-          300: '#D4C3A5',  // Border
-          350: '#CDBB9D',  // Secondary border
-          400: '#CDB795',  // Active navigation / Citation hover
-          450: '#D8C6A7',  // User message bubble
-          500: '#9A8B78',  // Muted
-          600: '#786B5C',  // Secondary text
-          700: '#8B6F52',  // Secondary brown / icon
-          800: '#5A4634',  // Primary brown
-          850: '#463526',  // Primary hover
-          900: '#30261E',  // Primary text
-          950: '#211B16',  // Dark mode background
-        },
-        // Primary Sandstone Brand (Dark Brown Primary #5A4634, Terracotta Accent #B87952)
+        // Primary Brand Spec: Deep Purple (#5920B5) and Violet (#8B5CF6)
         brand: {
-          50: '#F7F0E3',
-          100: '#F2E9D8',
-          200: '#E8DCC8',
-          300: '#CDB795',
-          400: '#B87952',  // Accent terracotta
-          500: '#8B6F52',  // Secondary camel
-          600: '#5A4634',  // Primary button & headers
-          700: '#463526',  // Hover
-          800: '#3D2D1E',
-          900: '#30261E',  // Primary text
-          950: '#211B16',  // Dark mode canvas
+          50: '#F8F6FC',
+          100: '#F0EBFA',
+          200: '#E8E1F2',
+          300: '#D5C7EA',
+          400: '#B297DD',
+          500: '#8B5CF6',  // Secondary Violet
+          600: '#7337DA',
+          700: '#5920B5',  // Primary Deep Purple
+          800: '#461793',
+          900: '#17152B',  // Primary Dark Navy Text
+          950: '#211A35',  // Sidebar Dark Navy Purple
         },
-        // Gray alias mapped to high-contrast sand values so standard utility classes remain legible
-        gray: {
-          50: '#F7F0E3',   // Surface / Card
-          100: '#F2E9D8',  // Secondary bg
-          200: '#E8DCC8',  // Canvas
-          300: '#D4C3A5',  // Border
-          400: '#6B5C4D',  // Readable muted text & icons (contrast >4.5:1)
-          500: '#5A4634',  // Primary secondary brown text
-          600: '#463526',  // Dark tone
-          700: '#3D2D1E',  // Deep tone
-          800: '#2A2017',  // Charcoal tone
-          900: '#1E1712',  // Primary dark text
-          950: '#140E0A',  // Darkest background
+        sidebar: {
+          DEFAULT: '#211A35',
+          darker: '#1A142B',
+          card: '#2A2242',
+          cardHover: '#332950',
+          hover: '#2E2449',
+          border: '#362C54',
+          text: '#E2DCF0',
+          muted: '#8E85A6',
+          active: '#5920B5',
         },
-        // Accent terracotta
-        terracotta: {
-          DEFAULT: '#B87952',
-          hover: '#A26844',
-          light: '#D99873',
-          dark: '#915331',
+        navy: {
+          900: '#17152B',
+          800: '#211A35',
+          700: '#2E2449',
+          600: '#3F355F',
         },
-        // Muted Sage Success
-        sage: {
-          DEFAULT: '#657A58',
-          light: '#EAF0E6',
-          dark: '#4A5B40',
+        muted: {
+          DEFAULT: '#77738A',
+          light: '#A39EB5',
+          dark: '#58546B',
         },
-        // Warm Amber Warning
-        amber: {
-          DEFAULT: '#B38A4A',
-          light: '#FAF2E4',
-          dark: '#8C672B',
+        card: {
+          DEFAULT: '#FFFFFF',
+          dark: '#1C162E',
+        },
+        lavender: {
+          50: '#FAF8FD',
+          100: '#F8F6FC',
+          200: '#E8E1F2',
+          300: '#DACFEA',
+          400: '#C2B2DD',
+        },
+        success: {
+          DEFAULT: '#16A34A',
+          light: '#DCFCE7',
+          dark: '#15803D',
+        },
+        warning: {
+          DEFAULT: '#D97706',
+          light: '#FEF3C7',
+          dark: '#B45309',
+        },
+        danger: {
+          DEFAULT: '#DC2626',
+          light: '#FEE2E2',
+          dark: '#B91C1C',
         },
       },
       fontFamily: {
         sans: [
           'Inter',
-          'Manrope',
           '-apple-system',
           'BlinkMacSystemFont',
           'Segoe UI',
@@ -103,17 +99,24 @@ export default {
           'ui-monospace',
           'SFMono-Regular',
           'Menlo',
+          'Monaco',
+          'Consolas',
           'monospace',
         ],
       },
       boxShadow: {
-        'subtle': '0 1px 2px 0 rgba(90, 70, 52, 0.05)',
-        'card': '0 4px 20px rgba(90, 70, 52, 0.08)',
-        'card-dark': '0 4px 20px rgba(0, 0, 0, 0.25)',
-        'elevated': '0 10px 30px -5px rgba(90, 70, 52, 0.12)',
-        'modal': '0 20px 60px rgba(90, 70, 52, 0.18)',
+        xs: '0 1px 2px rgba(23, 21, 43, 0.05)',
+        sm: '0 1px 3px rgba(23, 21, 43, 0.08)',
+        card: '0 4px 20px rgba(89, 32, 181, 0.04), 0 1px 3px rgba(23, 21, 43, 0.05)',
+        'card-hover': '0 8px 30px rgba(89, 32, 181, 0.08), 0 2px 6px rgba(23, 21, 43, 0.06)',
+        purple: '0 4px 20px rgba(89, 32, 181, 0.25)',
+        'purple-lg': '0 8px 30px rgba(89, 32, 181, 0.35)',
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
       },
     },
   },
   plugins: [],
-}
+};

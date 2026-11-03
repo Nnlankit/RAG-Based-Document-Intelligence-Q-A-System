@@ -13,10 +13,10 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   return (
     <div
       className={clsx(
-        'animate-pulse bg-[#D8C7AB]/70 dark:bg-[#44362A] border border-[#CDBB9D]/40 dark:border-[#524436]',
-        variant === 'text' && 'h-4 rounded',
+        'animate-pulse bg-[#EDE8F5] dark:bg-[#2A2047] border border-[#E8E1F2]/60 dark:border-[#352B52]',
+        variant === 'text' && 'h-4 rounded-lg',
         variant === 'circular' && 'rounded-full',
-        variant === 'rectangular' && 'rounded-xl',
+        variant === 'rectangular' && 'rounded-2xl',
         className
       )}
       {...props}

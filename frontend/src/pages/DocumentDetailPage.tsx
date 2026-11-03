@@ -88,10 +88,10 @@ export const DocumentDetailPage: React.FC = () => {
   if (!document) {
     return (
       <div className="p-12 text-center space-y-4">
-        <FileText className="w-12 h-12 text-[#8B6F52] dark:text-[#CDB795] mx-auto" />
-        <h3 className="text-base font-semibold text-[#30261E] dark:text-[#F4EBDD]">Document Not Found</h3>
-        <p className="text-xs text-[#5A4634] dark:text-[#DCC9AA] font-medium">
-          The requested document could not be located on the server.
+        <FileText className="w-12 h-12 text-[#5920B5] mx-auto opacity-60" />
+        <h3 className="text-base font-bold text-[#17152B] dark:text-white">Document Not Found</h3>
+        <p className="text-xs text-[#77738A] dark:text-[#A39EB8]">
+          The requested document could not be located in the local repository.
         </p>
         <Button variant="primary" onClick={() => navigate('/documents')}>
           Back to Documents
@@ -200,23 +200,23 @@ export const DocumentDetailPage: React.FC = () => {
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
       {/* Top Workspace Header */}
-      <div className="h-14 px-6 border-b border-[#D4C3A5] dark:border-[#524436] bg-[#F7F0E3]/90 dark:bg-[#261F1A]/90 backdrop-blur-md flex items-center justify-between shrink-0">
+      <div className="h-14 px-4 md:px-6 border-b border-[#E8E1F2] dark:border-[#352B52] bg-white/90 dark:bg-[#1E1733]/90 backdrop-blur-md flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3 min-w-0">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/documents')}
             title="Back to documents"
-            className="h-8 w-8 text-[#5A4634] hover:text-[#211B16] dark:text-[#DCC9AA] dark:hover:text-[#F4EBDD] hover:bg-[#E1D2B8]/40"
+            className="h-8 w-8 text-[#77738A] hover:text-[#5920B5]"
           >
             <ArrowLeft className="w-4 h-4" />
           </Button>
 
-          <div className="flex items-center gap-2 truncate">
-            <h2 className="text-sm font-bold text-[#30261E] dark:text-[#F7F0E3] truncate max-w-sm">
+          <div className="flex items-center gap-2.5 truncate">
+            <h2 className="text-sm font-bold text-[#17152B] dark:text-white truncate max-w-sm">
               {document.filename}
             </h2>
-            <span className="px-2 py-0.5 rounded text-[10px] font-semibold text-[#5A4634] dark:text-[#E8DCC8] bg-[#E1D2B8] dark:bg-[#3E3228] border border-[#CDBB9D] dark:border-[#5A4634]">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold text-[#5920B5] dark:text-[#A78BFA] bg-[#F0EBFA] dark:bg-[#2A2047] border border-[#E8E1F2] dark:border-[#3E3065]">
               {document.chunk_count} chunks
             </span>
           </div>
@@ -238,7 +238,7 @@ export const DocumentDetailPage: React.FC = () => {
             size="icon"
             onClick={handleDelete}
             title="Delete Document"
-            className="h-8 w-8 text-[#6B5C4D] dark:text-[#A89A89] hover:text-[#A65D50] hover:bg-[#A65D50]/10"
+            className="h-8 w-8 text-[#77738A] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40"
           >
             <Trash2 className="w-4 h-4" />
           </Button>
@@ -247,21 +247,21 @@ export const DocumentDetailPage: React.FC = () => {
 
       {/* Split Screen Workspace */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0 overflow-hidden">
-        {/* Left 6 or 7 cols: Document Viewer */}
-        <div className="lg:col-span-7 h-full p-4 overflow-hidden border-r border-[#D4C3A5] dark:border-[#524436]">
+        {/* Left 7 cols: Document Viewer */}
+        <div className="lg:col-span-7 h-full p-4 overflow-hidden border-r border-[#E8E1F2] dark:border-[#352B52]">
           <DocumentViewer document={document} targetPage={targetPage} />
         </div>
 
         {/* Right 5 cols: AI Contextual Assistant & Tabs */}
-        <div className="lg:col-span-5 h-full flex flex-col min-h-0 bg-[#F7F0E3]/40 dark:bg-[#261F1A]/40 overflow-hidden">
+        <div className="lg:col-span-5 h-full flex flex-col min-h-0 bg-[#FAF8FD] dark:bg-[#18112A] overflow-hidden">
           {/* Navigation Tabs */}
-          <div className="flex items-center border-b border-[#D4C3A5] dark:border-[#524436] px-4 pt-2 gap-2 bg-[#EEE3D0] dark:bg-[#2A221C] shrink-0">
+          <div className="flex items-center border-b border-[#E8E1F2] dark:border-[#352B52] px-4 pt-2 gap-2 bg-white dark:bg-[#1E1733] shrink-0">
             <button
               onClick={() => setActiveTab('chat')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold border-b-2 transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold border-b-2 transition-colors ${
                 activeTab === 'chat'
-                  ? 'border-[#5A4634] text-[#5A4634] dark:border-[#E8DCC8] dark:text-[#E8DCC8]'
-                  : 'border-transparent text-[#5A4634] hover:text-[#211B16] dark:text-[#DCC9AA] dark:hover:text-[#F7F0E3]'
+                  ? 'border-[#5920B5] text-[#5920B5] dark:border-[#8B5CF6] dark:text-[#A78BFA]'
+                  : 'border-transparent text-[#77738A] hover:text-[#17152B] dark:hover:text-white'
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
@@ -269,10 +269,10 @@ export const DocumentDetailPage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('intelligence')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold border-b-2 transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold border-b-2 transition-colors ${
                 activeTab === 'intelligence'
-                  ? 'border-[#5A4634] text-[#5A4634] dark:border-[#E8DCC8] dark:text-[#E8DCC8]'
-                  : 'border-transparent text-[#5A4634] hover:text-[#211B16] dark:text-[#DCC9AA] dark:hover:text-[#F7F0E3]'
+                  ? 'border-[#5920B5] text-[#5920B5] dark:border-[#8B5CF6] dark:text-[#A78BFA]'
+                  : 'border-transparent text-[#77738A] hover:text-[#17152B] dark:hover:text-white'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -280,10 +280,10 @@ export const DocumentDetailPage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('chunks')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold border-b-2 transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold border-b-2 transition-colors ${
                 activeTab === 'chunks'
-                  ? 'border-[#5A4634] text-[#5A4634] dark:border-[#E8DCC8] dark:text-[#E8DCC8]'
-                  : 'border-transparent text-[#5A4634] hover:text-[#211B16] dark:text-[#DCC9AA] dark:hover:text-[#F7F0E3]'
+                  ? 'border-[#5920B5] text-[#5920B5] dark:border-[#8B5CF6] dark:text-[#A78BFA]'
+                  : 'border-transparent text-[#77738A] hover:text-[#17152B] dark:hover:text-white'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -296,15 +296,15 @@ export const DocumentDetailPage: React.FC = () => {
             <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {chatMessages.length === 0 ? (
-                  <div className="py-12 text-center text-xs text-[#5A4634] dark:text-[#DCC9AA] space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#5A4634] text-[#F7F0E3] flex items-center justify-center mx-auto shadow-xs">
-                      <MessageSquare className="w-5 h-5" />
+                  <div className="py-12 text-center text-xs text-[#77738A] dark:text-[#A39EB8] space-y-3">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center mx-auto shadow-purple">
+                      <MessageSquare className="w-6 h-6" />
                     </div>
-                    <p className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
+                    <p className="font-bold text-[#17152B] dark:text-white text-sm">
                       Contextual AI Document Assistant
                     </p>
-                    <p className="max-w-xs mx-auto text-[#5A4634] dark:text-[#DCC9AA]">
-                      Ask questions specifically about "{document.filename}". Responses cite exact pages and chunks.
+                    <p className="max-w-xs mx-auto text-[#77738A] leading-relaxed">
+                      Ask questions specifically grounded in "{document.filename}". Responses cite exact pages and chunks.
                     </p>
                   </div>
                 ) : (
@@ -314,15 +314,15 @@ export const DocumentDetailPage: React.FC = () => {
                 )}
 
                 {isChatLoading && (
-                  <div className="flex items-center gap-2 text-xs text-[#5A4634] dark:text-[#DCC9AA] font-medium">
-                    <span className="w-2 h-2 rounded-full bg-[#8B6F52] animate-ping" />
+                  <div className="flex items-center gap-2 text-xs text-[#5920B5] font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-[#5920B5] animate-ping" />
                     <span>Analyzing document & generating answer...</span>
                   </div>
                 )}
               </div>
 
               {/* Chat Input */}
-              <div className="p-3 border-t border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/70 dark:bg-[#2A221C]/70">
+              <div className="p-3 border-t border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733]">
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
@@ -333,7 +333,7 @@ export const DocumentDetailPage: React.FC = () => {
                       if (e.key === 'Enter') handleSendDocQuestion();
                     }}
                     disabled={isChatLoading}
-                    className="flex-1 px-3.5 py-2 text-xs rounded-xl border border-[#CDBB9D] dark:border-[#524436] bg-[#F7F0E3] dark:bg-[#342A22] text-[#30261E] dark:text-[#F7F0E3] placeholder-[#6B5C4D]/80 dark:placeholder-[#B9A995]/80 focus:outline-none focus:ring-1 focus:ring-[#8B6F52]"
+                    className="flex-1 px-3.5 py-2 text-xs rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] text-[#17152B] dark:text-[#F5F3FF] placeholder-[#77738A]/70 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]"
                   />
                   <Button
                     variant="primary"
@@ -352,26 +352,26 @@ export const DocumentDetailPage: React.FC = () => {
 
           {/* Tab 2: Document Intelligence & Summary */}
           {activeTab === 'intelligence' && (
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 space-y-5 text-xs">
               {/* Summary Section */}
-              <div className="space-y-3 p-4 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/40 dark:bg-[#342A22]/40">
+              <div className="space-y-3 p-4 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold text-[#30261E] dark:text-[#F7F0E3] flex items-center gap-1.5">
-                    <FileCheck className="w-4 h-4 text-[#8B6F52]" />
+                  <h4 className="font-bold text-[#17152B] dark:text-white flex items-center gap-1.5">
+                    <FileCheck className="w-4 h-4 text-[#5920B5]" />
                     Document Summarizer
                   </h4>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 bg-[#FAF8FD] dark:bg-[#150F24] p-1 rounded-xl border border-[#E8E1F2] dark:border-[#352B52]">
                     {(['short', 'detailed', 'key_points'] as const).map((t) => (
                       <button
                         key={t}
                         onClick={() => setSummaryType(t)}
-                        className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                        className={`px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors ${
                           summaryType === t
-                            ? 'bg-[#5A4634] text-[#F7F0E3]'
-                            : 'bg-[#E1D2B8] text-[#5A4634] dark:bg-[#3E3228] dark:text-[#E8DCC8]'
+                            ? 'bg-[#5920B5] text-white shadow-purple'
+                            : 'text-[#77738A] hover:text-[#17152B]'
                         }`}
                       >
-                        {t === 'key_points' ? 'Key Points' : t.charAt(0).toUpperCase() + t.slice(1)}
+                        {t === 'key_points' ? 'Key Points' : t}
                       </button>
                     ))}
                   </div>
@@ -388,7 +388,7 @@ export const DocumentDetailPage: React.FC = () => {
                 </Button>
 
                 {summaryResult && (
-                  <div className="p-3 bg-[#F7F0E3] dark:bg-[#2A221C] rounded-xl border border-[#D4C3A5] dark:border-[#524436] leading-relaxed text-[#30261E] dark:text-[#E8DCC8]">
+                  <div className="p-3.5 bg-[#FAF8FD] dark:bg-[#150F24] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] leading-relaxed text-[#17152B] dark:text-[#F5F3FF]">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {summaryResult}
                     </ReactMarkdown>
@@ -397,10 +397,10 @@ export const DocumentDetailPage: React.FC = () => {
               </div>
 
               {/* Extract Metadata & Entities */}
-              <div className="space-y-3 p-4 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/40 dark:bg-[#342A22]/40">
+              <div className="space-y-3 p-4 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold text-[#30261E] dark:text-[#F7F0E3] flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-[#8B6F52]" />
+                  <h4 className="font-bold text-[#17152B] dark:text-white flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
                     Extract Entities & Metadata
                   </h4>
                   <Button
@@ -414,27 +414,27 @@ export const DocumentDetailPage: React.FC = () => {
                 </div>
 
                 {extractedInfo && (
-                  <div className="p-3 bg-[#F7F0E3] dark:bg-[#2A221C] rounded-xl border border-[#D4C3A5] dark:border-[#524436] space-y-2">
+                  <div className="p-3.5 bg-[#FAF8FD] dark:bg-[#150F24] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] space-y-2">
                     {extractedInfo.author && (
                       <p>
-                        <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">Author:</span>{' '}
+                        <span className="font-bold text-[#17152B] dark:text-white">Author:</span>{' '}
                         {extractedInfo.author}
                       </p>
                     )}
                     {extractedInfo.organization && (
                       <p>
-                        <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">Org:</span>{' '}
+                        <span className="font-bold text-[#17152B] dark:text-white">Org:</span>{' '}
                         {extractedInfo.organization}
                       </p>
                     )}
                     {extractedInfo.technologies?.length > 0 && (
                       <div>
-                        <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3] block mb-1">
+                        <span className="font-bold text-[#17152B] dark:text-white block mb-1">
                           Technologies:
                         </span>
                         <div className="flex flex-wrap gap-1">
                           {extractedInfo.technologies.map((t: string, i: number) => (
-                            <span key={i} className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#E1D2B8] text-[#5A4634] dark:bg-[#3E3228] dark:text-[#E8DCC8] border border-[#CDBB9D] dark:border-[#5A4634]">
+                            <span key={i} className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F0EBFA] text-[#5920B5] border border-[#E8E1F2]">
                               {t}
                             </span>
                           ))}
@@ -446,10 +446,10 @@ export const DocumentDetailPage: React.FC = () => {
               </div>
 
               {/* Generate Questions */}
-              <div className="space-y-3 p-4 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/40 dark:bg-[#342A22]/40">
+              <div className="space-y-3 p-4 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold text-[#30261E] dark:text-[#F7F0E3] flex items-center gap-1.5">
-                    <HelpCircle className="w-4 h-4 text-[#657A58]" />
+                  <h4 className="font-bold text-[#17152B] dark:text-white flex items-center gap-1.5">
+                    <HelpCircle className="w-4 h-4 text-[#16A34A]" />
                     Generated Questions
                   </h4>
                   <Button
@@ -471,7 +471,7 @@ export const DocumentDetailPage: React.FC = () => {
                           setActiveTab('chat');
                           handleSendDocQuestion(q);
                         }}
-                        className="w-full text-left p-2.5 rounded-lg border border-[#D4C3A5] dark:border-[#524436] bg-[#F7F0E3] dark:bg-[#2A221C] hover:border-[#8B6F52] hover:text-[#5A4634] dark:hover:text-[#F7F0E3] transition-colors"
+                        className="w-full text-left p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] hover:border-[#8B5CF6] hover:text-[#5920B5] transition-colors font-medium"
                       >
                         {q}
                       </button>

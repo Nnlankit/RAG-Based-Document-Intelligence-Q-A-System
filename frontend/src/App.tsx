@@ -11,9 +11,12 @@ import { DashboardPage } from './pages/DashboardPage';
 import { DocumentsPage } from './pages/DocumentsPage';
 import { DocumentDetailPage } from './pages/DocumentDetailPage';
 import { ChatPage } from './pages/ChatPage';
+import { ConversationsPage } from './pages/ConversationsPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { FavoritesPage } from './pages/FavoritesPage';
+import { KnowledgeBasePage } from './pages/KnowledgeBasePage';
 import { SettingsPage } from './pages/SettingsPage';
+import { ProfilePage } from './pages/ProfilePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,9 +42,12 @@ export const App: React.FC = () => {
                   <Route path="documents/:documentId" element={<DocumentDetailPage />} />
                   <Route path="chat" element={<ChatPage />} />
                   <Route path="chat/:conversationId" element={<ChatPage />} />
+                  <Route path="conversations" element={<ConversationsPage />} />
                   <Route path="analytics" element={<AnalyticsPage />} />
                   <Route path="favorites" element={<FavoritesPage />} />
+                  <Route path="knowledge-base" element={<KnowledgeBasePage />} />
                   <Route path="settings" element={<SettingsPage />} />
+                  <Route path="profile" element={<ProfilePage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>
               </Routes>

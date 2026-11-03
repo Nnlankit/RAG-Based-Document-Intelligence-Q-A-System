@@ -272,6 +272,13 @@ export const ChatPage: React.FC = () => {
     }
   };
 
+  const handleRegenerate = () => {
+    const lastUser = [...messages].reverse().find((m) => m.role === 'user');
+    if (lastUser) {
+      handleSendMessage(lastUser.content);
+    }
+  };
+
   return (
     <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
       {/* Conversations Sidebar */}
@@ -289,7 +296,9 @@ export const ChatPage: React.FC = () => {
         <ChatMessageList
           messages={messages}
           isLoading={isSending}
+          isStreaming={isSending}
           onSelectPrompt={(prompt) => handleSendMessage(prompt)}
+          onRegenerate={handleRegenerate}
         />
 
         <ChatInput

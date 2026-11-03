@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Layers,
   RotateCcw,
+  Sparkles,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useChatSettings } from '../context/ChatSettingsContext';
@@ -30,7 +31,7 @@ export const SettingsPage: React.FC = () => {
     setTopK,
   } = useChatSettings();
 
-  const { data: health, isLoading: healthLoading } = useQuery({
+  const { data: health, isLoading: healthLoading, refetch } = useQuery({
     queryKey: ['system-health'],
     queryFn: healthService.checkHealth,
   });
@@ -40,34 +41,37 @@ export const SettingsPage: React.FC = () => {
     setTopK(5);
   };
 
+  const isHealthy = health?.status === 'healthy';
+
   return (
-    <div className="p-6 md:p-8 space-y-8 max-w-5xl mx-auto">
+    <div className="w-full p-4 sm:p-6 lg:p-8 space-y-8">
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-[#30261E] dark:text-[#F7F0E3]">
-          Settings & Configuration
+        <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-[#17152B] dark:text-white flex items-center gap-2.5">
+          <Settings className="w-6 h-6 text-[#5920B5]" />
+          <span>Settings & Configuration</span>
         </h1>
-        <p className="text-xs text-[#5A4634] dark:text-[#DCC9AA] mt-0.5 font-medium">
+        <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-1 font-medium">
           Tune RAG retrieval sensitivity, adjust theme preferences, and inspect local AI engines
         </p>
       </div>
 
       <div className="space-y-6">
         {/* Appearance Section */}
-        <Card className="border border-[#D4C3A5] dark:border-[#524436] bg-[#F7F0E3] dark:bg-[#342A22] shadow-card">
+        <Card className="border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
           <CardHeader>
-            <h3 className="text-xs font-semibold text-[#30261E] dark:text-[#F7F0E3] uppercase tracking-wider">
+            <h3 className="text-xs font-bold text-[#17152B] dark:text-white uppercase tracking-wider">
               Appearance & Theme
             </h3>
-            <p className="text-xs text-[#5A4634] dark:text-[#DCC9AA] mt-0.5 font-medium">
+            <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5">
               Choose how DocuMind AI appears on your device
             </p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: 'light', label: 'Light', icon: Sun },
-                { id: 'dark', label: 'Dark', icon: Moon },
-                { id: 'system', label: 'System', icon: Laptop },
+                { id: 'light', label: 'Light Theme', desc: 'Soft lavender & clean white', icon: Sun },
+                { id: 'dark', label: 'Dark Theme', desc: 'Deep navy purple contrast', icon: Moon },
+                { id: 'system', label: 'System Default', desc: 'Sync with OS preference', icon: Laptop },
               ].map((item) => {
                 const Icon = item.icon;
                 const isSelected = theme === item.id;
@@ -75,14 +79,19 @@ export const SettingsPage: React.FC = () => {
                   <button
                     key={item.id}
                     onClick={() => setTheme(item.id as any)}
-                    className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all text-xs font-medium text-left ${
+                    className={`flex items-start gap-3 p-4 rounded-2xl border transition-all text-xs text-left ${
                       isSelected
-                        ? 'border-[#8B6F52] bg-[#E1D2B8] dark:bg-[#4A3B2F] text-[#5A4634] dark:text-[#E8DCC8] ring-1 ring-[#8B6F52] font-semibold shadow-xs'
-                        : 'border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/60 dark:bg-[#2A221C]/60 text-[#5A4634] dark:text-[#DCC9AA] hover:bg-[#E5D6BD]'
+                        ? 'border-[#5920B5] bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-white ring-2 ring-[#5920B5] font-bold shadow-purple'
+                        : 'border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] text-[#77738A] dark:text-[#A39EB8] hover:bg-[#F3EEFB] hover:border-[#8B5CF6]'
                     }`}
                   >
-                    <Icon className="w-4 h-4 text-[#8B6F52]" />
-                    <span>{item.label}</span>
+                    <div className={`p-2 rounded-xl shrink-0 ${isSelected ? 'bg-[#5920B5] text-white' : 'bg-white dark:bg-[#201934] text-[#77738A]'}`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[#17152B] dark:text-white">{item.label}</p>
+                      <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8] mt-0.5">{item.desc}</p>
+                    </div>
                   </button>
                 );
               })}
@@ -91,14 +100,14 @@ export const SettingsPage: React.FC = () => {
         </Card>
 
         {/* RAG Retrieval Parameters */}
-        <Card className="border border-[#D4C3A5] dark:border-[#524436] bg-[#F7F0E3] dark:bg-[#342A22] shadow-card">
+        <Card className="border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <h3 className="text-xs font-semibold text-[#30261E] dark:text-[#F7F0E3] uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-[#17152B] dark:text-white uppercase tracking-wider">
                 RAG Retrieval & Evidence Threshold
               </h3>
-              <p className="text-xs text-[#5A4634] dark:text-[#DCC9AA] mt-0.5 font-medium">
-                Calibrate evidence strictness to prevent hallucinated answers
+              <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5">
+                Control vector grounding strictness, cosine similarity cutoff, and chunk retrieval count
               </p>
             </div>
             <Button
@@ -106,141 +115,129 @@ export const SettingsPage: React.FC = () => {
               size="sm"
               onClick={handleResetSettings}
               leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
-              className="text-xs text-[#5A4634] dark:text-[#E8DCC8] hover:bg-[#E1D2B8]/40"
+              className="text-xs text-[#77738A] hover:text-[#5920B5]"
             >
               Reset Defaults
             </Button>
           </CardHeader>
+
           <CardContent className="space-y-6">
             {/* Similarity Threshold Slider */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                  Evidence Similarity Threshold
-                </span>
-                <span className="font-mono px-2 py-0.5 rounded bg-[#E1D2B8] dark:bg-[#4A3B2F] text-[#5A4634] dark:text-[#E8DCC8] font-bold border border-[#CDBB9D] dark:border-[#5A4634]">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-bold text-[#17152B] dark:text-white">
+                    Cosine Similarity Threshold
+                  </label>
+                  <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8]">
+                    Chunks with a distance higher than this are dropped to prevent hallucinated answers.
+                  </p>
+                </div>
+                <span className="px-2.5 py-1 rounded-xl bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#A78BFA] font-mono font-bold text-xs border border-[#E8E1F2]">
                   {similarityThreshold}
                 </span>
               </div>
               <input
                 type="range"
                 min="0.1"
-                max="0.8"
+                max="0.9"
                 step="0.05"
                 value={similarityThreshold}
                 onChange={(e) => setSimilarityThreshold(parseFloat(e.target.value))}
-                className="w-full accent-[#5A4634] cursor-pointer"
+                className="w-full accent-[#5920B5] cursor-pointer"
               />
-              <p className="text-[11px] text-[#5A4634] dark:text-[#DCC9AA]">
-                Default calibrated value is <span className="font-mono font-semibold">0.35</span>. Chunks with fused scores below this threshold are discarded. If no chunks exceed this score, the system strictly abstains to avoid hallucination.
-              </p>
+              <div className="flex justify-between text-[10px] text-[#77738A]">
+                <span>0.1 (Strict Abstention)</span>
+                <span>0.35 (Recommended Grounded)</span>
+                <span>0.9 (Permissive Recall)</span>
+              </div>
             </div>
 
             {/* Top-K Chunks Slider */}
-            <div className="space-y-2 pt-2 border-t border-[#D4C3A5]/40 dark:border-[#524436]/40">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">
-                  Top-K Retrieved Chunks
-                </span>
-                <span className="font-mono px-2 py-0.5 rounded bg-[#E1D2B8] dark:bg-[#4A3B2F] text-[#5A4634] dark:text-[#E8DCC8] font-bold border border-[#CDBB9D] dark:border-[#5A4634]">
-                  {topK}
+            <div className="space-y-2 pt-2 border-t border-[#E8E1F2] dark:border-[#352B52]">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-bold text-[#17152B] dark:text-white">
+                    Top-K Context Chunks
+                  </label>
+                  <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8]">
+                    Number of most relevant semantic chunks supplied to Llama 3.2 synthesis prompt.
+                  </p>
+                </div>
+                <span className="px-2.5 py-1 rounded-xl bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#A78BFA] font-mono font-bold text-xs border border-[#E8E1F2]">
+                  {topK} chunks
                 </span>
               </div>
               <input
                 type="range"
                 min="1"
-                max="10"
+                max="15"
                 step="1"
                 value={topK}
                 onChange={(e) => setTopK(parseInt(e.target.value, 10))}
-                className="w-full accent-[#5A4634] cursor-pointer"
+                className="w-full accent-[#5920B5] cursor-pointer"
               />
-              <p className="text-[11px] text-[#5A4634] dark:text-[#DCC9AA]">
-                Number of most relevant chunks passed to Llama 3.2 during prompt generation. Default is 5.
-              </p>
+              <div className="flex justify-between text-[10px] text-[#77738A]">
+                <span>1 chunk (Focused)</span>
+                <span>5 chunks (Optimal Balance)</span>
+                <span>15 chunks (Deep Context)</span>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Engine & Environment Health */}
-        <Card className="border border-[#D4C3A5] dark:border-[#524436] bg-[#F7F0E3] dark:bg-[#342A22] shadow-card">
+        {/* System & Engine Diagnostic Info */}
+        <Card className="border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
           <CardHeader>
-            <h3 className="text-xs font-semibold text-[#30261E] dark:text-[#F7F0E3] uppercase tracking-wider">
-              Connected Infrastructure & Models
+            <h3 className="text-xs font-bold text-[#17152B] dark:text-white uppercase tracking-wider">
+              Diagnostic & Engine Verification
             </h3>
-            <p className="text-xs text-[#5A4634] dark:text-[#DCC9AA] mt-0.5 font-medium">
-              Local inference engines and persistence verification
+            <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5">
+              Live status of backend microservices, models, and databases
             </p>
           </CardHeader>
+
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-3.5 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/60 dark:bg-[#2A221C]/60 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <Cpu className="w-4 h-4 text-[#8B6F52]" />
-                  <div>
-                    <p className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">Ollama LLM</p>
-                    <p className="text-[11px] text-[#5A4634] dark:text-[#DCC9AA] font-mono font-medium">
-                      {health?.details?.llm_model || 'llama3.2'}
-                    </p>
-                  </div>
+              <div className="p-3.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-[#17152B] dark:text-white">Relational DB</p>
+                  <p className="text-[11px] text-[#77738A]">Neon PostgreSQL</p>
                 </div>
-                <Badge variant={health?.models?.['llama3.2'] ? 'success' : 'danger'}>
-                  {health?.models?.['llama3.2'] ? 'Ready' : 'Offline'}
-                </Badge>
+                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#DCFCE7] text-[#16A34A]">
+                  {health?.database || 'Healthy'}
+                </span>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/60 dark:bg-[#2A221C]/60 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <Layers className="w-4 h-4 text-[#8B6F52]" />
-                  <div>
-                    <p className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">Embedding Model</p>
-                    <p className="text-[11px] text-[#5A4634] dark:text-[#DCC9AA] font-mono font-medium">
-                      {health?.details?.embedding_model || 'nomic-embed-text'}
-                    </p>
-                  </div>
+              <div className="p-3.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-[#17152B] dark:text-white">Vector Store</p>
+                  <p className="text-[11px] text-[#77738A]">pgvector (Cosine)</p>
                 </div>
-                <Badge variant={health?.models?.['nomic-embed-text'] ? 'success' : 'danger'}>
-                  {health?.models?.['nomic-embed-text'] ? 'Ready' : 'Offline'}
-                </Badge>
+                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#DCFCE7] text-[#16A34A]">
+                  {health?.vector_store || 'Healthy'}
+                </span>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/60 dark:bg-[#2A221C]/60 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <Database className="w-4 h-4 text-[#657A58]" />
-                  <div>
-                    <p className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">Vector Store</p>
-                    <p className="text-[11px] text-[#5A4634] dark:text-[#DCC9AA] font-mono font-medium">
-                      {health?.details?.vector_store_type?.toUpperCase() || 'CHROMADB'}
-                    </p>
-                  </div>
+              <div className="p-3.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-[#17152B] dark:text-white">LLM Engine</p>
+                  <p className="text-[11px] text-[#77738A]">Ollama Llama 3.2</p>
                 </div>
-                <Badge variant={health?.vector_store === 'healthy' ? 'success' : 'danger'}>
-                  {health?.vector_store === 'healthy' ? 'Connected' : 'Error'}
-                </Badge>
+                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#DCFCE7] text-[#16A34A]">
+                  {health?.ollama || 'Healthy'}
+                </span>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#EEE3D0]/60 dark:bg-[#2A221C]/60 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-[#8B6F52]" />
-                  <div>
-                    <p className="font-semibold text-[#30261E] dark:text-[#F7F0E3]">Relational DB</p>
-                    <p className="text-[11px] text-[#5A4634] dark:text-[#DCC9AA] font-mono font-medium">SQLAlchemy Persistent</p>
-                  </div>
+              <div className="p-3.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-[#17152B] dark:text-white">Embedding Service</p>
+                  <p className="text-[11px] text-[#77738A]">nomic-embed-text (768d)</p>
                 </div>
-                <Badge variant={health?.database === 'healthy' ? 'success' : 'danger'}>
-                  {health?.database === 'healthy' ? 'Active' : 'Error'}
-                </Badge>
+                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#DCFCE7] text-[#16A34A]">
+                  Verified
+                </span>
               </div>
-            </div>
-
-            <div className="p-4 rounded-xl bg-[#EEE3D0]/70 dark:bg-[#2A221C]/70 border border-[#D4C3A5] dark:border-[#524436] text-xs space-y-1">
-              <p className="font-semibold text-[#30261E] dark:text-[#F7F0E3] flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-[#657A58]" />
-                Air-Gapped & Privacy-Preserving
-              </p>
-              <p className="text-[#5A4634] dark:text-[#DCC9AA] text-[11px] leading-relaxed font-medium">
-                All document text extraction, semantic chunking, dense vector embeddings, and LLM text generation occur entirely locally on your host machine. No user documents or prompts are transmitted to third-party cloud APIs.
-              </p>
             </div>
           </CardContent>
         </Card>

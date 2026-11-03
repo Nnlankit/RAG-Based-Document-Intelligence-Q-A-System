@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Cpu, Sparkles, MessageSquare, BookOpen, Layers } from 'lucide-react';
+import { Sparkles, MessageSquare, BookOpen, Layers, Cpu, ArrowRight } from 'lucide-react';
 import { ChatMessage } from '../../types/chat';
 import { ChatMessageItem } from './ChatMessageItem';
 
@@ -7,12 +7,16 @@ interface ChatMessageListProps {
   messages: ChatMessage[];
   isLoading: boolean;
   onSelectPrompt?: (prompt: string) => void;
+  onRegenerate?: () => void;
+  isStreaming?: boolean;
 }
 
 export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   messages,
   isLoading,
   onSelectPrompt,
+  onRegenerate,
+  isStreaming = false,
 }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -23,11 +27,11 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   const starterPrompts = [
     {
       title: 'Summarize Document',
-      prompt: 'Provide a comprehensive summary of the uploaded document with key takeaways.',
+      prompt: 'Provide a comprehensive summary of the uploaded document with key takeaways and executive highlights.',
       icon: BookOpen,
     },
     {
-      title: 'Extract Core Skills & Tech',
+      title: 'Extract Core Skills & Topics',
       prompt: 'What are the main technical skills, frameworks, and domain expertise mentioned in the document?',
       icon: Sparkles,
     },
@@ -41,15 +45,15 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-xl mx-auto">
-        <div className="w-14 h-14 rounded-2xl bg-[#5A4634] text-[#F7F0E3] flex items-center justify-center shadow-card mb-4">
-          <Cpu className="w-7 h-7" />
+        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center shadow-purple-lg mb-4">
+          <Sparkles className="w-8 h-8" />
         </div>
 
-        <h3 className="text-lg font-bold text-[#30261E] dark:text-[#F7F0E3]">
+        <h3 className="text-xl font-extrabold text-[#17152B] dark:text-white tracking-tight">
           Ask DocuMind AI
         </h3>
-        <p className="text-xs text-[#5A4634] dark:text-[#DCC9AA] mt-1 max-w-sm">
-          Natural-language Q&A grounded in your uploaded documents. Powered by local Llama 3.2 and dense vector search with zero hallucinations.
+        <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-1.5 max-w-md leading-relaxed">
+          Natural-language Q&A grounded in your uploaded documents. Powered by local Llama 3.2 and dense pgvector search with zero hallucinations.
         </p>
 
         {/* Prompt suggestion cards */}
@@ -60,13 +64,15 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
               <button
                 key={idx}
                 onClick={() => onSelectPrompt?.(item.prompt)}
-                className="p-3.5 rounded-xl border border-[#D4C3A5] dark:border-[#524436] bg-[#F7F0E3] dark:bg-[#342A22] hover:border-[#8B6F52] dark:hover:border-[#8B6F52] hover:shadow-card text-left transition-all duration-150 group shadow-xs"
+                className="p-4 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] hover:border-[#8B5CF6] hover:shadow-card-hover text-left transition-all duration-150 group shadow-card"
               >
-                <Icon className="w-4 h-4 text-[#8B6F52] dark:text-[#D4A359] mb-2 group-hover:scale-110 transition-transform" />
-                <h4 className="text-xs font-semibold text-[#30261E] dark:text-[#F7F0E3] mb-1">
+                <div className="w-8 h-8 rounded-xl bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#A78BFA] flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+                  <Icon className="w-4 h-4" />
+                </div>
+                <h4 className="text-xs font-bold text-[#17152B] dark:text-white mb-1 group-hover:text-[#5920B5] dark:group-hover:text-[#A78BFA] transition-colors">
                   {item.title}
                 </h4>
-                <p className="text-[11px] text-[#5A4634] dark:text-[#DCC9AA] line-clamp-2">
+                <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8] line-clamp-2">
                   {item.prompt}
                 </p>
               </button>
@@ -79,23 +85,37 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
 
   return (
     <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-4">
-      {messages.map((msg, index) => (
-        <ChatMessageItem key={index} message={msg} />
-      ))}
+      {messages.map((msg, index) => {
+        const isLatestAssistant =
+          msg.role === 'assistant' &&
+          (index === messages.length - 1 ||
+            (index === messages.length - 2 && messages[messages.length - 1].role === 'user'));
+
+        return (
+          <ChatMessageItem
+            key={index}
+            message={msg}
+            isLatestAssistant={isLatestAssistant}
+            onRegenerate={onRegenerate}
+            onSelectPrompt={onSelectPrompt}
+            isStreaming={isStreaming && index === messages.length - 1 && msg.role === 'assistant'}
+          />
+        );
+      })}
 
       {/* Thinking / Loading indicator */}
       {isLoading && (
-        <div className="flex items-start gap-3 py-3">
-          <div className="w-8 h-8 rounded-xl bg-[#5A4634] text-[#F7F0E3] flex items-center justify-center shadow-xs shrink-0 animate-pulse">
-            <Cpu className="w-4 h-4" />
+        <div className="flex items-start gap-3.5 py-3">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center shadow-purple shrink-0 animate-pulse">
+            <Sparkles className="w-4 h-4" />
           </div>
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#F7F0E3] dark:bg-[#2A221C] border border-[#D4C3A5] dark:border-[#4B3C2F] text-xs text-[#5A4634] dark:text-[#DCC9AA] shadow-xs font-medium">
+          <div className="flex items-center gap-2.5 px-4.5 py-3 rounded-2xl bg-white dark:bg-[#1E1733] border border-[#E8E1F2] dark:border-[#352B52] text-xs text-[#5920B5] dark:text-[#A78BFA] shadow-card font-semibold">
             <span className="flex gap-1 items-center">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8B6F52] animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8B6F52] animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8B6F52] animate-bounce" style={{ animationDelay: '300ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#5920B5] animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#8B5CF6] animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#A78BFA] animate-bounce" style={{ animationDelay: '300ms' }} />
             </span>
-            <span>Retrieving chunks & generating grounded answer...</span>
+            <span>Retrieving chunks & generating grounded answer with Llama 3.2...</span>
           </div>
         </div>
       )}

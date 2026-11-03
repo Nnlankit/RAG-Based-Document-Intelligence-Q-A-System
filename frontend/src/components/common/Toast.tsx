@@ -80,21 +80,21 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
               className={clsx(
-                'pointer-events-auto flex items-start gap-3 p-4 rounded-xl shadow-modal border bg-[#F7F0E3] dark:bg-[#342A22] border-[#D4C3A5] dark:border-[#524436]'
+                'pointer-events-auto flex items-start gap-3 p-4 rounded-2xl shadow-purple border bg-white dark:bg-[#1E1733] border-[#E8E1F2] dark:border-[#352B52]'
               )}
             >
               {icons[t.type]}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[#30261E] dark:text-[#F4EBDD]">{t.title}</p>
+                <p className="text-sm font-semibold text-[#17152B] dark:text-[#F5F3FF]">{t.title}</p>
                 {t.message && (
-                  <p className="text-xs text-[#5A4634] dark:text-[#DCC9AA] mt-0.5 break-words font-medium">
+                  <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5 break-words font-medium">
                     {t.message}
                   </p>
                 )}
               </div>
               <button
                 onClick={() => removeToast(t.id)}
-                className="text-[#5A4634] hover:text-[#211B16] dark:text-[#DCC9AA] dark:hover:text-[#F4EBDD] p-0.5 rounded-lg"
+                className="text-[#77738A] hover:text-[#17152B] dark:text-[#A39EB8] dark:hover:text-[#FFFFFF] p-0.5 rounded-lg"
               >
                 <X className="w-4 h-4" />
               </button>

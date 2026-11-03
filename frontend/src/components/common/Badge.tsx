@@ -16,18 +16,17 @@ export const Badge: React.FC<BadgeProps> = ({
   const baseStyles = 'inline-flex items-center font-medium rounded-full';
 
   const variants = {
-    default: 'bg-[#9A8B78]/15 text-[#6D5F4D] dark:bg-[#9A8B78]/25 dark:text-[#C5B7A4] border border-[#9A8B78]/30 dark:border-[#9A8B78]/40',
-    neutral: 'bg-[#9A8B78]/15 text-[#6D5F4D] dark:bg-[#9A8B78]/25 dark:text-[#C5B7A4] border border-[#9A8B78]/30 dark:border-[#9A8B78]/40',
-    success: 'bg-[#657A58]/15 text-[#4E6242] dark:bg-[#657A58]/25 dark:text-[#A7BA9B] border border-[#657A58]/30 dark:border-[#657A58]/40',
-    warning: 'bg-[#B38A4A]/15 text-[#8F6A2C] dark:bg-[#B38A4A]/25 dark:text-[#E2BD7E] border border-[#B38A4A]/30 dark:border-[#B38A4A]/40',
-    danger: 'bg-[#A65D50]/15 text-[#884337] dark:bg-[#A65D50]/25 dark:text-[#E0988B] border border-[#A65D50]/30 dark:border-[#A65D50]/40',
-    info: 'bg-[#8B6F52]/15 text-[#5A4634] dark:bg-[#8B6F52]/25 dark:text-[#E5D5BA] border border-[#8B6F52]/30 dark:border-[#8B6F52]/40',
-    brand: 'bg-[#5A4634]/15 text-[#5A4634] dark:bg-[#E5D5BA]/20 dark:text-[#E5D5BA] border border-[#5A4634]/25 dark:border-[#E5D5BA]/35',
-    sand: 'bg-[#5A4634]/15 text-[#5A4634] dark:bg-[#E5D5BA]/20 dark:text-[#E5D5BA] border border-[#5A4634]/25 dark:border-[#E5D5BA]/35',
+    default: 'bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2C214B] dark:text-[#DDD6FE] border border-[#E8E1F2] dark:border-[#3E3065]',
+    neutral: 'bg-[#F3F0F8] text-[#77738A] dark:bg-[#271F3F] dark:text-[#A39EB8] border border-[#E8E1F2] dark:border-[#3E3065]',
+    success: 'bg-[#DCFCE7] text-[#16A34A] dark:bg-[#143E24] dark:text-[#4ADE80] border border-[#BBF7D0] dark:border-[#1F5E36]',
+    warning: 'bg-[#FEF3C7] text-[#D97706] dark:bg-[#3D2C10] dark:text-[#FBBF24] border border-[#FDE68A] dark:border-[#5C4215]',
+    danger: 'bg-[#FEE2E2] text-[#DC2626] dark:bg-[#3D1414] dark:text-[#F87171] border border-[#FECACA] dark:border-[#5E1E1E]',
+    info: 'bg-[#EDE9FE] text-[#6D28D9] dark:bg-[#2A1F49] dark:text-[#C4B5FD] border border-[#DDD6FE] dark:border-[#433272]',
+    brand: 'bg-[#EDE9FE] text-[#5920B5] dark:bg-[#2A1F49] dark:text-[#C4B5FD] border border-[#D5C7EA] dark:border-[#433272]',
   };
 
   const sizes = {
-    sm: 'px-2 py-0.5 text-xs',
+    sm: 'px-2 py-0.5 text-[11px]',
     md: 'px-2.5 py-1 text-xs',
   };
 
