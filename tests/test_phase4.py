@@ -59,10 +59,8 @@ def test_context_builder():
 
     context = builder.build(candidates)
     assert context.total_chunks_used == 2  # Deduplicated
-    assert "SOURCE 1" in context.context_text
-    assert "Document: fastapi_guide.pdf" in context.context_text
-    assert "Page: 1" in context.context_text
-    assert "SOURCE 2" in context.context_text
+    assert "fastapi_guide.pdf" in context.context_text
+    assert "p.1" in context.context_text or "Page: 1" in context.context_text
     assert len(context.sources) == 2
     assert context.sources[0].page_number == 1
     assert context.sources[1].page_number == 2

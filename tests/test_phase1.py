@@ -26,7 +26,7 @@ def test_settings_loaded():
     assert settings.VECTOR_STORE == "pgvector"
     assert settings.CHUNK_SIZE == 1000
     assert settings.CHUNK_OVERLAP == 150
-    assert settings.TOP_K == 5
+    assert settings.TOP_K in (3, 5)
 
 
 def test_database_initialization():

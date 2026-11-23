@@ -56,17 +56,8 @@ class ContextBuilder:
         current_length = 0
 
         for i, cand in enumerate(deduped, start=1):
-            page_info = f"Page: {cand.page_number}" if cand.page_number is not None else "Page: N/A"
-            section_info = f"Section: {cand.metadata.get('section')}\n" if cand.metadata.get("section") else ""
-
-            block = (
-                f"SOURCE {i}\n"
-                f"Document: {cand.filename}\n"
-                f"{page_info}\n"
-                f"{section_info}"
-                f"\n"
-                f"{cand.content}\n"
-            )
+            page_info = f"p.{cand.page_number}" if cand.page_number is not None else "p.N/A"
+            block = f"[{cand.filename} - {page_info}]: {cand.content.strip()}"
 
             block_len = len(block)
             if current_length + block_len > self.max_context_chars and context_blocks:
@@ -91,7 +82,7 @@ class ContextBuilder:
                 )
             )
 
-        full_context_text = "\n---\n\n".join(context_blocks)
+        full_context_text = "\n\n".join(context_blocks)
         return FormattedContext(
             context_text=full_context_text,
             sources=sources,

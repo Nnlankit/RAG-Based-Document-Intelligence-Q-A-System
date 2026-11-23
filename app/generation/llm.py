@@ -79,15 +79,15 @@ class OllamaLLMService(BaseLLMService):
             "model": self.model_name,
             "prompt": prompt,
             "stream": False,
-            "keep_alive": getattr(self.settings, "OLLAMA_KEEP_ALIVE", "60m"),
+            "keep_alive": getattr(self.settings, "OLLAMA_KEEP_ALIVE", "24h"),
             "options": {
                 "temperature": temp,
                 "num_predict": num_predict,
-                "num_ctx": getattr(self.settings, "LLM_NUM_CTX", 1536),
-                "num_thread": getattr(self.settings, "OLLAMA_NUM_THREAD", 8),
+                "num_ctx": getattr(self.settings, "LLM_NUM_CTX", 1024),
+                "num_thread": getattr(self.settings, "OLLAMA_NUM_THREAD", 6),
                 "top_p": 0.9,
                 "repeat_penalty": 1.1,
-                "stop": ["\n\n\n", "User:", "Question:"],
+                "stop": ["\n\n\n", "User:", "Question:", "Direct Answer:", "\nContext:"],
             },
         }
         if system_prompt:
@@ -137,15 +137,15 @@ class OllamaLLMService(BaseLLMService):
             "model": self.model_name,
             "prompt": prompt,
             "stream": True,
-            "keep_alive": getattr(self.settings, "OLLAMA_KEEP_ALIVE", "60m"),
+            "keep_alive": getattr(self.settings, "OLLAMA_KEEP_ALIVE", "24h"),
             "options": {
                 "temperature": temp,
                 "num_predict": num_predict,
-                "num_ctx": getattr(self.settings, "LLM_NUM_CTX", 1536),
-                "num_thread": getattr(self.settings, "OLLAMA_NUM_THREAD", 8),
+                "num_ctx": getattr(self.settings, "LLM_NUM_CTX", 1024),
+                "num_thread": getattr(self.settings, "OLLAMA_NUM_THREAD", 6),
                 "top_p": 0.9,
                 "repeat_penalty": 1.1,
-                "stop": ["\n\n\n", "User:", "Question:"],
+                "stop": ["\n\n\n", "User:", "Question:", "Direct Answer:", "\nContext:"],
             },
         }
         if system_prompt:

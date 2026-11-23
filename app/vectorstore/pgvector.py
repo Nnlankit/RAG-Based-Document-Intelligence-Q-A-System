@@ -181,10 +181,10 @@ class PgVectorStore(BaseVectorStore):
                     document_id, 
                     content, 
                     metadata, 
-                    1.0 - (COALESCE(embedding_vec, CAST(embedding AS vector)) <=> CAST(:query_emb AS vector)) AS similarity_score
+                    1.0 - (embedding_vec <=> CAST(:query_emb AS vector)) AS similarity_score
                 FROM document_chunks
-                WHERE {where_sql}
-                ORDER BY COALESCE(embedding_vec, CAST(embedding AS vector)) <=> CAST(:query_emb AS vector) ASC
+                WHERE {where_sql} AND embedding_vec IS NOT NULL
+                ORDER BY embedding_vec <=> CAST(:query_emb AS vector) ASC
                 LIMIT :k
             """
             try:

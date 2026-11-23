@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-23 16:59:09",
+  "timestamp": "2026-11-23 17:49:15",
   "total_test_cases": 5,
   "supported_cases": 3,
   "unsupported_negative_cases": 2,
@@ -7,9 +7,9 @@
     "context_recall": 1.0,
     "context_precision": 1.0,
     "abstention_accuracy": 1.0,
-    "avg_retrieval_latency_ms": 370.87,
-    "avg_generation_latency_ms": 2150.69,
-    "avg_total_latency_ms": 2521.67
+    "avg_retrieval_latency_ms": 403.15,
+    "avg_generation_latency_ms": 2869.54,
+    "avg_total_latency_ms": 3272.85
   },
   "individual_results": [
     {
@@ -19,8 +19,8 @@
       "context_recalled": true,
       "context_precision": 1.0,
       "answer": "Navigating subterranean tunnels and mapping hazard areas without human intervention.",
-      "sources_count": 1,
-      "total_latency_ms": 4346.9
+      "sources_count": 3,
+      "total_latency_ms": 4599.35
     },
     {
       "id": "eval_002",
@@ -28,9 +28,9 @@
       "is_unsupported": false,
       "context_recalled": true,
       "context_precision": 1.0,
-      "answer": "I could not find sufficient information in the provided documents regarding the battery endurance of the Titan robot.",
-      "sources_count": 1,
-      "total_latency_ms": 2880.31
+      "answer": "18 hours of continuous autonomous operation.",
+      "sources_count": 3,
+      "total_latency_ms": 2255.43
     },
     {
       "id": "eval_003",
@@ -38,8 +38,8 @@
       "is_unsupported": true,
       "abstained": true,
       "abstention_correct": true,
-      "answer": "I could not find sufficient information in the provided documents regarding the maximum speed of the rocket in Project Apollo, as it relates to Project Titan, not Project Apollo.",
-      "total_latency_ms": 3029.15
+      "answer": "I could not find sufficient information in the provided documents regarding a \"rocket\" in Project Apollo, as the context only discusses an autonomous mobile robotics platform called Project Titan.",
+      "total_latency_ms": 4006.24
     },
     {
       "id": "eval_004",
@@ -48,8 +48,8 @@
       "context_recalled": true,
       "context_precision": 1.0,
       "answer": "I could not find sufficient information in the provided documents.",
-      "sources_count": 1,
-      "total_latency_ms": 1978.73
+      "sources_count": 3,
+      "total_latency_ms": 2410.31
     },
     {
       "id": "eval_005",
@@ -57,8 +57,8 @@
       "is_unsupported": true,
       "abstained": true,
       "abstention_correct": true,
-      "answer": "I could not find sufficient information in the provided documents.",
-      "total_latency_ms": 373.27
+      "answer": "I could not find sufficient information in the provided documents regarding the capital city of ancient Atlantis.",
+      "total_latency_ms": 3092.94
     }
   ]
 }

@@ -31,10 +31,10 @@ class Settings(BaseSettings):
     OLLAMA_BASE_URL: str = Field(default="http://localhost:11434", description="Base URL for Ollama API")
     LLM_TEMPERATURE: float = Field(default=0.1, description="Sampling temperature for grounded generation")
     LLM_REQUEST_TIMEOUT: float = Field(default=120.0, description="Timeout in seconds for LLM calls")
-    LLM_MAX_TOKENS: int = Field(default=200, description="Maximum tokens to generate for fast, concise responses")
-    LLM_NUM_CTX: int = Field(default=1536, description="Context window size to optimize prompt evaluation latency")
-    OLLAMA_KEEP_ALIVE: str = Field(default="60m", description="Ollama model keep_alive duration")
-    OLLAMA_NUM_THREAD: int = Field(default=8, description="Optimal CPU thread count for Ollama generation")
+    LLM_MAX_TOKENS: int = Field(default=120, description="Maximum tokens to generate for fast, concise responses")
+    LLM_NUM_CTX: int = Field(default=1024, description="Context window size to optimize prompt evaluation latency")
+    OLLAMA_KEEP_ALIVE: str = Field(default="24h", description="Ollama model keep_alive duration")
+    OLLAMA_NUM_THREAD: int = Field(default=6, description="Optimal CPU thread count for Ollama generation")
     ENABLE_STREAMING: bool = Field(default=True, description="Enable streaming responses")
     ENABLE_LATENCY_METRICS: bool = Field(default=True, description="Enable detailed latency metrics in responses")
 
@@ -70,10 +70,10 @@ class Settings(BaseSettings):
     PROCESSED_DIR: str = Field(default="./data/processed", description="Directory to store processed outputs")
 
     # Retrieval & Grounding
-    TOP_K: int = Field(default=5, description="Final number of retrieved context chunks passed to LLM")
+    TOP_K: int = Field(default=3, description="Final number of retrieved context chunks passed to LLM")
     RETRIEVAL_CANDIDATES: int = Field(default=10, description="Initial candidates retrieved before filtering/reranking")
-    SIMILARITY_THRESHOLD: float = Field(default=0.35, description="Cosine relevance similarity cutoff threshold")
-    MAX_CONTEXT_CHARS: int = Field(default=3000, description="Maximum characters in formatted context prompt")
+    SIMILARITY_THRESHOLD: float = Field(default=0.38, description="Cosine relevance similarity cutoff threshold")
+    MAX_CONTEXT_CHARS: int = Field(default=1500, description="Maximum characters in formatted context prompt")
     ENABLE_RERANKER: bool = Field(default=True, description="Enable reranker model if True")
     ENABLE_QUERY_REWRITING: bool = Field(default=True, description="Enable query rewriting for conversational follow-ups")
     USE_FAST_QUERY_EXPANSION: bool = Field(default=True, description="Use sub-millisecond lexical expansion instead of slow LLM rewriting")
