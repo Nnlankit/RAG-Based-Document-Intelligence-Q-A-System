@@ -29,6 +29,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logger.info("Application database initialization completed.")
     except Exception as e:
         logger.error(f"Database startup warning: {e}. Ensure DATABASE_URL is configured.")
+
+    try:
+        from app.embeddings.embedding_service import get_embedding_service
+        from app.generation.llm import get_llm_service
+        logger.info("Pre-warming Ollama embedding and LLM models for zero cold-start...")
+        get_embedding_service().embed_query("warmup")
+        get_llm_service().generate("ok", max_tokens=1)
+        logger.info("Ollama models pre-warmed successfully (zero-cold-start ready).")
+    except Exception as e:
+        logger.warning(f"Ollama pre-warm notice: {e}")
     yield
     logger.info("Shutting down application...")
 

@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.core.security import get_current_user_id
 from app.database.postgres import get_db
 from app.database.repositories import ConversationRepository, RetrievalLogRepository
 from app.rag.memory import ConversationMemory
@@ -29,7 +30,7 @@ _rag_pipeline = RAGPipeline()
 def chat(
     request: ChatRequest,
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ) -> ChatResponse:
     """Answers document queries using grounded vector retrieval, query rewriting, and Llama 3.2."""
     request_id = str(uuid.uuid4())[:8]
@@ -90,7 +91,7 @@ def chat(
 def chat_stream(
     request: ChatRequest,
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ):
     """Streams RAG generation tokens in real-time as Server-Sent Events (SSE)."""
     conv = ConversationRepository.get_or_create(
@@ -176,7 +177,7 @@ def chat_stream(
 @router.get("/conversations", response_model=List[ConversationResponse], summary="List all user conversations")
 def list_conversations(
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ) -> List[ConversationResponse]:
     """Lists conversations for current user."""
     convs = ConversationRepository.list_conversations(db, user_id=user_id)

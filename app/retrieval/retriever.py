@@ -1,6 +1,8 @@
 """Document retriever implementing dense vector search, corpus-level hybrid BM25 search, and reranking."""
 
+from collections import OrderedDict
 import logging
+import time
 from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 
@@ -19,6 +21,16 @@ logger = logging.getLogger("document_intelligence.retrieval")
 
 class DocumentRetriever:
     """Manages dense vector retrieval, corpus-level hybrid keyword search, reranking, and threshold validation."""
+
+    _cache: OrderedDict = OrderedDict()
+    _cache_ttl: float = 300.0  # 5 minutes TTL
+    _cache_max_size: int = 512
+
+    @classmethod
+    def clear_cache(cls) -> None:
+        """Invalidates all cached retrieval results (e.g. on document upload/deletion)."""
+        cls._cache.clear()
+        logger.info("Cleared retrieval cache.")
 
     def __init__(
         self,
@@ -91,6 +103,25 @@ class DocumentRetriever:
         cutoff = similarity_threshold if similarity_threshold is not None else self.similarity_threshold
         use_hybrid = enable_hybrid if enable_hybrid is not None else self.settings.ENABLE_HYBRID_SEARCH
         use_reranker = enable_reranker if enable_reranker is not None else self.settings.ENABLE_RERANKER
+
+        # Check retrieval cache for identical parameters
+        norm_query = " ".join(query.lower().strip().split())
+        doc_key = ",".join(sorted(document_ids)) if document_ids else "all"
+        cache_key = f"{user_id or 'default'}:{doc_key}:{norm_query}:{k}:{cutoff}:{use_hybrid}:{use_reranker}"
+
+        now = time.time()
+        if cache_key in self._cache:
+            cached_time, cached_results = self._cache[cache_key]
+            if now - cached_time < self._cache_ttl:
+                self._cache.move_to_end(cache_key)
+                if profiler:
+                    profiler.record("embedding_ms", 0.0)
+                    profiler.record("vector_search_ms", 0.0)
+                    profiler.set_metric("retrieved_candidates_count", len(cached_results))
+                    profiler.set_metric("final_chunks_count", len(cached_results))
+                    profiler.set_metric("retrieval_cache_hit", True)
+                logger.info(f"Retrieval cache HIT for '{query[:30]}...' -> {len(cached_results)} chunks")
+                return cached_results
 
         # 1. Dense query vector search
         if profiler:
@@ -184,6 +215,10 @@ class DocumentRetriever:
 
         # 5. Return Top-K
         final_results = filtered_candidates[:k]
+        self._cache[cache_key] = (now, final_results)
+        if len(self._cache) > self._cache_max_size:
+            self._cache.popitem(last=False)
+
         if profiler:
             profiler.set_metric("retrieved_candidates_count", len(raw_candidates))
             profiler.set_metric("final_chunks_count", len(final_results))

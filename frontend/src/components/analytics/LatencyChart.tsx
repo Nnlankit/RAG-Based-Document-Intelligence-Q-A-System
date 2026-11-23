@@ -30,19 +30,19 @@ export const LatencyChart: React.FC<LatencyChartProps> = ({ queries }) => {
 
   if (data.length === 0) {
     return (
-      <Card className="p-8 text-center text-xs text-[#77738A] dark:text-[#A39EB8] border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733]">
+      <Card className="p-8 text-center text-xs text-[#77738A] dark:text-[#A8A499] border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124]">
         No query latency records available yet.
       </Card>
     );
   }
 
   return (
-    <Card className="border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
+    <Card className="border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124] shadow-card">
       <CardHeader>
-        <h4 className="text-xs font-bold text-[#17152B] dark:text-white uppercase tracking-wider">
+        <h4 className="text-xs font-bold text-[#202124] dark:text-white uppercase tracking-wider">
           Query Latency Breakdown (ms)
         </h4>
-        <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5">
+        <p className="text-xs text-[#77738A] dark:text-[#A8A499] mt-0.5">
           Retrieval (pgvector + BM25 + Rerank) vs Generation (Local Llama 3.2)
         </p>
       </CardHeader>
@@ -50,22 +50,22 @@ export const LatencyChart: React.FC<LatencyChartProps> = ({ queries }) => {
         <div className="h-64 sm:h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E8E1F2" opacity={0.6} />
-              <XAxis dataKey="index" tick={{ fontSize: 11, fill: '#77738A' }} stroke="#E8E1F2" />
-              <YAxis tick={{ fontSize: 11, fill: '#77738A' }} stroke="#E8E1F2" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E9E1CC" opacity={0.6} />
+              <XAxis dataKey="index" tick={{ fontSize: 11, fill: '#77738A' }} stroke="#E9E1CC" />
+              <YAxis tick={{ fontSize: 11, fill: '#77738A' }} stroke="#E9E1CC" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#211A35',
-                  borderColor: '#362C54',
+                  backgroundColor: '#202124',
+                  borderColor: '#303238',
                   borderRadius: '1rem',
-                  color: '#FFFFFF',
+                  color: '#FFFDF5',
                   fontSize: '12px',
-                  boxShadow: '0 8px 30px rgba(89, 32, 181, 0.35)',
+                  boxShadow: '0 4px 14px rgba(32, 33, 36, 0.25)',
                 }}
               />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} iconType="circle" />
-              <Bar dataKey="Retrieval" fill="#8B5CF6" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="Generation" fill="#5920B5" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="Retrieval" fill="#4D9B45" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="Generation" fill="#303238" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

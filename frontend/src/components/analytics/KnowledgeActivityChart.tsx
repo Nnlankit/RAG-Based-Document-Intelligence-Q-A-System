@@ -11,7 +11,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { Card, CardHeader, CardContent } from '../common/Card';
-import { Activity, AlertCircle, X, ExternalLink, MessageSquare, FileText, CheckCircle2 } from 'lucide-react';
+import { Activity, AlertCircle, X, ExternalLink } from 'lucide-react';
 import { ActivityTimelineItem } from '../../types/analytics';
 import { DocumentItem } from '../../types/document';
 import { Conversation } from '../../types/chat';
@@ -148,7 +148,6 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
     }
   }, [normalizedDailyTimeline, timeframe, dateRange]);
 
-  // Check if any activity has ever occurred in the dataset
   const totalActivity = useMemo(() => {
     return normalizedDailyTimeline.reduce(
       (sum, item) => sum + item.questions + item.answers + item.documents,
@@ -157,24 +156,23 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
   }, [normalizedDailyTimeline]);
 
   return (
-    <Card className="border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card h-full min-h-[300px] flex flex-col justify-between">
-      <CardHeader className="h-14 flex items-center justify-between gap-2 px-4 py-2.5 border-b border-[#E8E1F2] dark:border-[#352B52]">
+    <Card className="border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#202124] shadow-card h-full min-h-[300px] flex flex-col justify-between">
+      <CardHeader className="h-14 flex items-center justify-between gap-2 px-4 py-2.5 border-b border-[#E9E1CC] dark:border-[#303238]">
         <div className="min-w-0">
-          <h3 className="text-sm font-bold text-[#17152B] dark:text-white truncate">
+          <h3 className="text-sm font-bold text-[#202124] dark:text-white truncate">
             Knowledge Activity
           </h3>
-          <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8] truncate">
+          <p className="text-[11px] text-[#77746B] dark:text-[#A99F87] truncate">
             Questions, Answers & Document uploads
           </p>
         </div>
 
         {/* Date Range & Timeframe Filters */}
         <div className="flex items-center gap-1.5 shrink-0">
-          {/* Date range filter dropdown */}
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value as any)}
-            className="text-[10px] font-semibold bg-[#F8F6FC] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] text-[#17152B] dark:text-[#F5F3FF] rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#8B5CF6] cursor-pointer"
+            className="text-[10px] font-semibold bg-[#FFF9E8] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] text-[#202124] dark:text-[#FAF8F2] rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#FFE89A] cursor-pointer"
             title="Filter activity date range"
           >
             <option value="7d">Last 7 Days</option>
@@ -182,14 +180,13 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
             <option value="30d">Last 30 Days</option>
           </select>
 
-          {/* Timeframe Weekly / Monthly pill */}
-          <div className="flex items-center gap-0.5 p-0.5 bg-[#F8F6FC] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] rounded-lg">
+          <div className="flex items-center gap-0.5 p-0.5 bg-[#FFF9E8] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] rounded-lg">
             <button
               onClick={() => setTimeframe('weekly')}
               className={`px-2 py-0.5 text-[10px] font-semibold rounded-md transition-all ${
                 timeframe === 'weekly'
-                  ? 'bg-[#5920B5] text-white shadow-purple'
-                  : 'text-[#77738A] dark:text-[#A39EB8] hover:text-[#17152B] dark:hover:text-white'
+                  ? 'bg-[#202124] text-white shadow-xs'
+                  : 'text-[#77746B] dark:text-[#A99F87] hover:text-[#202124] dark:hover:text-white'
               }`}
             >
               Weekly
@@ -198,8 +195,8 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
               onClick={() => setTimeframe('monthly')}
               className={`px-2 py-0.5 text-[10px] font-semibold rounded-md transition-all ${
                 timeframe === 'monthly'
-                  ? 'bg-[#5920B5] text-white shadow-purple'
-                  : 'text-[#77738A] dark:text-[#A39EB8] hover:text-[#17152B] dark:hover:text-white'
+                  ? 'bg-[#202124] text-white shadow-xs'
+                  : 'text-[#77746B] dark:text-[#A99F87] hover:text-[#202124] dark:hover:text-white'
               }`}
             >
               Monthly
@@ -209,42 +206,38 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col justify-center p-3">
-        {/* Loading State */}
         {isLoading ? (
           <div className="h-44 sm:h-48 w-full flex flex-col items-center justify-center space-y-2">
-            <div className="w-8 h-8 border-3 border-[#5920B5] border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs text-[#77738A] dark:text-[#A39EB8] animate-pulse">
+            <div className="w-8 h-8 border-3 border-[#202124] border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs text-[#77746B] dark:text-[#A99F87] animate-pulse">
               Aggregating knowledge telemetry...
             </p>
           </div>
         ) : error ? (
-          /* Error State */
           <div className="h-44 sm:h-48 w-full flex flex-col items-center justify-center space-y-2 text-center">
-            <AlertCircle className="w-7 h-7 text-rose-500" />
-            <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">
+            <AlertCircle className="w-7 h-7 text-[#C94B4B]" />
+            <p className="text-xs font-semibold text-[#C94B4B]">
               Failed to load knowledge activity
             </p>
-            <p className="text-[11px] text-[#77738A] max-w-xs">
+            <p className="text-[11px] text-[#77746B] max-w-xs">
               {error.message || 'Unable to connect to database activity telemetry.'}
             </p>
           </div>
         ) : totalActivity === 0 ? (
-          /* Empty State */
           <div className="h-44 sm:h-48 w-full flex flex-col items-center justify-center space-y-2 text-center">
-            <div className="w-10 h-10 rounded-xl bg-[#F8F6FC] dark:bg-[#251B3D] text-[#5920B5] dark:text-[#A78BFA] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#FFF9E8] dark:bg-[#17181A] text-[#202124] dark:text-[#FFE89A] flex items-center justify-center">
               <Activity className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-[#17152B] dark:text-white">
+              <h4 className="text-xs font-bold text-[#202124] dark:text-white">
                 No activity recorded yet
               </h4>
-              <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8] mt-0.5 max-w-xs">
+              <p className="text-[11px] text-[#77746B] dark:text-[#A99F87] mt-0.5 max-w-xs">
                 Questions asked, AI responses generated, and newly indexed files will plot here dynamically.
               </p>
             </div>
           </div>
         ) : (
-          /* Render Area Chart */
           <div className="h-44 sm:h-48 min-h-[175px] w-full pt-1 relative">
             <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={175}>
               <AreaChart
@@ -258,40 +251,43 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
                 className="cursor-pointer"
               >
                 <defs>
-                  <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#5920B5" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#5920B5" stopOpacity={0.0} />
+                  {/* Charcoal for Questions (#303238) */}
+                  <linearGradient id="charcoalGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#303238" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#303238" stopOpacity={0.0} />
                   </linearGradient>
-                  <linearGradient id="violetGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.0} />
-                  </linearGradient>
+                  {/* Natural Green for Answers (#4D9B45) */}
                   <linearGradient id="greenGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#16A34A" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#16A34A" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#4D9B45" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#4D9B45" stopOpacity={0.0} />
+                  </linearGradient>
+                  {/* Golden Yellow for Documents (#E8BD42) */}
+                  <linearGradient id="yellowGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#E8BD42" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#E8BD42" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E8E1F2" opacity={0.6} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E9E1CC" opacity={0.7} />
                 <XAxis
                   dataKey="shortName"
-                  tick={{ fontSize: 11, fill: '#77738A' }}
-                  stroke="#E8E1F2"
+                  tick={{ fontSize: 11, fill: '#77746B' }}
+                  stroke="#E9E1CC"
                 />
                 <YAxis
-                  tick={{ fontSize: 11, fill: '#77738A' }}
-                  stroke="#E8E1F2"
+                  tick={{ fontSize: 11, fill: '#77746B' }}
+                  stroke="#E9E1CC"
                   allowDecimals={false}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#211A35',
-                    borderColor: '#362C54',
+                    backgroundColor: '#202124',
+                    borderColor: '#303238',
                     borderRadius: '1rem',
-                    color: '#FFFFFF',
+                    color: '#FAF8F2',
                     fontSize: '12px',
-                    boxShadow: '0 8px 30px rgba(89, 32, 181, 0.35)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
                   }}
-                  labelStyle={{ fontWeight: 'bold', color: '#DDD6FE', marginBottom: '4px' }}
+                  labelStyle={{ fontWeight: 'bold', color: '#FFE89A', marginBottom: '4px' }}
                 />
                 <Legend
                   wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
@@ -300,48 +296,48 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
                 <Area
                   type="monotone"
                   dataKey="Questions"
-                  stroke="#5920B5"
+                  stroke="#303238"
                   strokeWidth={2.5}
                   fillOpacity={1}
-                  fill="url(#purpleGradient)"
+                  fill="url(#charcoalGradient)"
                   isAnimationActive={false}
-                  activeDot={{ r: 5, fill: '#5920B5', stroke: '#FFFFFF', strokeWidth: 2 }}
+                  activeDot={{ r: 5, fill: '#303238', stroke: '#FFFFFF', strokeWidth: 2 }}
                 />
                 <Area
                   type="monotone"
                   dataKey="Answers"
-                  stroke="#8B5CF6"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#violetGradient)"
-                  isAnimationActive={false}
-                  activeDot={{ r: 5, fill: '#8B5CF6', stroke: '#FFFFFF', strokeWidth: 2 }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="Documents"
-                  stroke="#16A34A"
+                  stroke="#4D9B45"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#greenGradient)"
                   isAnimationActive={false}
-                  activeDot={{ r: 5, fill: '#16A34A', stroke: '#FFFFFF', strokeWidth: 2 }}
+                  activeDot={{ r: 5, fill: '#4D9B45', stroke: '#FFFFFF', strokeWidth: 2 }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="Documents"
+                  stroke="#E8BD42"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#yellowGradient)"
+                  isAnimationActive={false}
+                  activeDot={{ r: 5, fill: '#E8BD42', stroke: '#FFFFFF', strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
 
             {/* Clicked Activity Details Popover */}
             {selectedPoint && (
-              <div className="absolute inset-x-2 bottom-2 bg-[#211A35]/95 backdrop-blur-md text-white border border-[#3E3065] rounded-xl p-3 shadow-purple-lg flex items-center justify-between gap-3 z-20 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute inset-x-2 bottom-2 bg-[#202124]/95 backdrop-blur-md text-white border border-[#303238] rounded-xl p-3 shadow-dropdown flex items-center justify-between gap-3 z-20 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-[#5920B5] flex items-center justify-center shrink-0">
-                    <Activity className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 rounded-lg bg-[#303238] flex items-center justify-center shrink-0">
+                    <Activity className="w-4 h-4 text-[#FFE89A]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-white truncate">
                       Activity on {selectedPoint.name}
                     </p>
-                    <p className="text-[11px] text-[#DDD6FE] truncate mt-0.5">
+                    <p className="text-[11px] text-[#E6E7E8] truncate mt-0.5">
                       {selectedPoint.Questions} Questions • {selectedPoint.Answers} Answers • {selectedPoint.Documents} Uploads
                     </p>
                   </div>
@@ -357,14 +353,14 @@ export const KnowledgeActivityChart: React.FC<KnowledgeActivityChartProps> = ({
                   </button>
                   <button
                     onClick={() => navigate('/documents')}
-                    className="px-2.5 py-1 rounded-lg bg-[#5920B5] hover:bg-[#4C1A9E] text-white text-[11px] font-semibold flex items-center gap-1 transition-colors shadow-purple"
+                    className="px-2.5 py-1 rounded-lg bg-[#FFE89A] hover:bg-[#F5D670] text-[#202124] text-[11px] font-semibold flex items-center gap-1 transition-colors"
                   >
                     <span>Files</span>
                     <ExternalLink className="w-3 h-3" />
                   </button>
                   <button
                     onClick={() => setSelectedPoint(null)}
-                    className="p-1 rounded-lg text-[#DDD6FE] hover:text-white hover:bg-white/10 transition-colors ml-1"
+                    className="p-1 rounded-lg text-[#A4A7AD] hover:text-white hover:bg-white/10 transition-colors ml-1"
                     title="Dismiss"
                   >
                     <X className="w-3.5 h-3.5" />

@@ -26,21 +26,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
+      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
 
     const variants = {
       primary:
-        'bg-[#5920B5] hover:bg-[#481A94] text-white shadow-sm hover:shadow-purple focus:ring-[#8B5CF6] border border-transparent dark:bg-[#8B5CF6] dark:hover:bg-[#7C3AED] dark:text-white',
+        'bg-[#202124] hover:bg-[#303238] text-white shadow-xs focus:ring-[#FFE89A] border border-transparent dark:bg-[#FFE89A] dark:hover:bg-[#F5D670] dark:text-[#202124]',
       secondary:
-        'bg-[#F0EBFA] hover:bg-[#E4DAF8] text-[#5920B5] border border-[#E8E1F2] focus:ring-[#8B5CF6] dark:bg-[#2A2047] dark:hover:bg-[#342758] dark:text-[#DDD6FE] dark:border-[#3E3065]',
+        'bg-[#DDF2C1] hover:bg-[#D0EABC] text-[#245B32] border border-[#C2E599] focus:ring-[#4D9B45] dark:bg-[#1B4526] dark:hover:bg-[#245B32] dark:text-[#DDF2C1] dark:border-[#3D8036]',
       accent:
-        'bg-[#8B5CF6] hover:bg-[#7C3AED] text-white shadow-sm hover:shadow-purple focus:ring-[#8B5CF6] border border-transparent',
+        'bg-[#FFE89A] hover:bg-[#F5D670] text-[#202124] font-semibold shadow-xs focus:ring-[#202124] border border-transparent',
       outline:
-        'border border-[#E8E1F2] dark:border-[#352B52] text-[#17152B] dark:text-[#F5F3FF] hover:bg-[#F8F6FC] dark:hover:bg-[#261E3E] focus:ring-[#8B5CF6] bg-white dark:bg-[#1E1733]',
+        'border border-[#E9E1CC] dark:border-[#303238] text-[#202124] dark:text-[#FAF8F2] hover:bg-[#FFF9E8] dark:hover:bg-[#26282B] focus:ring-[#FFE89A] bg-white dark:bg-[#202124]',
       ghost:
-        'bg-transparent hover:bg-[#F0EBFA] dark:hover:bg-[#261E3E] text-[#77738A] dark:text-[#A39EB8] hover:text-[#17152B] dark:hover:text-[#FFFFFF] focus:ring-[#8B5CF6] border border-transparent',
+        'bg-transparent hover:bg-[#FFF9E8] dark:hover:bg-[#303238] text-[#77746B] dark:text-[#A99F87] hover:text-[#202124] dark:hover:text-[#FFFFFF] focus:ring-[#FFE89A] border border-transparent',
       danger:
-        'bg-[#DC2626] hover:bg-[#B91C1C] text-white shadow-sm focus:ring-red-500 border border-transparent',
+        'bg-[#C94B4B] hover:bg-[#A63838] text-white shadow-xs focus:ring-red-400 border border-transparent',
     };
 
     const sizes = {

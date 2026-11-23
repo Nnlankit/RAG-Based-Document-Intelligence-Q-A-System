@@ -12,6 +12,14 @@ export interface AnalyticsPerformance {
   avg_retrieval_ms: number;
   avg_generation_ms: number;
   avg_total_ms: number;
+  p50_retrieval_ms?: number;
+  p95_retrieval_ms?: number;
+  p50_generation_ms?: number;
+  p95_generation_ms?: number;
+  p50_total_ms?: number;
+  p95_total_ms?: number;
+  min_total_ms?: number;
+  max_total_ms?: number;
 }
 
 export interface RecentQueryItem {

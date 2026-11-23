@@ -16,7 +16,7 @@ export const AppShell: React.FC = () => {
   useKeyboardShortcut('k', () => setCommandPaletteOpen(true), true);
 
   return (
-    <div className="flex h-screen w-screen max-w-full bg-[#F8F6FC] dark:bg-[#120D20] text-[#17152B] dark:text-[#F5F3FF] overflow-hidden font-sans">
+    <div className="flex h-screen w-screen max-w-full bg-[#FFF9E8] dark:bg-[#17181A] text-[#202124] dark:text-[#FAF8F2] overflow-hidden font-sans">
       {/* Desktop Sidebar */}
       <div className="hidden md:flex shrink-0">
         <Sidebar
@@ -30,13 +30,13 @@ export const AppShell: React.FC = () => {
       {mobileMenuOpen && (
         <div
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 z-40 bg-[#17152B]/50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-[#202124]/60 backdrop-blur-sm md:hidden"
         />
       )}
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#211A35] border-r border-[#2C2347] transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#202124] border-r border-[#303238] transform transition-transform duration-300 ease-in-out md:hidden ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

@@ -13,7 +13,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   return (
     <div
       className={clsx(
-        'animate-pulse bg-[#EDE8F5] dark:bg-[#2A2047] border border-[#E8E1F2]/60 dark:border-[#352B52]',
+        'animate-pulse bg-[#F3EFE4] dark:bg-[#26282B] border border-[#E9E1CC]/60 dark:border-[#303238]',
         variant === 'text' && 'h-4 rounded-lg',
         variant === 'circular' && 'rounded-full',
         variant === 'rectangular' && 'rounded-2xl',

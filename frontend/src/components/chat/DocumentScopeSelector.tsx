@@ -29,27 +29,27 @@ export const DocumentScopeSelector: React.FC<DocumentScopeSelectorProps> = ({ do
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] text-xs font-semibold text-[#17152B] dark:text-[#F5F3FF] hover:border-[#8B5CF6] transition-colors shadow-xs"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#202124] text-xs font-semibold text-[#202124] dark:text-[#FFFDF5] hover:border-[#E8BD42] transition-colors shadow-xs"
       >
-        <Layers className="w-3.5 h-3.5 text-[#5920B5] dark:text-[#A78BFA]" />
+        <Layers className="w-3.5 h-3.5 text-[#4D9B45]" />
         <span>
           {isAll
             ? 'Scope: All Documents'
             : `Scoped: ${scopeDocumentIds.length} doc${scopeDocumentIds.length > 1 ? 's' : ''}`}
         </span>
-        <ChevronDown className="w-3.5 h-3.5 text-[#77738A]" />
+        <ChevronDown className="w-3.5 h-3.5 text-[#77746B]" />
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full mb-2 left-0 w-80 rounded-2xl bg-white dark:bg-[#1E1733] border border-[#E8E1F2] dark:border-[#352B52] shadow-purple-lg z-50 p-2.5 space-y-1">
-          <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[#E8E1F2] dark:border-[#352B52]">
-            <span className="text-[11px] font-bold text-[#77738A] dark:text-[#A39EB8] uppercase tracking-wider">
+        <div className="absolute bottom-full mb-2 left-0 w-80 rounded-2xl bg-white dark:bg-[#202124] border border-[#E9E1CC] dark:border-[#303238] shadow-card z-50 p-2.5 space-y-1">
+          <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[#E9E1CC] dark:border-[#303238]">
+            <span className="text-[11px] font-bold text-[#77746B] dark:text-[#A8A499] uppercase tracking-wider">
               Filter Document Scope
             </span>
             {!isAll && (
               <button
                 onClick={clearScope}
-                className="text-[11px] text-[#5920B5] hover:underline font-semibold"
+                className="text-[11px] text-[#245B32] dark:text-[#FFE89A] hover:underline font-semibold"
               >
                 Reset to All
               </button>
@@ -60,12 +60,12 @@ export const DocumentScopeSelector: React.FC<DocumentScopeSelectorProps> = ({ do
             onClick={clearScope}
             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-left transition-colors ${
               isAll
-                ? 'bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2A2047] dark:text-[#DDD6FE] font-bold'
-                : 'text-[#17152B] dark:text-[#E2DCF0] hover:bg-[#FAF8FD] dark:hover:bg-[#150F24]'
+                ? 'bg-[#FFF9E8] text-[#202124] dark:bg-[#303238] dark:text-white font-bold border-l-2 border-[#E8BD42]'
+                : 'text-[#202124] dark:text-[#E9E1CC] hover:bg-[#FFFDF5] dark:hover:bg-[#2A2B2E]'
             }`}
           >
             <span>All Uploaded Documents (Global Search)</span>
-            {isAll && <Check className="w-4 h-4 text-[#5920B5]" />}
+            {isAll && <Check className="w-4 h-4 text-[#4D9B45]" />}
           </button>
 
           <div className="max-h-56 overflow-y-auto space-y-0.5 pt-1">
@@ -77,12 +77,12 @@ export const DocumentScopeSelector: React.FC<DocumentScopeSelectorProps> = ({ do
                   onClick={() => toggleScopeDocumentId(doc.id)}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-left transition-colors ${
                     isSelected
-                      ? 'bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2A2047] dark:text-[#DDD6FE] font-semibold'
-                      : 'text-[#17152B] dark:text-[#E2DCF0] hover:bg-[#FAF8FD] dark:hover:bg-[#150F24]'
+                      ? 'bg-[#FFF9E8] text-[#202124] dark:bg-[#303238] dark:text-white font-semibold border-l-2 border-[#E8BD42]'
+                      : 'text-[#202124] dark:text-[#E9E1CC] hover:bg-[#FFFDF5] dark:hover:bg-[#2A2B2E]'
                   }`}
                 >
                   <span className="truncate pr-2">{doc.filename}</span>
-                  {isSelected && <Check className="w-4 h-4 text-[#5920B5] shrink-0" />}
+                  {isSelected && <Check className="w-4 h-4 text-[#4D9B45] shrink-0" />}
                 </button>
               );
             })}

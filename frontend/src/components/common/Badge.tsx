@@ -16,13 +16,13 @@ export const Badge: React.FC<BadgeProps> = ({
   const baseStyles = 'inline-flex items-center font-medium rounded-full';
 
   const variants = {
-    default: 'bg-[#F0EBFA] text-[#5920B5] dark:bg-[#2C214B] dark:text-[#DDD6FE] border border-[#E8E1F2] dark:border-[#3E3065]',
-    neutral: 'bg-[#F3F0F8] text-[#77738A] dark:bg-[#271F3F] dark:text-[#A39EB8] border border-[#E8E1F2] dark:border-[#3E3065]',
-    success: 'bg-[#DCFCE7] text-[#16A34A] dark:bg-[#143E24] dark:text-[#4ADE80] border border-[#BBF7D0] dark:border-[#1F5E36]',
-    warning: 'bg-[#FEF3C7] text-[#D97706] dark:bg-[#3D2C10] dark:text-[#FBBF24] border border-[#FDE68A] dark:border-[#5C4215]',
-    danger: 'bg-[#FEE2E2] text-[#DC2626] dark:bg-[#3D1414] dark:text-[#F87171] border border-[#FECACA] dark:border-[#5E1E1E]',
-    info: 'bg-[#EDE9FE] text-[#6D28D9] dark:bg-[#2A1F49] dark:text-[#C4B5FD] border border-[#DDD6FE] dark:border-[#433272]',
-    brand: 'bg-[#EDE9FE] text-[#5920B5] dark:bg-[#2A1F49] dark:text-[#C4B5FD] border border-[#D5C7EA] dark:border-[#433272]',
+    default: 'bg-[#FFF1CC] text-[#202124] dark:bg-[#303238] dark:text-[#FFE89A] border border-[#E9E1CC] dark:border-[#3D4046]',
+    neutral: 'bg-[#F3EFE4] text-[#77746B] dark:bg-[#26282B] dark:text-[#A99F87] border border-[#E9E1CC] dark:border-[#303238]',
+    success: 'bg-[#E5F4DC] text-[#245B32] dark:bg-[#1B4526] dark:text-[#DDF2C1] border border-[#C2E599] dark:border-[#3D8036]',
+    warning: 'bg-[#FFF1CC] text-[#875C0F] dark:bg-[#5E3E08] dark:text-[#FFE89A] border border-[#FFE89A] dark:border-[#875C0F]',
+    danger: 'bg-[#FCE8E8] text-[#A63838] dark:bg-[#5C1D1D] dark:text-[#F87171] border border-[#F8C8C8] dark:border-[#8E2828]',
+    info: 'bg-[#EAF0F6] text-[#384C62] dark:bg-[#223040] dark:text-[#BAC9D8] border border-[#C7D7E7] dark:border-[#405670]',
+    brand: 'bg-[#FFE89A] text-[#202124] dark:bg-[#303238] dark:text-[#FFE89A] border border-[#E9E1CC] dark:border-[#3D4046]',
   };
 
   const sizes = {

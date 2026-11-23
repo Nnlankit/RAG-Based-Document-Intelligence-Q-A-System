@@ -31,9 +31,10 @@ class Settings(BaseSettings):
     OLLAMA_BASE_URL: str = Field(default="http://localhost:11434", description="Base URL for Ollama API")
     LLM_TEMPERATURE: float = Field(default=0.1, description="Sampling temperature for grounded generation")
     LLM_REQUEST_TIMEOUT: float = Field(default=120.0, description="Timeout in seconds for LLM calls")
-    LLM_MAX_TOKENS: int = Field(default=256, description="Maximum tokens to generate for fast, concise responses")
-    LLM_NUM_CTX: int = Field(default=2048, description="Context window size to optimize prompt evaluation latency")
-    OLLAMA_KEEP_ALIVE: str = Field(default="5m", description="Ollama model keep_alive duration (e.g. '5m', '30m')")
+    LLM_MAX_TOKENS: int = Field(default=200, description="Maximum tokens to generate for fast, concise responses")
+    LLM_NUM_CTX: int = Field(default=1536, description="Context window size to optimize prompt evaluation latency")
+    OLLAMA_KEEP_ALIVE: str = Field(default="60m", description="Ollama model keep_alive duration")
+    OLLAMA_NUM_THREAD: int = Field(default=8, description="Optimal CPU thread count for Ollama generation")
     ENABLE_STREAMING: bool = Field(default=True, description="Enable streaming responses")
     ENABLE_LATENCY_METRICS: bool = Field(default=True, description="Enable detailed latency metrics in responses")
 

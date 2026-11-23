@@ -33,11 +33,11 @@ export const AnalyticsPage: React.FC = () => {
     <div className="w-full p-4 sm:p-6 lg:p-8 space-y-6 md:space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-[#17152B] dark:text-white flex items-center gap-2.5">
-          <BarChart3 className="w-6 h-6 text-[#5920B5]" />
+        <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-[#202124] dark:text-white flex items-center gap-2.5">
+          <BarChart3 className="w-6 h-6 text-[#202124] dark:text-[#FFE89A]" />
           <span>Analytics & System Observability</span>
         </h1>
-        <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-1 font-medium">
+        <p className="text-xs text-[#77738A] dark:text-[#A8A499] mt-1 font-medium">
           Real-time telemetry across vector retrieval, LLM inference latency, and query grounding
         </p>
       </div>
@@ -55,23 +55,23 @@ export const AnalyticsPage: React.FC = () => {
               value={overview?.total_queries ?? 0}
               subtitle="Audited in retrieval log"
               icon={Activity}
-              iconGradient="from-[#5920B5] to-[#7C3AED]"
+              iconGradient="from-[#202124] to-[#303238]"
               trend="+15% this week"
             />
             <StatMetricCard
               title="Avg Retrieval Time"
               value={`${performance?.avg_retrieval_ms ?? 0} ms`}
-              subtitle="pgvector + BM25 + Rerank"
+              subtitle={performance?.p50_retrieval_ms !== undefined ? `Median: ${performance.p50_retrieval_ms}ms | p95: ${performance.p95_retrieval_ms ?? 0}ms` : "pgvector HNSW"}
               icon={Zap}
-              iconGradient="from-[#7C3AED] to-[#8B5CF6]"
-              trend="High-speed"
+              iconGradient="from-[#245B32] to-[#4D9B45]"
+              trend="HNSW Fast"
             />
             <StatMetricCard
               title="Avg Generation Time"
               value={`${performance?.avg_generation_ms ? (performance.avg_generation_ms / 1000).toFixed(1) : 0} s`}
-              subtitle="Local Llama 3.2 via Ollama"
+              subtitle={performance?.p50_generation_ms !== undefined ? `Median: ${((performance.p50_generation_ms ?? 0) / 1000).toFixed(1)}s | p95: ${((performance.p95_generation_ms ?? 0) / 1000).toFixed(1)}s` : "Local Llama 3.2"}
               icon={Clock}
-              iconGradient="from-[#8B5CF6] to-[#A78BFA]"
+              iconGradient="from-[#D99A24] to-[#E8BD42]"
               trend="Streaming"
             />
             <StatMetricCard

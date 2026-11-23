@@ -105,20 +105,20 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
     : chunks;
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#1E1733] border border-[#E8E1F2] dark:border-[#352B52] rounded-2xl overflow-hidden shadow-card">
+    <div className="flex flex-col h-full bg-white dark:bg-[#202124] border border-[#E9E1CC] dark:border-[#303238] rounded-2xl overflow-hidden shadow-card">
       {/* Top Controls Toolbar */}
-      <div className="h-12 px-4 border-b border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] flex items-center justify-between gap-3 shrink-0">
+      <div className="h-12 px-4 border-b border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#1A1A1C] flex items-center justify-between gap-3 shrink-0">
         {/* Left: Document details chip */}
         <div className="flex items-center gap-2 truncate">
-          <FileText className="w-4 h-4 text-[#5920B5] shrink-0" />
+          <FileText className="w-4 h-4 text-[#202124] dark:text-[#FFE89A] shrink-0" />
           <span
-            className="text-xs font-bold text-[#17152B] dark:text-white truncate"
+            className="text-xs font-bold text-[#202124] dark:text-white truncate"
             title={document.filename}
           >
             {document.filename}
           </span>
           {isPdf && currentPage > 1 && (
-            <span className="px-2 py-0.5 text-[10px] font-mono bg-[#F0EBFA] text-[#5920B5] rounded-md font-bold border border-[#E8E1F2] shrink-0">
+            <span className="px-2 py-0.5 text-[10px] font-mono bg-[#FFF9E8] text-[#202124] rounded-md font-bold border border-[#E9E1CC] shrink-0">
               p. {currentPage}
             </span>
           )}
@@ -129,11 +129,11 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
           {isPdf ? (
             <>
               {/* Page Navigator */}
-              <div className="flex items-center bg-white dark:bg-[#1E1733] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] p-0.5 text-xs font-semibold text-[#17152B] dark:text-white">
+              <div className="flex items-center bg-white dark:bg-[#202124] rounded-xl border border-[#E9E1CC] dark:border-[#303238] p-0.5 text-xs font-semibold text-[#202124] dark:text-white">
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage <= 1}
-                  className="p-1 rounded-lg hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] disabled:opacity-40 transition-colors"
+                  className="p-1 rounded-lg hover:bg-[#FFF9E8] dark:hover:bg-[#303238] disabled:opacity-40 transition-colors"
                   title="Previous Page"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
@@ -143,7 +143,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 </span>
                 <button
                   onClick={handleNextPage}
-                  className="p-1 rounded-lg hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+                  className="p-1 rounded-lg hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
                   title="Next Page"
                 >
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -151,10 +151,10 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
               </div>
 
               {/* Zoom Controls */}
-              <div className="flex items-center bg-white dark:bg-[#1E1733] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] p-0.5 text-xs font-semibold text-[#17152B] dark:text-white">
+              <div className="flex items-center bg-white dark:bg-[#202124] rounded-xl border border-[#E9E1CC] dark:border-[#303238] p-0.5 text-xs font-semibold text-[#202124] dark:text-white">
                 <button
                   onClick={handleZoomOut}
-                  className="p-1 rounded-lg hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+                  className="p-1 rounded-lg hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
                   title="Zoom Out"
                 >
                   <ZoomOut className="w-3.5 h-3.5" />
@@ -168,7 +168,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 </button>
                 <button
                   onClick={handleZoomIn}
-                  className="p-1 rounded-lg hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+                  className="p-1 rounded-lg hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
                   title="Zoom In"
                 >
                   <ZoomIn className="w-3.5 h-3.5" />
@@ -177,13 +177,13 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
             </>
           ) : isMarkdown ? (
             /* Markdown Mode Switcher */
-            <div className="flex items-center bg-white dark:bg-[#1E1733] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] p-0.5 text-xs font-semibold">
+            <div className="flex items-center bg-white dark:bg-[#202124] rounded-xl border border-[#E9E1CC] dark:border-[#303238] p-0.5 text-xs font-semibold">
               <button
                 onClick={() => setMarkdownMode('rendered')}
                 className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 ${
                   markdownMode === 'rendered'
-                    ? 'bg-[#5920B5] text-white shadow-purple'
-                    : 'text-[#77738A] hover:bg-[#F0EBFA]'
+                    ? 'bg-[#202124] text-[#FFE89A] shadow-subtle'
+                    : 'text-[#77746B] hover:bg-[#FFF9E8]'
                 }`}
               >
                 <BookOpen className="w-3 h-3" />
@@ -193,8 +193,8 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 onClick={() => setMarkdownMode('raw')}
                 className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 ${
                   markdownMode === 'raw'
-                    ? 'bg-[#5920B5] text-white shadow-purple'
-                    : 'text-[#77738A] hover:bg-[#F0EBFA]'
+                    ? 'bg-[#202124] text-[#FFE89A] shadow-subtle'
+                    : 'text-[#77746B] hover:bg-[#FFF9E8]'
                 }`}
               >
                 <Code className="w-3 h-3" />
@@ -204,13 +204,13 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
           ) : (
             /* Search filter for TXT or DOCX */
             <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#77738A]" />
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#77746B]" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search document text..."
-                className="pl-8 pr-3 py-1 text-xs rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] text-[#17152B] dark:text-[#F5F3FF] placeholder-[#77738A]/70 focus:outline-none focus:ring-1 focus:ring-[#8B5CF6] w-40 sm:w-52"
+                className="pl-8 pr-3 py-1 text-xs rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#1A1A1C] text-[#202124] dark:text-[#FFFDF5] placeholder-[#77746B]/70 focus:outline-none focus:ring-1 focus:ring-[#FFE89A] w-40 sm:w-52"
               />
             </div>
           )}
@@ -220,14 +220,14 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => window.open(fileUrl, '_blank')}
-            className="p-1.5 rounded-lg text-[#77738A] hover:text-[#5920B5] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+            className="p-1.5 rounded-lg text-[#77746B] hover:text-[#202124] hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
             title="Open in new window"
           >
             <ExternalLink className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={handleDownload}
-            className="p-1.5 rounded-lg text-[#77738A] hover:text-[#5920B5] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+            className="p-1.5 rounded-lg text-[#77746B] hover:text-[#202124] hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
             title="Download document"
           >
             <Download className="w-3.5 h-3.5" />
@@ -236,7 +236,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-auto bg-[#F8F6FC] dark:bg-[#120D20] p-4 flex items-center justify-center">
+      <div className="flex-1 overflow-auto bg-[#FFF9E8] dark:bg-[#151517] p-4 flex items-center justify-center">
         {isPdf ? (
           /* CASE 1: Native PDF Preview (iframe with #page=X) */
           <div
@@ -251,51 +251,51 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
           </div>
         ) : isMarkdown ? (
           /* CASE 2: Markdown File Viewer (Rendered / Raw) */
-          <div className="w-full h-full bg-white dark:bg-[#1E1733] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] shadow-card p-6 overflow-auto">
+          <div className="w-full h-full bg-white dark:bg-[#202124] rounded-xl border border-[#E9E1CC] dark:border-[#303238] shadow-card p-6 overflow-auto">
             {textLoading ? (
-              <div className="flex items-center justify-center h-full text-xs text-[#77738A]">
+              <div className="flex items-center justify-center h-full text-xs text-[#77746B]">
                 <Loader2 className="w-5 h-5 animate-spin mr-2" />
                 Loading markdown content...
               </div>
             ) : markdownMode === 'rendered' ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none">
+              <div className="prose prose-sm dark:prose-invert max-w-none text-[#202124] dark:text-[#FFFDF5]">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {textContent || 'No content found in markdown file.'}
                 </ReactMarkdown>
               </div>
             ) : (
-              <pre className="text-xs font-mono bg-[#211A35] text-white p-4 rounded-xl overflow-x-auto whitespace-pre-wrap">
+              <pre className="text-xs font-mono bg-[#202124] text-[#FFFDF5] border border-[#303238] p-4 rounded-xl overflow-x-auto whitespace-pre-wrap">
                 {textContent}
               </pre>
             )}
           </div>
         ) : isTxt ? (
           /* CASE 3: Plain Text Viewer */
-          <div className="w-full h-full bg-white dark:bg-[#1E1733] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] shadow-card p-6 overflow-auto">
+          <div className="w-full h-full bg-white dark:bg-[#202124] rounded-xl border border-[#E9E1CC] dark:border-[#303238] shadow-card p-6 overflow-auto">
             {textLoading ? (
-              <div className="flex items-center justify-center h-full text-xs text-[#77738A]">
+              <div className="flex items-center justify-center h-full text-xs text-[#77746B]">
                 <Loader2 className="w-5 h-5 animate-spin mr-2" />
                 Loading text file...
               </div>
             ) : (
-              <pre className="text-xs font-mono text-[#17152B] dark:text-[#E2DCF0] whitespace-pre-wrap leading-relaxed">
+              <pre className="text-xs font-mono text-[#202124] dark:text-[#E9E1CC] whitespace-pre-wrap leading-relaxed">
                 {textContent}
               </pre>
             )}
           </div>
         ) : (
           /* CASE 4: DOCX / Formatted Document Reader (from extracted chunks) */
-          <div className="w-full h-full bg-white dark:bg-[#1E1733] rounded-xl border border-[#E8E1F2] dark:border-[#352B52] shadow-card p-6 overflow-auto space-y-4">
-            <div className="p-4 rounded-2xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="w-full h-full bg-white dark:bg-[#202124] rounded-xl border border-[#E9E1CC] dark:border-[#303238] shadow-card p-6 overflow-auto space-y-4">
+            <div className="p-4 rounded-2xl bg-[#FFFDF5] dark:bg-[#1A1A1C] border border-[#E9E1CC] dark:border-[#303238] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#A78BFA]">
+                <div className="p-2.5 rounded-xl bg-[#FFF9E8] dark:bg-[#303238] text-[#202124] dark:text-[#FFE89A]">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-[#17152B] dark:text-white uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-[#202124] dark:text-white uppercase tracking-wider">
                     {isDocx ? 'Word Document (DOCX) Preview' : 'Document In-App Reader'}
                   </h4>
-                  <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5">
+                  <p className="text-xs text-[#77738A] dark:text-[#A8A499] mt-0.5">
                     Rendered directly inside the application from extracted text chunks.
                   </p>
                 </div>
@@ -315,7 +315,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
             {/* Extracted Chunks Content Stream */}
             {chunksLoading ? (
               <div className="flex flex-col items-center justify-center py-16 gap-2 text-[#77738A]">
-                <Loader2 className="w-6 h-6 animate-spin text-[#5920B5]" />
+                <Loader2 className="w-6 h-6 animate-spin text-[#202124]" />
                 <span className="text-xs">Loading extracted document sections...</span>
               </div>
             ) : filteredChunks.length === 0 ? (
@@ -329,21 +329,21 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 {filteredChunks.map((chunk: any, idx: number) => (
                   <div
                     key={chunk.id || idx}
-                    className="p-4 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24] space-y-2 shadow-xs"
+                    className="p-4 rounded-2xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFF9E8] dark:bg-[#1A1A1C] space-y-2 shadow-xs"
                   >
                     <div className="flex items-center justify-between text-[11px] font-bold text-[#77738A]">
-                      <span className="flex items-center gap-1.5 font-mono text-[#5920B5] dark:text-[#A78BFA]">
+                      <span className="flex items-center gap-1.5 font-mono text-[#245B32] dark:text-[#DDF2C1]">
                         <Layers className="w-3.5 h-3.5" />
                         Section {chunk.chunk_index + 1} of {chunks.length}
                       </span>
                       {chunk.page_number && (
-                        <span className="px-2 py-0.5 rounded bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#C4B5FD] border border-[#E8E1F2]">
+                        <span className="px-2 py-0.5 rounded bg-[#E5F4DC] text-[#245B32] border border-[#DDF2C1]">
                           Page {chunk.page_number}
                         </span>
                       )}
                     </div>
 
-                    <p className="text-xs font-sans text-[#17152B] dark:text-[#F5F3FF] whitespace-pre-wrap leading-relaxed">
+                    <p className="text-xs font-sans text-[#202124] dark:text-[#FFFDF5] whitespace-pre-wrap leading-relaxed">
                       {chunk.content}
                     </p>
                   </div>

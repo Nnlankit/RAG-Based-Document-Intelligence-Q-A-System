@@ -18,12 +18,13 @@ interface DocDistributionChartProps {
   onUploadClick?: () => void;
 }
 
+// Requirement-aligned palette: PDF (Charcoal), DOCX (Natural Green), TXT (Golden Yellow), MD (Soft Sage)
 const TYPE_COLORS: Record<string, string> = {
-  PDF: '#5920B5',
-  DOCX: '#8B5CF6',
-  TXT: '#A78BFA',
-  MD: '#16A34A',
-  OTHER: '#77738A',
+  PDF: '#202124',
+  DOCX: '#4D9B45',
+  TXT: '#E8BD42',
+  MD: '#82C358',
+  OTHER: '#77746B',
 };
 
 export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
@@ -53,7 +54,7 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
           name: upper,
           value: item.value || 0,
           percentage: pct,
-          color: TYPE_COLORS[upper] || '#77738A',
+          color: TYPE_COLORS[upper] || '#77746B',
         };
       });
     }
@@ -84,7 +85,7 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
         name,
         value,
         percentage: pct,
-        color: TYPE_COLORS[name] || '#77738A',
+        color: TYPE_COLORS[name] || '#77746B',
       };
     });
   }, [distribution]);
@@ -101,20 +102,20 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
   };
 
   return (
-    <Card className="border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card h-full min-h-[300px] flex flex-col justify-between">
-      <CardHeader className="h-14 flex items-center justify-between px-4 py-2.5 border-b border-[#E8E1F2] dark:border-[#352B52]">
+    <Card className="border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#202124] shadow-card h-full min-h-[300px] flex flex-col justify-between">
+      <CardHeader className="h-14 flex items-center justify-between px-4 py-2.5 border-b border-[#E9E1CC] dark:border-[#303238]">
         <div className="min-w-0">
-          <h3 className="text-sm font-bold text-[#17152B] dark:text-white truncate">
+          <h3 className="text-sm font-bold text-[#202124] dark:text-white truncate">
             Document Types
           </h3>
-          <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8] truncate">
+          <p className="text-[11px] text-[#77746B] dark:text-[#A99F87] truncate">
             Click segment or legend to filter files
           </p>
         </div>
 
         <button
           onClick={() => navigate('/documents')}
-          className="text-[11px] font-semibold text-[#5920B5] dark:text-[#A78BFA] hover:underline flex items-center gap-1 shrink-0"
+          className="text-[11px] font-semibold text-[#202124] dark:text-[#FFE89A] hover:underline flex items-center gap-1 shrink-0"
           title="Open Document Repository"
         >
           <span>All</span>
@@ -125,42 +126,42 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
         {/* Loading State */}
         {isLoading ? (
           <div className="py-6 flex flex-col items-center justify-center space-y-2">
-            <div className="w-12 h-12 rounded-full border-3 border-dashed border-[#5920B5]/30 animate-spin" />
-            <p className="text-xs text-[#77738A] dark:text-[#A39EB8] animate-pulse">
+            <div className="w-12 h-12 rounded-full border-3 border-dashed border-[#202124]/30 animate-spin" />
+            <p className="text-xs text-[#77746B] dark:text-[#A99F87] animate-pulse">
               Loading distribution...
             </p>
           </div>
         ) : error ? (
           /* Error State */
           <div className="py-4 text-center space-y-1.5">
-            <AlertCircle className="w-6 h-6 text-rose-500 mx-auto" />
-            <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">
+            <AlertCircle className="w-6 h-6 text-[#C94B4B] mx-auto" />
+            <p className="text-xs font-semibold text-[#C94B4B]">
               Failed to load distribution
             </p>
-            <p className="text-[11px] text-[#77738A] max-w-xs mx-auto">
+            <p className="text-[11px] text-[#77746B] max-w-xs mx-auto">
               {error.message || 'Unable to retrieve document metadata from database.'}
             </p>
           </div>
         ) : total === 0 ? (
           /* Empty State */
           <div className="py-4 text-center space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-[#F8F6FC] dark:bg-[#251B3D] text-[#5920B5] dark:text-[#A78BFA] flex items-center justify-center mx-auto">
+            <div className="w-8 h-8 rounded-xl bg-[#FFF9E8] dark:bg-[#17181A] text-[#202124] dark:text-[#FFE89A] flex items-center justify-center mx-auto">
               <FileQuestion className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-[#17152B] dark:text-white">
+              <h4 className="text-xs font-bold text-[#202124] dark:text-white">
                 No documents indexed yet
               </h4>
-              <p className="text-[10px] text-[#77738A] dark:text-[#A39EB8] mt-0.5 max-w-xs mx-auto">
+              <p className="text-[10px] text-[#77746B] dark:text-[#A99F87] mt-0.5 max-w-xs mx-auto">
                 Upload your first document to see format distribution.
               </p>
             </div>
             {onUploadClick && (
               <button
                 onClick={onUploadClick}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#5920B5] hover:bg-[#4C1A9E] text-white text-[11px] font-semibold shadow-purple transition-all"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#202124] hover:bg-[#303238] text-white text-[11px] font-semibold shadow-xs transition-all"
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="w-3 h-3 text-[#FFE89A]" />
                 <span>Upload Document</span>
               </button>
             )}
@@ -168,7 +169,6 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
         ) : (
           /* Render Donut Chart and Legend */
           <div className="flex flex-col items-center justify-between gap-1.5 w-full h-full">
-            {/* Donut Chart with Centered Total */}
             <div className="relative w-28 h-28 min-h-[112px] shrink-0 flex items-center justify-center cursor-pointer">
               <ResponsiveContainer width="100%" height="100%" minWidth={110} minHeight={110}>
                 <PieChart>
@@ -198,7 +198,7 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
                       if (active && payload && payload.length) {
                         const item = payload[0].payload;
                         return (
-                          <div className="bg-[#211A35] text-white p-2.5 rounded-xl text-xs border border-[#362C54] shadow-purple">
+                          <div className="bg-[#202124] text-white p-2.5 rounded-xl text-xs border border-[#303238] shadow-dropdown">
                             <p className="font-bold flex items-center gap-1.5">
                               <span
                                 className="w-2.5 h-2.5 rounded-full"
@@ -206,10 +206,10 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
                               />
                               {item.name}
                             </p>
-                            <p className="text-[11px] text-[#DDD6FE] mt-1 font-mono">
+                            <p className="text-[11px] text-[#FAF8F2] mt-1 font-mono">
                               {item.value} {item.value === 1 ? 'doc' : 'docs'} ({item.percentage.toFixed(2)}%)
                             </p>
-                            <p className="text-[9px] text-[#A78BFA] mt-1">
+                            <p className="text-[9px] text-[#FFE89A] mt-1">
                               Click to view in repository
                             </p>
                           </div>
@@ -229,23 +229,23 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
                   className="w-14 h-14 rounded-full flex flex-col items-center justify-center text-center pointer-events-auto cursor-pointer group select-none focus:outline-none"
                   title="View All Documents in Repository"
                 >
-                  <span className="text-lg font-extrabold text-[#17152B] dark:text-white leading-tight group-hover:text-[#5920B5] transition-colors">
+                  <span className="text-lg font-extrabold text-[#202124] dark:text-white leading-tight group-hover:text-[#4D9B45] transition-colors">
                     {total}
                   </span>
-                  <span className="text-[8px] uppercase font-bold tracking-wider text-[#77738A] group-hover:text-[#5920B5] transition-colors">
+                  <span className="text-[8px] uppercase font-bold tracking-wider text-[#77746B] group-hover:text-[#4D9B45] transition-colors">
                     Total Docs
                   </span>
                 </button>
               </div>
             </div>
 
-            {/* Document Types Legend with dynamic counts & percentages */}
+            {/* Document Types Legend */}
             <div className="w-full space-y-1 pt-0.5">
               {fullData.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleSelectFormat(item.name)}
-                  className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-all text-[11px] group text-left cursor-pointer active:scale-98"
+                  className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-all text-[11px] group text-left cursor-pointer active:scale-98"
                   title={`View all ${item.name} documents`}
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
@@ -253,15 +253,15 @@ export const DocDistributionChart: React.FC<DocDistributionChartProps> = ({
                       className="w-2 h-2 rounded-full shrink-0 group-hover:scale-125 transition-transform"
                       style={{ backgroundColor: item.color }}
                     />
-                    <span className="font-semibold text-[#17152B] dark:text-[#F5F3FF] truncate text-[11px] group-hover:text-[#5920B5] dark:group-hover:text-[#A78BFA] transition-colors">
+                    <span className="font-semibold text-[#202124] dark:text-[#FAF8F2] truncate text-[11px] group-hover:text-[#4D9B45] dark:group-hover:text-[#FFE89A] transition-colors">
                       {item.name}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="font-mono text-[10px] text-[#77738A] dark:text-[#A39EB8]">
+                    <span className="font-mono text-[10px] text-[#77746B] dark:text-[#A99F87]">
                       {item.value} {item.value === 1 ? 'doc' : 'docs'}
                     </span>
-                    <span className="font-bold text-[#5920B5] dark:text-[#A78BFA] text-[10px] w-10 text-right group-hover:underline">
+                    <span className="font-bold text-[#202124] dark:text-[#FFE89A] text-[10px] w-10 text-right group-hover:underline">
                       {item.percentage.toFixed(1)}%
                     </span>
                   </div>

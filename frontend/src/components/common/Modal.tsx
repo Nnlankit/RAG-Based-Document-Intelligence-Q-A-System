@@ -53,7 +53,7 @@ export const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-[#17152B]/40 backdrop-blur-sm"
+            className="fixed inset-0 bg-[#202124]/40 backdrop-blur-sm"
           />
 
           <motion.div
@@ -62,27 +62,27 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className={clsx(
-              'relative w-full bg-white dark:bg-[#1E1733] rounded-2xl shadow-purple-lg border border-[#E8E1F2] dark:border-[#352B52] overflow-hidden z-10 flex flex-col',
+              'relative w-full bg-white dark:bg-[#202124] rounded-2xl shadow-dropdown border border-[#E9E1CC] dark:border-[#303238] overflow-hidden z-10 flex flex-col',
               sizes[size]
             )}
           >
             {(title || description) && (
-              <div className="px-6 py-4.5 border-b border-[#E8E1F2] dark:border-[#352B52] flex items-start justify-between">
+              <div className="px-6 py-4.5 border-b border-[#E9E1CC] dark:border-[#303238] flex items-start justify-between">
                 <div>
                   {title && (
-                    <h3 className="text-base font-bold text-[#17152B] dark:text-[#F5F3FF]">
+                    <h3 className="text-base font-bold text-[#202124] dark:text-[#FAF8F2]">
                       {title}
                     </h3>
                   )}
                   {description && (
-                    <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5">
+                    <p className="text-xs text-[#77746B] dark:text-[#A99F87] mt-0.5">
                       {description}
                     </p>
                   )}
                 </div>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg text-[#77738A] hover:text-[#17152B] dark:text-[#A39EB8] dark:hover:text-[#FFFFFF] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+                  className="p-1.5 rounded-lg text-[#77746B] hover:text-[#202124] dark:text-[#A99F87] dark:hover:text-[#FFFFFF] hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>

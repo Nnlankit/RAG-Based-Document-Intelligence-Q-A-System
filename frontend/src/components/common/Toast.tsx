@@ -61,10 +61,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const info = useCallback((title: string, message?: string) => toast({ type: 'info', title, message }), [toast]);
 
   const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />,
-    warning: <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-rose-500 shrink-0" />,
-    info: <Info className="w-5 h-5 text-blue-500 shrink-0" />,
+    success: <CheckCircle2 className="w-5 h-5 text-[#4D9B45] shrink-0" />,
+    warning: <AlertTriangle className="w-5 h-5 text-[#D99A24] shrink-0" />,
+    error: <AlertCircle className="w-5 h-5 text-[#C94B4B] shrink-0" />,
+    info: <Info className="w-5 h-5 text-[#536C88] shrink-0" />,
   };
 
   return (
@@ -80,21 +80,21 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
               className={clsx(
-                'pointer-events-auto flex items-start gap-3 p-4 rounded-2xl shadow-purple border bg-white dark:bg-[#1E1733] border-[#E8E1F2] dark:border-[#352B52]'
+                'pointer-events-auto flex items-start gap-3 p-4 rounded-2xl shadow-dropdown border bg-white dark:bg-[#202124] border-[#E9E1CC] dark:border-[#303238]'
               )}
             >
               {icons[t.type]}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[#17152B] dark:text-[#F5F3FF]">{t.title}</p>
+                <p className="text-sm font-semibold text-[#202124] dark:text-[#FAF8F2]">{t.title}</p>
                 {t.message && (
-                  <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-0.5 break-words font-medium">
+                  <p className="text-xs text-[#77746B] dark:text-[#A99F87] mt-0.5 break-words font-medium">
                     {t.message}
                   </p>
                 )}
               </div>
               <button
                 onClick={() => removeToast(t.id)}
-                className="text-[#77738A] hover:text-[#17152B] dark:text-[#A39EB8] dark:hover:text-[#FFFFFF] p-0.5 rounded-lg"
+                className="text-[#77746B] hover:text-[#202124] dark:text-[#A99F87] dark:hover:text-[#FFFFFF] p-0.5 rounded-lg"
               >
                 <X className="w-4 h-4" />
               </button>

@@ -60,34 +60,34 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
     const ext = filename.split('.').pop()?.toLowerCase();
     if (ext === 'pdf') {
       return (
-        <span className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center font-bold text-[10px] border border-red-200 dark:border-red-900/60 shrink-0">
+        <span className="w-8 h-8 rounded-lg bg-[#202124] text-white flex items-center justify-center font-bold text-[10px] border border-[#303238] shrink-0">
           PDF
         </span>
       );
     }
     if (ext === 'docx') {
       return (
-        <span className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-[10px] border border-blue-200 dark:border-blue-900/60 shrink-0">
+        <span className="w-8 h-8 rounded-lg bg-[#E5F4DC] text-[#245B32] flex items-center justify-center font-bold text-[10px] border border-[#DDF2C1] shrink-0">
           DOCX
         </span>
       );
     }
     if (ext === 'txt') {
       return (
-        <span className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-[10px] border border-slate-200 dark:border-slate-700 shrink-0">
+        <span className="w-8 h-8 rounded-lg bg-[#FFF1CC] text-[#D99A24] flex items-center justify-center font-bold text-[10px] border border-[#FFE89A] shrink-0">
           TXT
         </span>
       );
     }
     if (ext === 'md') {
       return (
-        <span className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-[10px] border border-purple-200 dark:border-purple-900/60 shrink-0">
+        <span className="w-8 h-8 rounded-lg bg-[#E5F4DC] text-[#245B32] flex items-center justify-center font-bold text-[10px] border border-[#DDF2C1] shrink-0">
           MD
         </span>
       );
     }
     return (
-      <span className="w-8 h-8 rounded-lg bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#C4B5FD] flex items-center justify-center font-bold text-[10px] border border-[#E8E1F2] dark:border-[#3E3065] shrink-0">
+      <span className="w-8 h-8 rounded-lg bg-[#FFF9E8] text-[#202124] flex items-center justify-center font-bold text-[10px] border border-[#E9E1CC] shrink-0">
         FILE
       </span>
     );
@@ -96,15 +96,15 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
   const getStatusBadge = (status: string) => {
     if (status === 'completed' || status === 'indexed') {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0] dark:bg-[#143E24] dark:text-[#4ADE80] dark:border-[#1F5E36]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]" />
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#E5F4DC] text-[#245B32] border border-[#DDF2C1]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#4D9B45]" />
           Indexed
         </span>
       );
     }
     if (status === 'processing') {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#FEF3C7] text-[#D97706] border border-[#FDE68A] dark:bg-[#3D2C10] dark:text-[#FBBF24] dark:border-[#5C4215]">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#FFF1CC] text-[#D99A24] border border-[#FFE89A]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#D97706] animate-pulse" />
           Processing
         </span>
@@ -112,14 +112,14 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
     }
     if (status === 'failed') {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA] dark:bg-[#3D1414] dark:text-[#F87171] dark:border-[#5E1E1E]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#FCE8E8] text-[#C94B4B] border border-[#FAD2D2]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#C94B4B]" />
           Failed
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#F0EBFA] text-[#5920B5] border border-[#E8E1F2]">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#FFF9E8] text-[#202124] border border-[#E9E1CC]">
         {status}
       </span>
     );
@@ -203,7 +203,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
       {enableSearch && (
         <div className="flex items-center justify-between gap-3">
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-4 h-4 text-[#77738A] absolute left-3 top-2.5 pointer-events-none" />
+            <Search className="w-4 h-4 text-[#77746B] absolute left-3 top-2.5 pointer-events-none" />
             <input
               type="text"
               placeholder="Search table by document name..."
@@ -212,59 +212,59 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] text-[#17152B] dark:text-[#F5F3FF] placeholder-[#77738A]/70 focus:outline-none focus:ring-1 focus:ring-[#8B5CF6]"
+              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#1A1A1C] text-[#202124] dark:text-[#FFFDF5] placeholder-[#77746B]/70 focus:outline-none focus:ring-1 focus:ring-[#FFE89A]"
             />
           </div>
-          <span className="text-xs text-[#77738A] dark:text-[#A39EB8]">
+          <span className="text-xs text-[#77746B] dark:text-[#A8A499]">
             Showing {filteredAndSorted.length} of {documents.length} records
           </span>
         </div>
       )}
 
       {/* Table Container */}
-      <div className="w-full overflow-x-auto border border-[#E8E1F2] dark:border-[#352B52] rounded-2xl bg-white dark:bg-[#1E1733] shadow-card">
+      <div className="w-full overflow-x-auto border border-[#E9E1CC] dark:border-[#303238] rounded-2xl bg-white dark:bg-[#202124] shadow-card">
         <table className="w-full text-left text-xs">
-          <thead className="bg-[#FAF8FD] dark:bg-[#150F24] text-[#77738A] dark:text-[#A39EB8] font-bold border-b border-[#E8E1F2] dark:border-[#352B52] uppercase tracking-wider">
+          <thead className="bg-[#FFFDF5] dark:bg-[#1A1A1C] text-[#77746B] dark:text-[#A8A499] font-bold border-b border-[#E9E1CC] dark:border-[#303238] uppercase tracking-wider">
             <tr>
               <th className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} w-10 text-center`}>Fav</th>
               <th
-                className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} cursor-pointer hover:text-[#5920B5] transition-colors`}
+                className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} cursor-pointer hover:text-[#202124] transition-colors`}
                 onClick={() => toggleSort('filename')}
               >
                 <div className="flex items-center gap-1.5">
                   <span>Document Name</span>
                   {sortField === 'filename' &&
-                    (sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-[#5920B5]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#5920B5]" />)}
+                    (sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-[#202124]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#202124]" />)}
                 </div>
               </th>
               <th
-                className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} cursor-pointer hover:text-[#5920B5] transition-colors`}
+                className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} cursor-pointer hover:text-[#202124] transition-colors`}
                 onClick={() => toggleSort('chunk_count')}
               >
                 <div className="flex items-center gap-1.5">
                   <span>Chunks</span>
                   {sortField === 'chunk_count' &&
-                    (sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-[#5920B5]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#5920B5]" />)}
+                    (sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-[#202124]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#202124]" />)}
                 </div>
               </th>
               <th className={`${compact ? 'py-2 px-3' : 'py-3 px-4'}`}>Status</th>
               <th
-                className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} cursor-pointer hover:text-[#5920B5] transition-colors`}
+                className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} cursor-pointer hover:text-[#202124] transition-colors`}
                 onClick={() => toggleSort('created_at')}
               >
                 <div className="flex items-center gap-1.5">
                   <span>Uploaded At</span>
                   {sortField === 'created_at' &&
-                    (sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-[#5920B5]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#5920B5]" />)}
+                    (sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-[#202124]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#202124]" />)}
                 </div>
               </th>
               <th className={`${compact ? 'py-2 px-3' : 'py-3 px-4'} text-right`}>Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E8E1F2] dark:divide-[#352B52]">
+          <tbody className="divide-y divide-[#E9E1CC] dark:divide-[#303238]">
             {paginatedDocs.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-8 text-center text-[#77738A]">
+                <td colSpan={6} className="py-8 text-center text-[#77746B]">
                   No documents found.
                 </td>
               </tr>
@@ -277,7 +277,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                   <tr
                     key={doc.id}
                     onClick={() => navigate(`/documents/${doc.id}`)}
-                    className="hover:bg-[#FAF8FD] dark:hover:bg-[#1A132C] cursor-pointer transition-colors group"
+                    className="hover:bg-[#FFF9E8] dark:hover:bg-[#2A2B2E] cursor-pointer transition-colors group"
                   >
                     {/* Favorite star */}
                     <td className={`${compact ? 'py-2 px-3' : 'py-3.5 px-4'} text-center`} onClick={(e) => e.stopPropagation()}>
@@ -286,7 +286,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                         className={`p-1 rounded-lg transition-colors ${
                           starred
                             ? 'text-amber-500 fill-current'
-                            : 'text-[#77738A] hover:text-amber-500 hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047]'
+                            : 'text-[#77746B] hover:text-amber-500 hover:bg-[#FFF9E8] dark:hover:bg-[#303238]'
                         }`}
                         title={starred ? 'Starred' : 'Star document'}
                       >
@@ -295,14 +295,14 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                     </td>
 
                     {/* Document Name with File Type Icon */}
-                    <td className={`${compact ? 'py-2 px-3' : 'py-3.5 px-4'} font-semibold text-[#17152B] dark:text-[#F5F3FF] max-w-xs truncate`}>
+                    <td className={`${compact ? 'py-2 px-3' : 'py-3.5 px-4'} font-semibold text-[#202124] dark:text-[#FFFDF5] max-w-xs truncate`}>
                       <div className="flex items-center gap-2.5">
                         {getFormatIcon(doc.filename)}
                         <div className="truncate">
-                          <p className="truncate group-hover:text-[#5920B5] dark:group-hover:text-[#A78BFA] transition-colors text-xs font-bold" title={doc.filename}>
+                          <p className="truncate group-hover:text-[#4D9B45] transition-colors text-xs font-bold" title={doc.filename}>
                             {doc.filename}
                           </p>
-                          <p className="text-[10px] text-[#77738A] font-normal truncate">
+                          <p className="text-[10px] text-[#77746B] font-normal truncate">
                             {(doc.file_size / (1024 * 1024)).toFixed(2)} MB • {doc.original_filename}
                           </p>
                         </div>
@@ -310,7 +310,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                     </td>
 
                     {/* Chunks */}
-                    <td className={`${compact ? 'py-2 px-3 text-[11px]' : 'py-3.5 px-4'} font-mono font-bold text-[#5920B5] dark:text-[#A78BFA]`}>
+                    <td className={`${compact ? 'py-2 px-3 text-[11px]' : 'py-3.5 px-4'} font-mono font-bold text-[#202124] dark:text-[#FFE89A]`}>
                       {doc.chunk_count} chunks
                     </td>
 
@@ -318,7 +318,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                     <td className={`${compact ? 'py-2 px-3' : 'py-3.5 px-4'}`}>{getStatusBadge(doc.status)}</td>
 
                     {/* Uploaded At */}
-                    <td className={`${compact ? 'py-2 px-3 text-[11px]' : 'py-3.5 px-4'} text-[#77738A] dark:text-[#A39EB8]`}>
+                    <td className={`${compact ? 'py-2 px-3 text-[11px]' : 'py-3.5 px-4'} text-[#77738A] dark:text-[#A8A499]`}>
                       {formatDate(doc.created_at)}
                     </td>
 
@@ -331,7 +331,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                             setScopeDocumentIds([doc.id]);
                             navigate('/chat');
                           }}
-                          className="p-1.5 text-[#5920B5] hover:text-white hover:bg-[#5920B5] rounded-lg transition-colors"
+                          className="p-1.5 text-[#202124] hover:text-[#FFE89A] hover:bg-[#202124] rounded-lg transition-colors"
                           title="Ask AI about this document"
                         >
                           <MessageSquare className="w-4 h-4" />
@@ -343,7 +343,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                             e.stopPropagation();
                             setActiveMenuId(isMenuOpen ? null : doc.id);
                           }}
-                          className="p-1.5 text-[#77738A] hover:text-[#17152B] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] rounded-lg transition-colors"
+                          className="p-1.5 text-[#77738A] hover:text-[#202124] hover:bg-[#FFF9E8] dark:hover:bg-[#303238] rounded-lg transition-colors"
                           title="More Actions"
                         >
                           <MoreVertical className="w-4 h-4" />
@@ -353,16 +353,16 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                         {isMenuOpen && (
                           <div
                             onClick={(e) => e.stopPropagation()}
-                            className="absolute right-0 top-8 w-44 bg-white dark:bg-[#1E1733] border border-[#E8E1F2] dark:border-[#352B52] shadow-purple-lg rounded-xl py-1.5 z-40 text-left"
+                            className="absolute right-0 top-8 w-44 bg-white dark:bg-[#202124] border border-[#E9E1CC] dark:border-[#303238] shadow-card rounded-xl py-1.5 z-40 text-left"
                           >
                             <button
                               onClick={() => {
                                 setActiveMenuId(null);
                                 navigate(`/documents/${doc.id}`);
                               }}
-                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#17152B] dark:text-[#F5F3FF] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#202124] dark:text-[#FFFDF5] hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
                             >
-                              <Eye className="w-3.5 h-3.5 text-[#5920B5]" />
+                              <Eye className="w-3.5 h-3.5 text-[#202124]" />
                               <span>Open Document</span>
                             </button>
 
@@ -371,9 +371,9 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                                 setActiveMenuId(null);
                                 navigate(`/documents/${doc.id}`);
                               }}
-                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#17152B] dark:text-[#F5F3FF] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#202124] dark:text-[#FFFDF5] hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
                             >
-                              <Info className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                              <Info className="w-3.5 h-3.5 text-[#4D9B45]" />
                               <span>View Details</span>
                             </button>
 
@@ -382,20 +382,20 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                                 setActiveMenuId(null);
                                 documentService.downloadDocument(doc.id, doc.filename);
                               }}
-                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#17152B] dark:text-[#F5F3FF] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-colors"
+                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#202124] dark:text-[#FFFDF5] hover:bg-[#FFF9E8] dark:hover:bg-[#303238] transition-colors"
                             >
                               <Download className="w-3.5 h-3.5 text-[#77738A]" />
                               <span>Download Original</span>
                             </button>
 
-                            <div className="my-1 border-t border-[#E8E1F2] dark:border-[#352B52]" />
+                            <div className="my-1 border-t border-[#E9E1CC] dark:border-[#303238]" />
 
                             <button
                               onClick={(e) => {
                                 setActiveMenuId(null);
                                 handleDelete(e, doc);
                               }}
-                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors font-semibold"
+                              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#C94B4B] hover:bg-[#FCE8E8] dark:hover:bg-[#3D1414] transition-colors font-semibold"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                               <span>Delete Document</span>
@@ -413,7 +413,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
 
         {/* Pagination Controls */}
         {enablePagination && totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#1A1A1C]">
             <span className="text-xs text-[#77738A]">
               Page {currentPage} of {totalPages}
             </span>
@@ -421,14 +421,14 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
               <button
                 disabled={currentPage <= 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="p-1.5 rounded-lg border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] text-[#77738A] hover:text-[#5920B5] disabled:opacity-40 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-lg border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124] text-[#77738A] hover:text-[#202124] disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 disabled={currentPage >= totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                className="p-1.5 rounded-lg border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] text-[#77738A] hover:text-[#5920B5] disabled:opacity-40 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-lg border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124] text-[#77738A] hover:text-[#202124] disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

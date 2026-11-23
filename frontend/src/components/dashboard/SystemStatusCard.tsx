@@ -6,13 +6,8 @@ import {
   Database,
   Layers,
   Activity,
-  CheckCircle2,
-  XCircle,
   RefreshCw,
-  Server,
-  Zap,
   ExternalLink,
-  Info,
 } from 'lucide-react';
 import { healthService } from '../../services/healthService';
 import { analyticsService } from '../../services/analyticsService';
@@ -51,17 +46,17 @@ export const SystemStatusCard: React.FC = () => {
 
   return (
     <>
-      <Card className="border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card h-full min-h-[300px] flex flex-col justify-between">
-        <CardHeader className="h-14 flex items-center justify-between px-4 py-2.5 border-b border-[#E8E1F2] dark:border-[#352B52]">
+      <Card className="border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124] shadow-card h-full min-h-[300px] flex flex-col justify-between">
+        <CardHeader className="h-14 flex items-center justify-between px-4 py-2.5 border-b border-[#E9E1CC] dark:border-[#303238]">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] flex items-center justify-center text-white shadow-purple shrink-0">
-              <Activity className="w-3.5 h-3.5" />
+            <div className="w-7 h-7 rounded-lg bg-[#FFE89A] flex items-center justify-center text-[#202124] shadow-xs shrink-0">
+              <Activity className="w-3.5 h-3.5 text-[#202124]" />
             </div>
             <div className="min-w-0">
-              <h3 className="text-sm font-bold text-[#17152B] dark:text-white truncate">
+              <h3 className="text-sm font-bold text-[#202124] dark:text-white truncate">
                 System Health
               </h3>
-              <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8] truncate">
+              <p className="text-[11px] text-[#77746B] dark:text-[#A99F87] truncate">
                 Click any service for diagnostics
               </p>
             </div>
@@ -70,10 +65,10 @@ export const SystemStatusCard: React.FC = () => {
           <button
             onClick={handleRefresh}
             disabled={isFetching}
-            className="p-1 rounded-md text-[#77738A] hover:text-[#5920B5] hover:bg-[#F0EBFA] dark:hover:bg-[#2A2047] transition-all disabled:opacity-50 shrink-0"
+            className="p-1 rounded-md text-[#77746B] hover:text-[#202124] hover:bg-[#FFE89A]/30 dark:hover:bg-[#303238] transition-all disabled:opacity-50 shrink-0"
             title="Refresh health checks"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin text-[#5920B5]' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin text-[#202124]' : ''}`} />
           </button>
         </CardHeader>
 
@@ -82,18 +77,18 @@ export const SystemStatusCard: React.FC = () => {
             {/* 1. LLM Model */}
             <button
               onClick={() => setSelectedService('llm')}
-              className="p-2 rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] hover:border-[#8B5CF6] dark:hover:border-[#8B5CF6] hover:shadow-xs flex items-center justify-between transition-all text-left cursor-pointer active:scale-98 group w-full"
+              className="p-2 rounded-xl bg-[#FFFDF5] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] hover:border-[#FFE89A] dark:hover:border-[#FFE89A] hover:shadow-xs flex items-center justify-between transition-all text-left cursor-pointer active:scale-98 group w-full"
               title="Click for LLM Engine details"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-7 h-7 rounded-lg bg-[#F0EBFA] dark:bg-[#2A2047] flex items-center justify-center text-[#5920B5] dark:text-[#A78BFA] shrink-0 group-hover:scale-105 transition-transform">
-                  <Cpu className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-[#FFE89A]/30 dark:bg-[#303238] flex items-center justify-center text-[#202124] dark:text-[#FFE89A] shrink-0 group-hover:scale-105 transition-transform">
+                  <Cpu className="w-4 h-4 text-[#202124] dark:text-[#FFE89A]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[9px] uppercase font-bold tracking-wider text-[#77738A]">
+                  <p className="text-[9px] uppercase font-bold tracking-wider text-[#77746B]">
                     LLM Engine
                   </p>
-                  <p className="text-xs font-bold text-[#17152B] dark:text-white truncate group-hover:text-[#5920B5] dark:group-hover:text-[#A78BFA] transition-colors">
+                  <p className="text-xs font-bold text-[#202124] dark:text-white truncate group-hover:text-[#4D9B45] dark:group-hover:text-[#FFE89A] transition-colors">
                     {llmModelName}
                   </p>
                 </div>
@@ -102,18 +97,18 @@ export const SystemStatusCard: React.FC = () => {
               <div
                 className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
                   isLlmOnline
-                    ? 'bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0] dark:bg-[#143E24] dark:text-[#4ADE80] dark:border-[#1F5E36]'
-                    : 'bg-[#FEE2E2] text-[#DC2626] border-[#FECACA] dark:bg-[#3D1414] dark:text-[#F87171] dark:border-[#5E1E1E]'
+                    ? 'bg-[#E5F4DC] text-[#245B32] border-[#C2E599] dark:bg-[#1B4526] dark:text-[#DDF2C1] dark:border-[#3D8036]'
+                    : 'bg-[#FCE8E8] text-[#A63838] border-[#F8C8C8] dark:bg-[#5C1D1D] dark:text-[#F87171] dark:border-[#8E2828]'
                 }`}
               >
                 {isLlmOnline ? (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4D9B45] animate-pulse" />
                     <span>Online</span>
                   </>
                 ) : (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C94B4B]" />
                     <span>Offline</span>
                   </>
                 )}
@@ -123,18 +118,18 @@ export const SystemStatusCard: React.FC = () => {
             {/* 2. Relational Database */}
             <button
               onClick={() => setSelectedService('db')}
-              className="p-2 rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] hover:border-[#8B5CF6] dark:hover:border-[#8B5CF6] hover:shadow-xs flex items-center justify-between transition-all text-left cursor-pointer active:scale-98 group w-full"
+              className="p-2 rounded-xl bg-[#FFFDF5] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] hover:border-[#FFE89A] dark:hover:border-[#FFE89A] hover:shadow-xs flex items-center justify-between transition-all text-left cursor-pointer active:scale-98 group w-full"
               title="Click for Relational DB details"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-7 h-7 rounded-lg bg-[#F0EBFA] dark:bg-[#2A2047] flex items-center justify-center text-[#5920B5] dark:text-[#A78BFA] shrink-0 group-hover:scale-105 transition-transform">
-                  <Database className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-[#FFE89A]/30 dark:bg-[#303238] flex items-center justify-center text-[#202124] dark:text-[#FFE89A] shrink-0 group-hover:scale-105 transition-transform">
+                  <Database className="w-4 h-4 text-[#202124] dark:text-[#FFE89A]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[9px] uppercase font-bold tracking-wider text-[#77738A]">
+                  <p className="text-[9px] uppercase font-bold tracking-wider text-[#77746B]">
                     Relational DB
                   </p>
-                  <p className="text-xs font-bold text-[#17152B] dark:text-white truncate group-hover:text-[#5920B5] dark:group-hover:text-[#A78BFA] transition-colors">
+                  <p className="text-xs font-bold text-[#202124] dark:text-white truncate group-hover:text-[#4D9B45] dark:group-hover:text-[#FFE89A] transition-colors">
                     Neon PostgreSQL
                   </p>
                 </div>
@@ -143,18 +138,18 @@ export const SystemStatusCard: React.FC = () => {
               <div
                 className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
                   isDbConnected
-                    ? 'bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0] dark:bg-[#143E24] dark:text-[#4ADE80] dark:border-[#1F5E36]'
-                    : 'bg-[#FEE2E2] text-[#DC2626] border-[#FECACA] dark:bg-[#3D1414] dark:text-[#F87171] dark:border-[#5E1E1E]'
+                    ? 'bg-[#E5F4DC] text-[#245B32] border-[#C2E599] dark:bg-[#1B4526] dark:text-[#DDF2C1] dark:border-[#3D8036]'
+                    : 'bg-[#FCE8E8] text-[#A63838] border-[#F8C8C8] dark:bg-[#5C1D1D] dark:text-[#F87171] dark:border-[#8E2828]'
                 }`}
               >
                 {isDbConnected ? (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4D9B45] animate-pulse" />
                     <span>Connected</span>
                   </>
                 ) : (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C94B4B]" />
                     <span>Disconnected</span>
                   </>
                 )}
@@ -164,18 +159,18 @@ export const SystemStatusCard: React.FC = () => {
             {/* 3. Vector Database */}
             <button
               onClick={() => setSelectedService('vector')}
-              className="p-2 rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] hover:border-[#8B5CF6] dark:hover:border-[#8B5CF6] hover:shadow-xs flex items-center justify-between transition-all text-left cursor-pointer active:scale-98 group w-full"
+              className="p-2 rounded-xl bg-[#FFFDF5] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] hover:border-[#FFE89A] dark:hover:border-[#FFE89A] hover:shadow-xs flex items-center justify-between transition-all text-left cursor-pointer active:scale-98 group w-full"
               title="Click for Vector Store details"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-7 h-7 rounded-lg bg-[#F0EBFA] dark:bg-[#2A2047] flex items-center justify-center text-[#5920B5] dark:text-[#A78BFA] shrink-0 group-hover:scale-105 transition-transform">
-                  <Layers className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-[#FFE89A]/30 dark:bg-[#303238] flex items-center justify-center text-[#202124] dark:text-[#FFE89A] shrink-0 group-hover:scale-105 transition-transform">
+                  <Layers className="w-4 h-4 text-[#202124] dark:text-[#FFE89A]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[9px] uppercase font-bold tracking-wider text-[#77738A]">
+                  <p className="text-[9px] uppercase font-bold tracking-wider text-[#77746B]">
                     Vector Store
                   </p>
-                  <p className="text-xs font-bold text-[#17152B] dark:text-white truncate group-hover:text-[#5920B5] dark:group-hover:text-[#A78BFA] transition-colors">
+                  <p className="text-xs font-bold text-[#202124] dark:text-white truncate group-hover:text-[#4D9B45] dark:group-hover:text-[#FFE89A] transition-colors">
                     {vectorStoreType} ({totalChunks} chunks)
                   </p>
                 </div>
@@ -184,18 +179,18 @@ export const SystemStatusCard: React.FC = () => {
               <div
                 className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
                   isVectorConnected
-                    ? 'bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0] dark:bg-[#143E24] dark:text-[#4ADE80] dark:border-[#1F5E36]'
-                    : 'bg-[#FEE2E2] text-[#DC2626] border-[#FECACA] dark:bg-[#3D1414] dark:text-[#F87171] dark:border-[#5E1E1E]'
+                    ? 'bg-[#E5F4DC] text-[#245B32] border-[#C2E599] dark:bg-[#1B4526] dark:text-[#DDF2C1] dark:border-[#3D8036]'
+                    : 'bg-[#FCE8E8] text-[#A63838] border-[#F8C8C8] dark:bg-[#5C1D1D] dark:text-[#F87171] dark:border-[#8E2828]'
                 }`}
               >
                 {isVectorConnected ? (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4D9B45] animate-pulse" />
                     <span>Indexed</span>
                   </>
                 ) : (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C94B4B]" />
                     <span>Unavailable</span>
                   </>
                 )}
@@ -222,34 +217,34 @@ export const SystemStatusCard: React.FC = () => {
         <div className="space-y-4">
           {selectedService === 'llm' && (
             <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-[#FFFDF5] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[#17152B] dark:text-white">Active LLM Model</p>
-                  <p className="text-[11px] text-[#77738A]">{health?.details?.llm_model || 'llama3.2:3b'}</p>
+                  <p className="text-xs font-bold text-[#202124] dark:text-white">Active LLM Model</p>
+                  <p className="text-[11px] text-[#77746B]">{health?.details?.llm_model || 'llama3.2:latest'}</p>
                 </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E5F4DC] text-[#245B32] border border-[#C2E599]">
                   {health?.ollama === 'healthy' ? 'Healthy & Loaded' : 'Unavailable'}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Provider</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">Local Ollama</p>
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Provider</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">Local Ollama</p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Context Window</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">8,192 Tokens</p>
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Context Window</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">1,536 Tokens (Optimized)</p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Embedding Model</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5 truncate">
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Embedding Model</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5 truncate">
                     {health?.details?.embedding_model || 'nomic-embed-text'}
                   </p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Ollama URL</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5 font-mono text-[11px] truncate">
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Ollama URL</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5 font-mono text-[11px] truncate">
                     {health?.details?.ollama_base_url || 'http://localhost:11434'}
                   </p>
                 </div>
@@ -276,36 +271,36 @@ export const SystemStatusCard: React.FC = () => {
 
           {selectedService === 'db' && (
             <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-[#FFFDF5] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[#17152B] dark:text-white">PostgreSQL Connection</p>
-                  <p className="text-[11px] text-[#77738A]">Neon Cloud Serverless Lakebase</p>
+                  <p className="text-xs font-bold text-[#202124] dark:text-white">PostgreSQL Connection</p>
+                  <p className="text-[11px] text-[#77746B]">Neon Cloud Serverless Lakebase</p>
                 </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E5F4DC] text-[#245B32] border border-[#C2E599]">
                   {health?.database === 'healthy' ? 'Connected & Verified' : 'Disconnected'}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Total Documents</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Total Documents</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">
                     {stats?.overview?.total_documents ?? 0}
                   </p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Total Queries</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Total Queries</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">
                     {stats?.overview?.total_queries ?? 0}
                   </p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">ACID Isolation</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">Enabled (Read Committed)</p>
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">ACID Isolation</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">Enabled (Read Committed)</p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Storage Mode</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">Cloud PostgreSQL</p>
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Storage Mode</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">Cloud PostgreSQL</p>
                 </div>
               </div>
 
@@ -330,36 +325,36 @@ export const SystemStatusCard: React.FC = () => {
 
           {selectedService === 'vector' && (
             <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-[#FFFDF5] dark:bg-[#17181A] border border-[#E9E1CC] dark:border-[#303238] flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[#17152B] dark:text-white">pgvector Semantic Index</p>
-                  <p className="text-[11px] text-[#77738A]">{totalChunks} chunks indexed into vector collection</p>
+                  <p className="text-xs font-bold text-[#202124] dark:text-white">pgvector Semantic Index</p>
+                  <p className="text-[11px] text-[#77746B]">{totalChunks} chunks indexed into vector collection</p>
                 </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E5F4DC] text-[#245B32] border border-[#C2E599]">
                   {health?.vector_store === 'healthy' ? 'Operational' : 'Unavailable'}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Chunk Size</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">
-                    {health?.details?.chunk_size || 800} chars
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">HNSW Indexing</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">
+                    m=16, ef_search=64
                   </p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Chunk Overlap</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">
-                    {health?.details?.chunk_overlap || 100} chars
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Vector Dimension</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">
+                    768 (nomic-embed-text)
                   </p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Similarity Metric</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">Cosine Distance</p>
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Similarity Metric</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">Cosine Distance (&lt;=&gt;)</p>
                 </div>
-                <div className="p-2.5 rounded-xl border border-[#E8E1F2] dark:border-[#352B52] bg-[#FAF8FD] dark:bg-[#150F24]">
-                  <p className="text-[10px] font-bold text-[#77738A] uppercase">Store Type</p>
-                  <p className="font-semibold text-[#17152B] dark:text-white mt-0.5">{vectorStoreType}</p>
+                <div className="p-2.5 rounded-xl border border-[#E9E1CC] dark:border-[#303238] bg-[#FFFDF5] dark:bg-[#17181A]">
+                  <p className="text-[10px] font-bold text-[#77746B] uppercase">Store Type</p>
+                  <p className="font-semibold text-[#202124] dark:text-white mt-0.5">{vectorStoreType}</p>
                 </div>
               </div>
 

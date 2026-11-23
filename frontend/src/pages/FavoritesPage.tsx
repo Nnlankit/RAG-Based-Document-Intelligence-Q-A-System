@@ -30,14 +30,14 @@ export const FavoritesPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center text-amber-500">
+            <div className="w-8 h-8 rounded-xl bg-[#FFF1CC] border border-[#FFE89A] flex items-center justify-center text-[#D99A24]">
               <Star className="w-4 h-4 fill-current" />
             </div>
-            <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-[#17152B] dark:text-white">
+            <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-[#202124] dark:text-white">
               Favorite Documents
             </h1>
           </div>
-          <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-1 font-medium">
+          <p className="text-xs text-[#77738A] dark:text-[#A8A499] mt-1 font-medium">
             Quickly access and ask questions about your pinned documents across sessions
           </p>
         </div>
@@ -53,7 +53,7 @@ export const FavoritesPage: React.FC = () => {
 
       {/* Search Filter Bar */}
       {favoriteDocs.length > 0 && (
-        <div className="flex items-center gap-3 p-3 bg-white dark:bg-[#1E1733] rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] shadow-card">
+        <div className="flex items-center gap-3 p-3 bg-white dark:bg-[#202124] rounded-2xl border border-[#E9E1CC] dark:border-[#303238] shadow-card">
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-[#77738A] absolute left-3.5 top-3 pointer-events-none" />
             <input
@@ -61,10 +61,10 @@ export const FavoritesPage: React.FC = () => {
               placeholder="Search your starred documents..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl bg-[#FAF8FD] dark:bg-[#150F24] border border-[#E8E1F2] dark:border-[#352B52] text-[#17152B] dark:text-[#F5F3FF] placeholder-[#77738A]/70 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]"
+              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl bg-[#FFF9E8] dark:bg-[#1A1A1C] border border-[#E9E1CC] dark:border-[#303238] text-[#202124] dark:text-[#FFFDF5] placeholder-[#77738A]/70 focus:outline-none focus:ring-2 focus:ring-[#FFE89A]"
             />
           </div>
-          <span className="text-xs text-[#77738A] dark:text-[#A39EB8] ml-auto">
+          <span className="text-xs text-[#77738A] dark:text-[#A8A499] ml-auto">
             {filteredFavorites.length} starred documents
           </span>
         </div>
@@ -78,12 +78,12 @@ export const FavoritesPage: React.FC = () => {
           ))}
         </div>
       ) : favoriteDocs.length === 0 ? (
-        <div className="p-16 text-center rounded-3xl border-2 border-dashed border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card space-y-3">
-          <Star className="w-12 h-12 text-amber-500 mx-auto opacity-70" />
-          <h3 className="text-base font-bold text-[#17152B] dark:text-white">
+        <div className="p-16 text-center rounded-3xl border-2 border-dashed border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124] shadow-card space-y-3">
+          <Star className="w-12 h-12 text-[#D99A24] mx-auto opacity-70" />
+          <h3 className="text-base font-bold text-[#202124] dark:text-white">
             No favorite documents yet
           </h3>
-          <p className="text-xs text-[#77738A] dark:text-[#A39EB8] max-w-sm mx-auto">
+          <p className="text-xs text-[#77738A] dark:text-[#A8A499] max-w-sm mx-auto">
             Click the star icon on any document card or table row in the repository to pin it here for instant access.
           </p>
           <div className="pt-2">

@@ -49,6 +49,13 @@ class LatencyProfiler:
         """Finalizes profiling and records total end-to-end latency."""
         total_ms = round((time.perf_counter() - self._start_time) * 1000, 2)
         self.timings["total_latency_ms"] = total_ms
+
+        # Compute token generation throughput
+        gen_tokens = self.extra_metrics.get("generated_tokens", 0)
+        eval_ms = self.timings.get("llm_eval_ms") or self.timings.get("llm_generation_ms", 0.0)
+        if gen_tokens and eval_ms > 0:
+            self.extra_metrics["tokens_per_second"] = round(gen_tokens / (eval_ms / 1000.0), 2)
+
         self.log_structured()
         return self.to_dict()
 

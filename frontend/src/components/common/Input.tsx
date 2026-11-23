@@ -17,14 +17,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-xs font-semibold text-[#17152B] dark:text-[#E2DCF0] mb-1.5"
+            className="block text-xs font-semibold text-[#202124] dark:text-[#FAF8F2] mb-1.5"
           >
             {label}
           </label>
         )}
         <div className="relative rounded-xl shadow-xs">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#77738A] dark:text-[#A39EB8]">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#77746B] dark:text-[#A99F87]">
               {leftIcon}
             </div>
           )}
@@ -32,27 +32,27 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             className={clsx(
-              'block w-full rounded-xl text-sm bg-white dark:bg-[#1A132C] border transition-all duration-150',
-              'text-[#17152B] dark:text-[#F5F3FF] placeholder-[#77738A]/70 dark:placeholder-[#A39EB8]/60',
-              'focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-[#8B5CF6] dark:focus:ring-[#8B5CF6] dark:focus:border-[#8B5CF6]',
+              'block w-full rounded-xl text-sm bg-[#FFFDF5] dark:bg-[#17181A] border transition-all duration-150',
+              'text-[#202124] dark:text-[#FAF8F2] placeholder-[#77746B]/70 dark:placeholder-[#A99F87]/60',
+              'focus:outline-none focus:ring-2 focus:ring-[#FFE89A] focus:border-[#FFE89A] dark:focus:ring-[#FFE89A] dark:focus:border-[#FFE89A]',
               leftIcon ? 'pl-10' : 'pl-3.5',
               rightIcon ? 'pr-10' : 'pr-3.5',
               'py-2.5',
               error
-                ? 'border-[#DC2626] dark:border-[#EF4444] focus:ring-[#DC2626]'
-                : 'border-[#E8E1F2] dark:border-[#352B52]',
+                ? 'border-[#C94B4B] dark:border-[#C94B4B] focus:ring-[#C94B4B]'
+                : 'border-[#E9E1CC] dark:border-[#303238]',
               className
             )}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#77738A] dark:text-[#A39EB8]">
+            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#77746B] dark:text-[#A99F87]">
               {rightIcon}
             </div>
           )}
         </div>
         {error && (
-          <p className="mt-1.5 text-xs text-[#DC2626] dark:text-[#EF4444] font-medium">{error}</p>
+          <p className="mt-1.5 text-xs text-[#C94B4B] dark:text-[#F87171] font-medium">{error}</p>
         )}
       </div>
     );

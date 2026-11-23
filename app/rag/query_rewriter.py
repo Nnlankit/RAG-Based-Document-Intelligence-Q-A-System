@@ -61,9 +61,21 @@ class ConversationalQueryRewriter:
             for turn in reversed(history[-3:]):
                 if turn.role.lower() == "user":
                     words = re.findall(r"[A-Za-z0-9_\-]+", turn.content)
+                    # Prioritize proper nouns, capitalized entity terms, and IDs (e.g. Titan-1234, Project)
+                    proper_nouns = [
+                        w for w in words 
+                        if w.lower() not in stopwords 
+                        and (w[0].isupper() or any(c.isdigit() or c in '_-' for c in w))
+                        and len(w) > 1
+                    ]
+                    if proper_nouns:
+                        context_entities = proper_nouns[:4]
+                        break
+
                     key_words = [w for w in words if w.lower() not in stopwords and len(w) > 2]
                     if key_words:
-                        context_entities.extend(key_words[:4])
+                        # Focus on subject terms which typically appear toward end of query
+                        context_entities = key_words[-4:]
                         break
 
             if context_entities:

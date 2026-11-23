@@ -312,12 +312,23 @@ class RetrievalLogRepository:
 
     @classmethod
     def get_stats(cls, db: Session) -> Dict[str, Any]:
-        """Aggregates metrics for the analytics dashboard."""
+        """Aggregates metrics and latency percentiles for the analytics dashboard."""
         logs = db.query(RetrievalLog).all()
         total_queries = len(logs)
         avg_retrieval_ms = round(sum((l.retrieval_latency_ms or 0.0) for l in logs) / total_queries, 2) if total_queries else 0.0
         avg_generation_ms = round(sum((l.generation_latency_ms or 0.0) for l in logs) / total_queries, 2) if total_queries else 0.0
         avg_total_ms = round(sum((l.total_latency_ms or 0.0) for l in logs) / total_queries, 2) if total_queries else 0.0
+
+        # Latency percentiles
+        retrieval_times = sorted([float(l.retrieval_latency_ms or 0.0) for l in logs])
+        generation_times = sorted([float(l.generation_latency_ms or 0.0) for l in logs])
+        total_times = sorted([float(l.total_latency_ms or 0.0) for l in logs])
+
+        def percentile(arr, p):
+            if not arr:
+                return 0.0
+            idx = int(len(arr) * (p / 100.0))
+            return round(arr[min(idx, len(arr) - 1)], 2)
 
         # Success rate (queries that retrieved at least one chunk)
         successful_queries = sum(1 for l in logs if l.retrieved_chunk_ids and len(l.retrieved_chunk_ids) > 0)
@@ -328,5 +339,13 @@ class RetrievalLogRepository:
             "avg_retrieval_ms": avg_retrieval_ms,
             "avg_generation_ms": avg_generation_ms,
             "avg_total_ms": avg_total_ms,
+            "p50_retrieval_ms": percentile(retrieval_times, 50),
+            "p95_retrieval_ms": percentile(retrieval_times, 95),
+            "p50_generation_ms": percentile(generation_times, 50),
+            "p95_generation_ms": percentile(generation_times, 95),
+            "p50_total_ms": percentile(total_times, 50),
+            "p95_total_ms": percentile(total_times, 95),
+            "min_total_ms": total_times[0] if total_times else 0.0,
+            "max_total_ms": total_times[-1] if total_times else 0.0,
             "success_rate": success_rate,
         }

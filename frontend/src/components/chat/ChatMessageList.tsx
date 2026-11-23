@@ -51,14 +51,14 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-xl mx-auto">
-        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center shadow-purple-lg mb-4">
+        <div className="w-16 h-16 rounded-3xl bg-[#202124] text-[#FFE89A] flex items-center justify-center shadow-subtle mb-4 border border-[#303238]">
           <Sparkles className="w-8 h-8" />
         </div>
 
-        <h3 className="text-xl font-extrabold text-[#17152B] dark:text-white tracking-tight">
+        <h3 className="text-xl font-extrabold text-[#202124] dark:text-white tracking-tight">
           Ask DocuMind AI
         </h3>
-        <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-1.5 max-w-md leading-relaxed">
+        <p className="text-xs text-[#77746B] dark:text-[#A8A499] mt-1.5 max-w-md leading-relaxed">
           Natural-language Q&A grounded in your uploaded documents. Powered by local Llama 3.2 and dense pgvector search with zero hallucinations.
         </p>
 
@@ -70,15 +70,15 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
               <button
                 key={idx}
                 onClick={() => onSelectPrompt?.(item.prompt)}
-                className="p-4 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] hover:border-[#8B5CF6] hover:shadow-card-hover text-left transition-all duration-150 group shadow-card"
+                className="p-4 rounded-2xl border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124] hover:border-[#E8BD42] hover:bg-[#FFFDF5] dark:hover:bg-[#2A2B2E] text-left transition-all duration-150 group shadow-card"
               >
-                <div className="w-8 h-8 rounded-xl bg-[#F0EBFA] dark:bg-[#2A2047] text-[#5920B5] dark:text-[#A78BFA] flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-[#FFF9E8] dark:bg-[#303238] text-[#245B32] dark:text-[#FFE89A] flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
                   <Icon className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-bold text-[#17152B] dark:text-white mb-1 group-hover:text-[#5920B5] dark:group-hover:text-[#A78BFA] transition-colors">
+                <h4 className="text-xs font-bold text-[#202124] dark:text-white mb-1 group-hover:text-[#4D9B45] dark:group-hover:text-[#FFE89A] transition-colors">
                   {item.title}
                 </h4>
-                <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8] line-clamp-2">
+                <p className="text-[11px] text-[#77746B] dark:text-[#A8A499] line-clamp-2">
                   {item.prompt}
                 </p>
               </button>
@@ -112,14 +112,14 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
       {/* Thinking / Loading indicator (only if no pending assistant bubble in state) */}
       {isLoading && !hasPendingAssistant && (
         <div className="flex items-start gap-3.5 py-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center shadow-purple shrink-0 animate-pulse">
+          <div className="w-8 h-8 rounded-xl bg-[#202124] text-[#FFE89A] border border-[#303238] flex items-center justify-center shadow-subtle shrink-0 animate-pulse">
             <Sparkles className="w-4 h-4" />
           </div>
-          <div className="flex items-center gap-2.5 px-4.5 py-3 rounded-2xl bg-white dark:bg-[#1E1733] border border-[#E8E1F2] dark:border-[#352B52] text-xs text-[#5920B5] dark:text-[#A78BFA] shadow-card font-semibold">
+          <div className="flex items-center gap-2.5 px-4.5 py-3 rounded-2xl bg-white dark:bg-[#202124] border border-[#E9E1CC] dark:border-[#303238] text-xs text-[#202124] dark:text-[#DDF2C1] shadow-card font-semibold">
             <span className="flex gap-1 items-center">
-              <span className="w-2 h-2 rounded-full bg-[#5920B5] animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-2 h-2 rounded-full bg-[#8B5CF6] animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-2 h-2 rounded-full bg-[#A78BFA] animate-bounce" style={{ animationDelay: '300ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#202124] dark:bg-[#DDF2C1] animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#4D9B45] animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-2 h-2 rounded-full bg-[#E8BD42] animate-bounce" style={{ animationDelay: '300ms' }} />
             </span>
             <span>Retrieving chunks & generating grounded answer with Llama 3.2...</span>
           </div>

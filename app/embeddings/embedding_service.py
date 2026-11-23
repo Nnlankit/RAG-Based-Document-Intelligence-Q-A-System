@@ -56,12 +56,14 @@ class OllamaEmbeddingService(BaseEmbeddingService):
         logger.info(f"Initialized OllamaEmbeddingService with model '{self.model_name}' at '{self.base_url}'")
 
     def embed_query(self, text: str) -> List[float]:
-        """Embeds a search query with caching for sub-millisecond repeated queries."""
+        """Embeds a search query with canonical caching for sub-millisecond repeated queries."""
         clean_text = text.strip()
         if not clean_text:
             clean_text = "empty query"
 
-        cache_key = f"{self.model_name}:{clean_text}"
+        # Canonical normalization for higher cache hit rate
+        normalized = " ".join(clean_text.lower().split())
+        cache_key = f"{self.model_name}:{normalized}"
         if cache_key in self._query_cache:
             self._query_cache.move_to_end(cache_key)
             return self._query_cache[cache_key]
@@ -109,13 +111,14 @@ class OllamaEmbeddingService(BaseEmbeddingService):
         return all_embeddings
 
     def _embed_batch(self, texts: List[str]) -> List[List[float]]:
-        """Calls Ollama embedding API with fallback from /api/embed to /api/embeddings."""
+        """Calls Ollama embedding API with keep_alive to prevent model unloading."""
+        keep_alive = getattr(get_settings(), "OLLAMA_KEEP_ALIVE", "60m")
         try:
             # 1. Try batch /api/embed endpoint (Ollama v0.1.34+)
             try:
                 resp = self._client.post(
                     f"{self.base_url}/api/embed",
-                    json={"model": self.model_name, "input": texts},
+                    json={"model": self.model_name, "input": texts, "keep_alive": keep_alive},
                 )
                 if resp.status_code == 200:
                     data = resp.json()
@@ -131,7 +134,7 @@ class OllamaEmbeddingService(BaseEmbeddingService):
             for text in texts:
                 resp = self._client.post(
                     f"{self.base_url}/api/embeddings",
-                    json={"model": self.model_name, "prompt": text},
+                    json={"model": self.model_name, "prompt": text, "keep_alive": keep_alive},
                 )
                 if resp.status_code != 200:
                     raise EmbeddingFailureError(

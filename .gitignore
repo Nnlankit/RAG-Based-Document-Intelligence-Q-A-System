@@ -53,3 +53,8 @@ htmlcov/
 Thumbs.db
 .neon
 node_modules/
+**/node_modules/
+frontend/dist/
+dist/
+extracted_ref/
+

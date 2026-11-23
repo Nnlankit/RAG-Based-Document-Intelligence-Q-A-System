@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from pathlib import Path
 
+from app.core.security import get_current_user_id
 from app.database.postgres import get_db
 from app.database.models import Document, DocumentChunk, Conversation, Message
 from app.database.repositories import RetrievalLogRepository
@@ -47,7 +48,7 @@ def normalize_doc_type(filename: str, mime_type: Optional[str] = None) -> str:
 @router.get("/stats", summary="Get comprehensive system and RAG analytics")
 def get_analytics_stats(
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ) -> Dict[str, Any]:
     """Computes real-time analytics across documents, chunks, chat queries, and latency."""
     # 1. Documents stats
@@ -176,6 +177,14 @@ def get_analytics_stats(
             "avg_retrieval_ms": stats["avg_retrieval_ms"],
             "avg_generation_ms": stats["avg_generation_ms"],
             "avg_total_ms": stats["avg_total_ms"],
+            "p50_retrieval_ms": stats.get("p50_retrieval_ms", 0.0),
+            "p95_retrieval_ms": stats.get("p95_retrieval_ms", 0.0),
+            "p50_generation_ms": stats.get("p50_generation_ms", 0.0),
+            "p95_generation_ms": stats.get("p95_generation_ms", 0.0),
+            "p50_total_ms": stats.get("p50_total_ms", 0.0),
+            "p95_total_ms": stats.get("p95_total_ms", 0.0),
+            "min_total_ms": stats.get("min_total_ms", 0.0),
+            "max_total_ms": stats.get("max_total_ms", 0.0),
         },
         "document_types": doc_types,
         "document_distribution": document_distribution,

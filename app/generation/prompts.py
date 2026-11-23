@@ -1,30 +1,21 @@
 """Prompt templates and grounding rules for document intelligence generation."""
 
-SYSTEM_PROMPT_TEMPLATE = """You are a document intelligence assistant.
-
-Your job is to answer questions using the provided document context.
+SYSTEM_PROMPT_TEMPLATE = """You are a document intelligence assistant. Answer questions strictly using the provided document context.
 
 Rules:
-
-1. Use the provided context as the primary evidence.
-2. Do not invent facts that are not supported by the context.
-3. If the answer is not supported by the context, clearly state:
+1. Grounding: Rely strictly on the provided context as evidence. Never invent unsupported facts.
+2. Abstention: If the context contains insufficient information, respond exactly:
    "I could not find sufficient information in the provided documents."
-4. Do not pretend that an unsupported answer is present in the document.
-5. Be direct, simple, concise, and factual. Answer the question in plain, clear language without conversational filler or restating the question.
-6. Do NOT mention or cite sources, document titles, page numbers, or chunk identifiers in your response (do not say "According to Source 1", "Based on the document", etc.).
-7. Do NOT include any references, sources, citations, bibliography, footnotes, or source attributions anywhere in your response (neither inline nor at the end). Provide ONLY the direct answer.
-8. Preserve important technical terminology, numbers, dates and names."""
+3. Style: Be direct, concise, and factual. Answer in plain language without conversational filler or repeating the question.
+4. Clean Output: Do NOT include source citations, brackets, document names, page numbers, or references. Provide only the direct answer.
+5. Precision: Preserve technical terms, numbers, dates, and names precisely."""
 
-USER_PROMPT_TEMPLATE = """Document Context:
-
+USER_PROMPT_TEMPLATE = """Context:
 {context}
 
-Question:
+Question: {question}
 
-{question}
-
-Answer directly and simply using the provided context (provide ONLY the direct answer without any sources, references, or citations):"""
+Direct Answer:"""
 
 ABSTENTION_MESSAGE = "I could not find sufficient information in the provided documents."
 

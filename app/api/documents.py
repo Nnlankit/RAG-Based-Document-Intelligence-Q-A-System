@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
+from app.core.security import get_current_user_id
 from app.core.exceptions import (
     DocumentAIException,
     FileTooLargeError,
@@ -63,7 +64,7 @@ class CompareRequest(BaseModel):
 async def upload_document(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ) -> DocumentUploadResponse:
     """Uploads, validates, extracts, chunks, embeds, and indexes a document."""
     original_filename = file.filename or "unknown_file"
@@ -154,6 +155,9 @@ async def upload_document(
 
         # 12. Update document status to completed
         DocumentRepository.update_status(db, document_id, status="completed")
+        # Invalidate retrieval query cache on new document ingestion
+        from app.retrieval.retriever import DocumentRetriever
+        DocumentRetriever.clear_cache()
         logger.info(f"Document {document_id} ingestion completed successfully with {len(processed_chunks)} chunks.")
 
         return DocumentUploadResponse(
@@ -174,7 +178,7 @@ async def upload_document(
 @router.get("", response_model=DocumentListResponse)
 def list_documents(
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
     skip: int = 0,
     limit: int = 100,
 ) -> DocumentListResponse:
@@ -220,7 +224,7 @@ def compare_documents(
 def get_document(
     document_id: str,
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ) -> DocumentResponse:
     """Retrieves document metadata by ID."""
     doc = DocumentRepository.get_by_id(db, document_id, user_id=user_id)
@@ -246,7 +250,7 @@ def get_document(
 def get_document_file(
     document_id: str,
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ):
     """Streams original document file inline for previewing in PDF/document viewer without triggering browser download."""
     doc = DocumentRepository.get_by_id(db, document_id, user_id=user_id)
@@ -283,7 +287,7 @@ def get_document_file(
 def download_document_file(
     document_id: str,
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ):
     """Downloads original document file as an attachment only upon explicit user download request."""
     doc = DocumentRepository.get_by_id(db, document_id, user_id=user_id)
@@ -310,7 +314,7 @@ def download_document_file(
 def get_document_chunks(
     document_id: str,
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ):
     """Retrieves all indexed text chunks and metadata for a document."""
     # Ensure document exists and belongs to user
@@ -337,7 +341,7 @@ def get_document_chunks(
 def delete_document(
     document_id: str,
     db: Session = Depends(get_db),
-    user_id: str = "default_user",
+    user_id: str = Depends(get_current_user_id),
 ):
     """Deletes a document: removes disk file, database records, chunks, and vector store entries."""
     doc = DocumentRepository.get_by_id(db, document_id, user_id=user_id)
@@ -356,6 +360,9 @@ def delete_document(
         logger.warning(f"Error purging vectors for document {document_id}: {e}")
 
     DocumentRepository.delete(db, document_id)
+    # Invalidate retrieval query cache on document deletion
+    from app.retrieval.retriever import DocumentRetriever
+    DocumentRetriever.clear_cache()
     return {"message": f"Document '{document_id}' and all associated chunks/vectors deleted successfully."}
 
 

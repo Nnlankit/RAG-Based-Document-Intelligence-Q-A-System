@@ -199,8 +199,8 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               onClick={() => fileInputRef.current?.click()}
               className={`border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
                 isDragging
-                  ? 'border-[#5920B5] bg-[#F0EBFA] dark:bg-[#2A2047]'
-                  : 'border-[#E8E1F2] dark:border-[#352B52] hover:border-[#8B5CF6] bg-[#FAF8FD] dark:bg-[#150F24] hover:bg-[#F3EEFB] dark:hover:bg-[#1E1733]'
+                  ? 'border-[#4D9B45] bg-[#E5F4DC]'
+                  : 'border-[#E9E1CC] dark:border-[#303238] hover:border-[#E8BD42] bg-[#FFF9E8] dark:bg-[#1A1A1C] hover:bg-[#FFFDF5]'
               }`}
             >
               <input
@@ -210,29 +210,29 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 onChange={handleFileChange}
                 className="hidden"
               />
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#5920B5] to-[#8B5CF6] text-white flex items-center justify-center mb-3 shadow-purple">
+              <div className="w-14 h-14 rounded-2xl bg-[#202124] text-[#FFE89A] border border-[#303238] flex items-center justify-center mb-3 shadow-subtle">
                 <UploadCloud className="w-7 h-7" />
               </div>
-              <p className="text-sm font-bold text-[#17152B] dark:text-white">
-                Drag & drop your document here, or <span className="text-[#5920B5] dark:text-[#A78BFA] underline">browse files</span>
+              <p className="text-sm font-bold text-[#202124] dark:text-white">
+                Drag & drop your document here, or <span className="text-[#202124] dark:text-[#FFE89A] underline font-bold">browse files</span>
               </p>
-              <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-1 font-medium">
+              <p className="text-xs text-[#77746B] dark:text-[#A8A499] mt-1 font-medium">
                 Supports PDF, DOCX, TXT, Markdown (Max 50MB)
               </p>
             </div>
 
             {/* Selected File Card */}
             {selectedFile && (
-              <div className="flex items-center justify-between p-4 rounded-2xl border border-[#E8E1F2] dark:border-[#352B52] bg-white dark:bg-[#1E1733] shadow-card">
+              <div className="flex items-center justify-between p-4 rounded-2xl border border-[#E9E1CC] dark:border-[#303238] bg-white dark:bg-[#202124] shadow-card">
                 <div className="flex items-center gap-3 truncate">
-                  <div className="w-10 h-10 rounded-xl bg-[#F0EBFA] dark:bg-[#2A2047] flex items-center justify-center text-[#5920B5] dark:text-[#A78BFA] shrink-0 font-bold text-xs">
+                  <div className="w-10 h-10 rounded-xl bg-[#FFF9E8] dark:bg-[#303238] flex items-center justify-center text-[#202124] dark:text-[#FFE89A] shrink-0 font-bold text-xs border border-[#E9E1CC] dark:border-[#484A50]">
                     {selectedFile.name.split('.').pop()?.toUpperCase() || 'FILE'}
                   </div>
                   <div className="truncate">
-                    <p className="text-xs font-bold text-[#17152B] dark:text-white truncate">
+                    <p className="text-xs font-bold text-[#202124] dark:text-white truncate">
                       {selectedFile.name}
                     </p>
-                    <p className="text-[11px] text-[#77738A] dark:text-[#A39EB8]">
+                    <p className="text-[11px] text-[#77746B] dark:text-[#A8A499]">
                       {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
                     </p>
                   </div>
@@ -242,7 +242,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                     e.stopPropagation();
                     setSelectedFile(null);
                   }}
-                  className="p-1.5 text-[#77738A] hover:text-[#DC2626] rounded-lg transition-colors"
+                  className="p-1.5 text-[#77746B] hover:text-[#C94B4B] rounded-lg transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -251,7 +251,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
             {/* Error Message Banner */}
             {errorMessage && (
-              <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 flex items-start gap-2.5 text-red-600 dark:text-red-400 text-xs">
+              <div className="p-3.5 rounded-xl bg-[#FCE8E8] dark:bg-[#C94B4B]/20 border border-[#FAD2D2] dark:border-[#C94B4B]/40 flex items-start gap-2.5 text-[#C94B4B] dark:text-[#FCA5A5] text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <span className="leading-relaxed font-medium">{errorMessage}</span>
               </div>
@@ -276,10 +276,10 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           /* Multi-step Processing Pipeline */
           <div className="py-4 space-y-6">
             <div className="text-center space-y-1">
-              <h4 className="text-sm font-bold text-[#17152B] dark:text-white">
+              <h4 className="text-sm font-bold text-[#202124] dark:text-white">
                 Processing "{selectedFile?.name}"
               </h4>
-              <p className="text-xs text-[#77738A] dark:text-[#A39EB8]">
+              <p className="text-xs text-[#77746B] dark:text-[#A8A499]">
                 Running through local RAG pipeline and vector generation
               </p>
             </div>
@@ -287,16 +287,16 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             {/* Overall Progress Bar */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-xs font-semibold">
-                <span className="text-[#5920B5] dark:text-[#A78BFA]">
+                <span className="text-[#202124] dark:text-[#FFE89A]">
                   {stage === 'uploading' ? `Uploading (${uploadPercent}%)` : 'Vectorizing & Indexing...'}
                 </span>
-                <span className="font-mono text-[#77738A]">
+                <span className="font-mono text-[#77746B]">
                   {stage === 'uploading' ? `${uploadPercent}%` : '85%'}
                 </span>
               </div>
-              <div className="w-full bg-[#E8E1F2] dark:bg-[#352B52] h-2.5 rounded-full overflow-hidden">
+              <div className="w-full bg-[#E9E1CC] dark:bg-[#303238] h-2.5 rounded-full overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-[#5920B5] to-[#8B5CF6] h-full rounded-full transition-all duration-300"
+                  className="bg-[#4D9B45] h-full rounded-full transition-all duration-300"
                   style={{
                     width: stage === 'uploading' ? `${uploadPercent}%` : '85%',
                   }}
@@ -313,17 +313,17 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                     key={step.id}
                     className={`flex items-center justify-between p-3 rounded-xl border text-xs transition-colors ${
                       status === 'done'
-                        ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40 text-emerald-700 dark:text-emerald-400'
+                        ? 'bg-[#E5F4DC] border-[#DDF2C1] text-[#245B32]'
                         : status === 'active'
-                        ? 'bg-[#F0EBFA] dark:bg-[#2A2047] border-[#8B5CF6] text-[#5920B5] dark:text-[#DDD6FE] font-bold'
-                        : 'bg-[#FAF8FD] dark:bg-[#150F24] border-[#E8E1F2] dark:border-[#352B52] text-[#77738A] dark:text-[#A39EB8]'
+                        ? 'bg-[#FFF9E8] border-[#E8BD42] text-[#202124] font-bold'
+                        : 'bg-[#FFFDF5] dark:bg-[#1A1A1C] border-[#E9E1CC] dark:border-[#303238] text-[#77746B] dark:text-[#A8A499]'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       {status === 'done' ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 text-[#4D9B45] shrink-0" />
                       ) : status === 'active' ? (
-                        <Cpu className="w-4 h-4 text-[#5920B5] animate-spin shrink-0" />
+                        <Cpu className="w-4 h-4 text-[#202124] animate-spin shrink-0" />
                       ) : (
                         <span className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 shrink-0" />
                       )}
@@ -344,17 +344,17 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         ) : (
           /* Completed Success Screen */
           <div className="py-6 flex flex-col items-center text-center space-y-4">
-            <div className="w-16 h-16 rounded-3xl bg-[#DCFCE7] dark:bg-[#143E24] border border-[#BBF7D0] dark:border-[#1F5E36] flex items-center justify-center text-[#16A34A] shadow-sm">
+            <div className="w-16 h-16 rounded-3xl bg-[#E5F4DC] border border-[#DDF2C1] flex items-center justify-center text-[#4D9B45] shadow-xs">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
             <div>
-              <h4 className="text-base font-bold text-[#17152B] dark:text-white">
+              <h4 className="text-base font-bold text-[#202124] dark:text-white">
                 Document Successfully Indexed!
               </h4>
-              <p className="text-xs text-[#77738A] dark:text-[#A39EB8] mt-1 max-w-md mx-auto">
+              <p className="text-xs text-[#77738A] dark:text-[#A8A499] mt-1 max-w-md mx-auto">
                 "{selectedFile?.name}" was processed into{' '}
-                <span className="font-bold text-[#5920B5] dark:text-[#A78BFA]">
+                <span className="font-bold text-[#245B32] dark:text-[#DDF2C1]">
                   {resultChunkCount} semantic chunks
                 </span>{' '}
                 and indexed in Neon pgvector. Ready for grounded Q&A!
